@@ -1,0 +1,68 @@
+{
+  "name": "pong-demo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "pong",
+  "sourceRoot": "apps/pong-demo/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/pong-demo",
+        "index": "apps/pong-demo/src/index.html",
+        "browser": "apps/pong-demo/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/pong-demo/tsconfig.app.json",
+        "assets": [
+          "apps/pong-demo/src/favicon.ico",
+          "apps/pong-demo/src/assets"
+        ],
+        "styles": ["apps/pong-demo/src/styles.css"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "pong-demo:build:production"
+        },
+        "development": {
+          "buildTarget": "pong-demo:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "pong-demo:build"
+      }
+    }
+  }
+}
