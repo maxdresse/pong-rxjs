@@ -31,9 +31,8 @@ const createLoop = ({ draw, world, paused }: ILoopDef) => {
     };
     return l;
 }
-export const createMatch: MatchFactory = (def: IMatchDef) => {
-    const objectsSub$ = new Subject<Array<IObj>>();
 
+export const setupWorld = () => {
     // create box 2d world
     const gravity = new b2Vec2(0.0, -10.0);
     const world = b2World.Create(gravity);
@@ -42,6 +41,13 @@ export const createMatch: MatchFactory = (def: IMatchDef) => {
     const groundBox = new b2PolygonShape();
     groundBox.SetAsBox(50.0, 10.0);
     groundBody.CreateFixture({ shape: groundBox });
+    const bodies = [groundBody];
+    return { world, bodies };
+};
+
+export const createMatch: MatchFactory = (def: IMatchDef) => {
+    const objectsSub$ = new Subject<Array<IObj>>();
+    const { world, bodies } = setupWorld();    
     const draw = new DebugDraw(def.canvas.getContext('2d')!);
     // create main loop
     const loop = createLoop({ draw, matchDef: def, world, paused: false});
@@ -52,7 +58,9 @@ export const createMatch: MatchFactory = (def: IMatchDef) => {
     return {
         objects$: objectsSub$,
         tearDown: () => {
-            world.DestroyBody(groundBody);
+            bodies.forEach(b => {
+                world.DestroyBody(b);
+            });
         }
     };
 };
