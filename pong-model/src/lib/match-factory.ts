@@ -2,6 +2,7 @@ import { Subject } from 'rxjs';
 import { IMatchDef, IObj, MatchFactory } from './types'
 import { b2Vec2, b2World, b2PolygonShape, DrawShapes, DrawJoints, DrawAABBs, DrawCenterOfMasses, DrawPairs, b2Draw } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
+import { attachResizer } from './canvas-resizer';
 
 interface ILoopDef {
     draw: DebugDraw;
@@ -51,7 +52,8 @@ export const createMatch: MatchFactory = (def: IMatchDef) => {
     const draw = new DebugDraw(def.canvas.getContext('2d')!);
     // create main loop
     const loop = createLoop({ draw, matchDef: def, world, paused: false});
-
+    const aspectRatio = 1;
+    const { detachResizer } = attachResizer(def.canvas, aspectRatio);
     // todo: wire loop execution to match control
     requestAnimationFrame(loop);
 
@@ -61,6 +63,7 @@ export const createMatch: MatchFactory = (def: IMatchDef) => {
             bodies.forEach(b => {
                 world.DestroyBody(b);
             });
+            detachResizer();
         }
     };
 };
