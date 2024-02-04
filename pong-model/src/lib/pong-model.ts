@@ -1,3 +1,1 @@
-export function pongModel(): string {
-  return 'pong-model';
-}
+export * from './match-factory';
