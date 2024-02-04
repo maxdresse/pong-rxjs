@@ -40,6 +40,7 @@ export interface IMatchDef {
     control: IMatchControl;
     userInput1: IUserInput;
     userInput2: IUserInput;
+    canvas: HTMLCanvasElement;
 }
 
 export type MatchFactory = (def: IMatchDef) => IMatch; 
