@@ -41,6 +41,7 @@ export interface IMatchDef {
     userInput1: IUserInput;
     userInput2: IUserInput;
     canvas: HTMLCanvasElement;
+    zoomFactor?: number;
 }
 
 export type MatchFactory = (def: IMatchDef) => IMatch; 

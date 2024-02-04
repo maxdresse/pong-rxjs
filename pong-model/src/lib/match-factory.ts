@@ -11,13 +11,15 @@ interface ILoopDef {
     paused: boolean;
 }
 
-const createLoop = ({ draw, world, paused }: ILoopDef) => {
+const defaultZoom = 3;
+
+const createLoop = ({ draw, world, paused, matchDef }: ILoopDef) => {
     const l = () => {
         // for each iteration
         // update simulation
         world.Step(1000 / 16, { positionIterations: 3, velocityIterations: 8 });
         // call debug draw
-        draw.Prepare(0, 0, 1, true); // center, zoom, flipy
+        draw.Prepare(0, 0, matchDef.zoomFactor ?? defaultZoom, true); // center, zoom, flipy
         DrawShapes(draw, world);
         DrawJoints(draw, world);
         DrawAABBs(draw, world);
