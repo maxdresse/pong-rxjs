@@ -24,6 +24,7 @@ export interface IScore {
 
 export interface IMatch {
     objects$: Observable<Array<IObj>>;
+    tearDown: () => void;
 }
 
 export enum MatchControlAction {
