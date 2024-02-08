@@ -36,6 +36,9 @@ export interface IMatchControl {
     actions$: Observable<MatchControlAction>;
 }
 
+
+// todo GameIntent and GameEffects!
+
 export interface IMatchDef {
     control: IMatchControl;
     userInput1: IUserInput;
