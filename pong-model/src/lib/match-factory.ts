@@ -1,8 +1,9 @@
 import { Subject } from 'rxjs';
 import { IMatchDef, IObj, MatchFactory } from './types'
-import { b2Vec2, b2World, b2PolygonShape, DrawShapes, DrawJoints, DrawAABBs, DrawCenterOfMasses, DrawPairs, b2Draw } from '@box2d/core';
+import { b2Vec2, b2World, DrawShapes, DrawJoints, DrawAABBs, DrawCenterOfMasses, DrawPairs, b2Draw } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 import { attachResizer } from './canvas-resizer';
+import { createStaticRectBody } from './b2d-utils';
 
 interface ILoopDef {
     draw: DebugDraw;
@@ -40,10 +41,7 @@ export const setupWorld = () => {
     const gravity = new b2Vec2(0.0, -10.0);
     const world = b2World.Create(gravity);
     // add bodies and tracking IObj for them
-    const groundBody = world.CreateBody({ position: { x: 0, y: -10 }});
-    const groundBox = new b2PolygonShape();
-    groundBox.SetAsBox(50.0, 10.0);
-    groundBody.CreateFixture({ shape: groundBox });
+    const groundBody = createStaticRectBody(world, { x: 0, y: -10 }, { x: 50, y: 10 });
     const bodies = [groundBody];
     return { world, bodies };
 };
@@ -69,3 +67,5 @@ export const createMatch: MatchFactory = (def: IMatchDef) => {
         }
     };
 };
+
+
