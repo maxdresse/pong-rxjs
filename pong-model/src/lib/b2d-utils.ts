@@ -2,7 +2,7 @@ import { b2World, b2PolygonShape, b2BodyDef, b2BodyType } from '@box2d/core';
 import { Vc2 } from './types';
 
 export function createDynamicRectBody(world: b2World, position: Vc2, size: Vc2) {
-    const bodyDef: b2BodyDef = { position, type: b2BodyType.b2_dynamicBody, enabled: true };
+    const bodyDef: b2BodyDef = { position, type: b2BodyType.b2_dynamicBody, enabled: true, linearDamping: 0.0005 };
     return createBox(world, size, bodyDef);
 }
 
