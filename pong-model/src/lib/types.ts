@@ -1,3 +1,4 @@
+import { b2Body } from '@box2d/core';
 import { Observable } from 'rxjs';
 
 export interface Vc2 {
@@ -36,8 +37,19 @@ export interface IMatchControl {
     actions$: Observable<MatchControlAction>;
 }
 
+export interface GameIntent<T extends number, P> {
+    type: T;
+    payload: P;
+};
 
-// todo GameIntent and GameEffects!
+
+export interface GameSnapshot {
+    player1Body: b2Body;
+}
+
+export interface GameEffect {
+    apply(sn: GameSnapshot): void;
+}
 
 export interface IMatchDef {
     control: IMatchControl;
