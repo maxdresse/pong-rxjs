@@ -3,7 +3,7 @@ import { IMatchDef, IObj, MatchFactory } from './types'
 import { b2Vec2, b2World, DrawShapes, DrawJoints, DrawAABBs, DrawCenterOfMasses, DrawPairs, b2Draw } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 import { attachResizer } from './canvas-resizer';
-import { createDynamicRectBody, createStaticRectBody } from './b2d-utils';
+import { createDynamicRectBody, createEdge, createStaticRectBody } from './b2d-utils';
 
 interface ILoopDef {
     draw: DebugDraw;
@@ -42,8 +42,8 @@ export const setupWorld = () => {
     const world = b2World.Create(gravity);
     const groundBody = createStaticRectBody(world, { x: 0, y: -10 }, { x: 50, y: 10 });
     const dynamicBody = createDynamicRectBody(world, { x: 0, y: 50 }, { x: 50, y: 10 });
-
-    const bodies = [groundBody, dynamicBody];
+    const leftEdge = createEdge(world, { x: -100, y: -100 }, { x: -100, y: 300 });
+    const bodies = [groundBody, dynamicBody, leftEdge];
     return { world, bodies };
 };
 
