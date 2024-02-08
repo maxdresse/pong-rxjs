@@ -3,7 +3,7 @@ import { IMatchDef, IObj, MatchFactory } from './types'
 import { b2Vec2, b2World, DrawShapes, DrawJoints, DrawAABBs, DrawCenterOfMasses, DrawPairs, b2Draw } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 import { attachResizer } from './canvas-resizer';
-import { createStaticRectBody } from './b2d-utils';
+import { createDynamicRectBody, createStaticRectBody } from './b2d-utils';
 
 interface ILoopDef {
     draw: DebugDraw;
@@ -40,15 +40,27 @@ export const setupWorld = () => {
     // create box 2d world
     const gravity = new b2Vec2(0.0, -10.0);
     const world = b2World.Create(gravity);
-    // add bodies and tracking IObj for them
     const groundBody = createStaticRectBody(world, { x: 0, y: -10 }, { x: 50, y: 10 });
-    const bodies = [groundBody];
+    const dynamicBody = createDynamicRectBody(world, { x: 0, y: 50 }, { x: 50, y: 10 });
+
+    const bodies = [groundBody, dynamicBody];
     return { world, bodies };
 };
 
 export const createMatch: MatchFactory = (def: IMatchDef) => {
+    
+
+
     const objectsSub$ = new Subject<Array<IObj>>();
-    const { world, bodies } = setupWorld();    
+    const { world, bodies } = setupWorld();
+
+    window.addEventListener('keydown', ev => {
+        if (ev.key === 'ArrowUp') {
+            console.log('applying force');
+            bodies[1].ApplyLinearImpulseToCenter({ x: 0, y: 10000 });
+        }
+    });
+
     const draw = new DebugDraw(def.canvas.getContext('2d')!);
     // create main loop
     const loop = createLoop({ draw, matchDef: def, world, paused: false});
