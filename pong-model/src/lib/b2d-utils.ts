@@ -2,7 +2,7 @@ import { b2World, b2PolygonShape, b2BodyDef, b2BodyType } from '@box2d/core';
 import { Vc2 } from './types';
 
 export function createDynamicRectBody(world: b2World, position: Vc2, size: Vc2) {
-    const bodyDef: b2BodyDef = { position, type: b2BodyType.b2_dynamicBody };
+    const bodyDef: b2BodyDef = { position, type: b2BodyType.b2_dynamicBody, enabled: true };
     return createBox(world, size, bodyDef);
 }
 
@@ -14,6 +14,6 @@ export function createBox(world: b2World, size: Vc2, bodyDef: b2BodyDef) {
     const body = world.CreateBody(bodyDef);
     const shape = new b2PolygonShape();
     shape.SetAsBox(size.x, size.y);
-    body.CreateFixture({ shape: shape });
+    body.CreateFixture({ shape: shape, density: 1 });
     return body;
 }

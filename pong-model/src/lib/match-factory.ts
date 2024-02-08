@@ -38,7 +38,7 @@ const createLoop = ({ draw, world, paused, matchDef }: ILoopDef) => {
 
 export const setupWorld = () => {
     // create box 2d world
-    const gravity = new b2Vec2(0.0, -10.0);
+    const gravity = new b2Vec2(0.0, 0.0);
     const world = b2World.Create(gravity);
     const groundBody = createStaticRectBody(world, { x: 0, y: -10 }, { x: 50, y: 10 });
     const dynamicBody = createDynamicRectBody(world, { x: 0, y: 50 }, { x: 50, y: 10 });
@@ -54,10 +54,12 @@ export const createMatch: MatchFactory = (def: IMatchDef) => {
     const objectsSub$ = new Subject<Array<IObj>>();
     const { world, bodies } = setupWorld();
 
+    // TESTCODE,remove
     window.addEventListener('keydown', ev => {
         if (ev.key === 'ArrowUp') {
-            console.log('applying force');
-            bodies[1].ApplyLinearImpulseToCenter({ x: 0, y: 10000 });
+            bodies[1].ApplyLinearImpulseToCenter({ x: 0, y: 120_0000 });
+        } else if (ev.key === 'ArrowDown') {
+            bodies[1].ApplyLinearImpulseToCenter({ x: 0, y: -120_0000 });
         }
     });
 
