@@ -39,13 +39,13 @@ export interface GameEffect {
     apply(sn: GameSituation): void;
 }
 
-export interface IntentContext {
+export interface ThingWeDontNeed {
     gameSituation: GameSituation;
 }
 
 export type InputFactory = (ctx: { onFrame$: Observable<void> }) => Observable<SomeGameIntent>;
 
-export type IntentResponder = (intent: SomeGameIntent, ctx: IntentContext) => GameEffect;
+export type IntentResponder = (intent: SomeGameIntent) => GameEffect;
 
 export interface GameEvent {
 

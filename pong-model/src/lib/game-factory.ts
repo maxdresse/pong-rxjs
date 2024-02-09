@@ -1,9 +1,11 @@
-import { Subject } from 'rxjs';
-import { IGameDef, IObj, GameFactory } from './types'
-import { b2Vec2, b2World, DrawShapes, DrawJoints, DrawAABBs, DrawCenterOfMasses, DrawPairs, b2Draw } from '@box2d/core';
+import { Subject, map } from 'rxjs';
+import { IGameDef, IObj, GameFactory, Player } from './types'
+import { b2Vec2, b2World, DrawShapes, DrawJoints, DrawAABBs, DrawCenterOfMasses, DrawPairs, b2Draw, b2Body } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 import { attachResizer } from './canvas-resizer';
 import { createDynamicRectBody, createEdge, createStaticRectBody } from './b2d-utils';
+import { getKeyboardInput } from './input/keyboard-input';
+import { defaultGameLogic } from './logic';
 
 interface ILoopDef {
     draw: DebugDraw;
@@ -15,7 +17,9 @@ interface ILoopDef {
 const defaultZoom = 3;
 
 const createLoop = ({ draw, world, paused, gameDef }: ILoopDef) => {
+    const onFrame$ = new Subject<void>();
     const l = () => {
+        onFrame$.next();
         // for each iteration
         // update simulation
         world.Step(1000 / 16, { positionIterations: 3, velocityIterations: 8 });
@@ -33,7 +37,7 @@ const createLoop = ({ draw, world, paused, gameDef }: ILoopDef) => {
             requestAnimationFrame(l);
         }
     };
-    return l;
+    return { loop: l, onFrame$ };
 }
 
 export const setupWorld = () => {
@@ -51,19 +55,18 @@ export const createGame: GameFactory = (def: IGameDef) => {
 
     const objectsSub$ = new Subject<Array<IObj>>();
     const { world, bodies } = setupWorld();
-
-    // TESTCODE,remove
-    window.addEventListener('keydown', ev => {
-        if (ev.key === 'ArrowUp') {
-            bodies[1].ApplyLinearImpulseToCenter({ x: 0, y: 120_0000 });
-        } else if (ev.key === 'ArrowDown') {
-            bodies[1].ApplyLinearImpulseToCenter({ x: 0, y: -120_0000 });
-        }
-    });
-
     const draw = new DebugDraw(def.canvas.getContext('2d')!);
     // create main loop
-    const loop = createLoop({ draw, gameDef: def, world, paused: false});
+    const { loop, onFrame$ } = createLoop({ draw, gameDef: def, world, paused: false});
+
+    // controls
+    const playerBodies = [bodies[1], bodies[2]] as [b2Body, b2Body]; // todo: 2nd is not correct!
+    const inputFactory = def.inputFactory ?? getKeyboardInput(Player.PLAYER1);
+    const gameLogic = def.gameLogic ?? defaultGameLogic;
+    const sub = inputFactory({ onFrame$ }).pipe(
+        map(intent => gameLogic.intentResponder(intent))
+    ).subscribe(effect => effect.apply({ playerBodies }))
+
     const aspectRatio = 1;
     const { detachResizer } = attachResizer(def.canvas, aspectRatio);
     // todo: wire loop execution to match control
@@ -72,6 +75,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
     return {
         objects$: objectsSub$,
         tearDown: () => {
+            sub.unsubscribe();
             bodies.forEach(b => {
                 world.DestroyBody(b);
             });

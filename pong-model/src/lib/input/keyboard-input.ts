@@ -9,7 +9,7 @@ const key2Dir: Record<string, Vc2> = {
     ArrowRight: { x: 1, y: 0 },
 };
 
-function getKeyboard(player: Player): InputFactory {
+export function getKeyboardInput(player: Player): InputFactory {
     return _ctx => new Observable<MovePlayerIntent>(subscriber => {
         const cb: Parameters<(typeof window.addEventListener<'keydown'>)>[1] = ev => {
             const k = ev.key;
