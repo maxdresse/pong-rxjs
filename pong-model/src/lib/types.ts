@@ -33,15 +33,6 @@ export interface IGame {
     tearDown: () => void;
 }
 
-export enum GameControlAction {
-    RUN,
-    PAUSE
-}
-
-export interface IGameControl {
-    actions$: Observable<GameControlAction>;
-}
-
 export interface GameIntent<T extends number, P> {
     type: T;
     payload: P;
@@ -52,14 +43,13 @@ export interface GameSituation {
     playerBodies: [b2Body, b2Body];
 }
 
-export interface GameEffect<P> {
-    apply(sn: GameSituation, payload: P): void;
+export interface GameEffect {
+    apply(sn: GameSituation): void;
 }
 
+
 export interface IGameDef {
-    control: IGameControl;
-    userInput1: IUserInput;
-    userInput2: IUserInput;
+    effects: Observable<GameEffect>;
     canvas: HTMLCanvasElement;
     zoomFactor?: number;
 }
