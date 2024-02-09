@@ -22,4 +22,4 @@ function getKeyboard(player: Player): InputFactory {
         window.addEventListener('keydown', cb);
         subscriber.add(() => window.removeEventListener('keydown', cb));
     });  
-} 
+}

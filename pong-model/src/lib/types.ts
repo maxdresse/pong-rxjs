@@ -40,21 +40,33 @@ export interface GameEffect {
 }
 
 export interface EffectContext {
-    /* onFrame: Observable<void>;
-    addTeardownLogic(logic: () => void): void; */
     gameSituation: GameSituation;
 }
 
 export type InputFactory = (ctx: { onFrame$: Observable<void> }) => Observable<SomeGameIntent>;
 
+export interface IntentResponder {
+    toEffect(intent: SomeGameIntent): GameEffect;
+}
+
+export interface GameEvent {
+
+}
+
+export interface EventResponder {
+    toIntent(event: GameEvent): SomeGameIntent;
+}
+
+export interface GameLogic {
+    intentResponder: IntentResponder;
+    eventResponder: EventResponder;
+}
+
 export interface IGameDef {
     canvas: HTMLCanvasElement;
     inputFactory?: InputFactory;
+    gameLogic?: GameLogic;
     zoomFactor?: number;
 }
-
-// observable of intents
-// for each intent, decide if a factory can handle it
-// if so, create and apply effect
 
 export type GameFactory = (def: IGameDef) => IGame; 
