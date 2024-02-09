@@ -29,6 +29,7 @@ export interface GameIntent<T extends number, P> {
     payload: P;
 };
 
+export type SomeGameIntent = GameIntent<number, unknown>;
 
 export interface GameSituation {
     playerBodies: [b2Body, b2Body];
@@ -44,13 +45,11 @@ export interface EffectContext {
     gameSituation: GameSituation;
 }
 
-export interface EffectFactory {
-    canHandle(intent: GameIntent<number, unknown>): boolean;
-    create: (intent: GameIntent<number, unknown>, ctx: EffectContext) => GameEffect;
-}
+export type InputFactory = (ctx: { onFrame$: Observable<void> }) => Observable<SomeGameIntent>;
 
 export interface IGameDef {
     canvas: HTMLCanvasElement;
+    inputFactory?: InputFactory;
     zoomFactor?: number;
 }
 
