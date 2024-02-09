@@ -1,7 +1,21 @@
-import { Observable } from 'rxjs';
+import { Observable, merge } from 'rxjs';
 import { InputFactory, Player, Vc2 } from '../types';
 import { MovePlayerIntent, createMovePlayerIntent } from '../intents/player-control-intents';
 import { UNIT_VECTOR_UP, UNIT_VECTOR_DOWN, UNIT_VECTOR_LEFT, UNIT_VECTOR_RIGHT } from './input-constants';
+
+function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent) => Vc2 | undefined): InputFactory {
+    return _ctx => new Observable<MovePlayerIntent>(subscriber => {
+        const cb: Parameters<(typeof window.addEventListener<'keydown'>)>[1] = ev => {
+            const d = ev2Dir(ev);
+            if (!d) {
+                return;
+            }
+            subscriber.next(createMovePlayerIntent({ player, direction: d}));
+        };
+        window.addEventListener('keydown', cb);
+        subscriber.add(() => window.removeEventListener('keydown', cb));
+    });  
+}
 
 const arrowKeys2Dir: Record<string, Vc2> = {
     ArrowUp: UNIT_VECTOR_UP,
@@ -10,17 +24,25 @@ const arrowKeys2Dir: Record<string, Vc2> = {
     ArrowRight: UNIT_VECTOR_RIGHT,
 };
 
+export function getArrowKeyboardInput(player: Player): InputFactory {
+    return getKeyboardInputFromMapping(player, ev => arrowKeys2Dir[ev.key]);
+}
+
+const wasdKeys2Dir: Record<string, Vc2> = {
+    KeyW: UNIT_VECTOR_UP,
+    KeyS: UNIT_VECTOR_DOWN,
+    KeyA: UNIT_VECTOR_LEFT,
+    KeyD: UNIT_VECTOR_RIGHT,
+};
+
+function getWASDKeyboardInput(player: Player): InputFactory {
+    return getKeyboardInputFromMapping(player, ev => wasdKeys2Dir[ev.code]);
+}
+
 export function getKeyboardInput(player: Player): InputFactory {
-    return _ctx => new Observable<MovePlayerIntent>(subscriber => {
-        const cb: Parameters<(typeof window.addEventListener<'keydown'>)>[1] = ev => {
-            const k = ev.key;
-            const d = arrowKeys2Dir[k];
-            if (!d) {
-                return;
-            }
-        subscriber.next(createMovePlayerIntent({ player, direction: d}));
-        };
-        window.addEventListener('keydown', cb);
-        subscriber.add(() => window.removeEventListener('keydown', cb));
-    });  
+    return ctx => {
+        const first = getArrowKeyboardInput(player)(ctx);
+        const second = getWASDKeyboardInput(player)(ctx);
+        return merge(first, second);
+    };  
 }
