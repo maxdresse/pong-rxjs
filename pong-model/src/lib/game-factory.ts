@@ -48,11 +48,12 @@ export const setupWorld = () => {
 };
 
 export const createGame: GameFactory = (def: IGameDef) => {
-    
-
 
     const objectsSub$ = new Subject<Array<IObj>>();
     const { world, bodies } = setupWorld();
+    intents$?: Observable<GameIntent<IntentUnion, unknown>>;
+    effectFactories?: Array<EffectFactory>; */
+
 
     // TESTCODE,remove
     window.addEventListener('keydown', ev => {

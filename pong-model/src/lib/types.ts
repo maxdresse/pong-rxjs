@@ -38,14 +38,24 @@ export interface GameEffect {
     apply(sn: GameSituation): void;
 }
 
-export interface EffectContext {}
+export interface EffectContext {
+    /* onFrame: Observable<void>;
+    addTeardownLogic(logic: () => void): void; */
+    gameSituation: GameSituation;
+}
 
-export type EffectFactory = (ctx: EffectContext) => GameEffect;
+export interface EffectFactory {
+    canHandle(intent: GameIntent<number, unknown>): boolean;
+    create: (intent: GameIntent<number, unknown>, ctx: EffectContext) => GameEffect;
+}
 
 export interface IGameDef {
-    effectFactories: Array<EffectFactory>;
     canvas: HTMLCanvasElement;
     zoomFactor?: number;
 }
+
+// observable of intents
+// for each intent, decide if a factory can handle it
+// if so, create and apply effect
 
 export type GameFactory = (def: IGameDef) => IGame; 

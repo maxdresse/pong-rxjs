@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
       }
       this.zone.runOutsideAngular(() => {
         const result = createGame({
-          effectFactories: undefined!,
           canvas
         });
       });
