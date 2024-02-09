@@ -1,0 +1,1 @@
+export const MOVE_IMPULSE_FACTOR = 100000;
