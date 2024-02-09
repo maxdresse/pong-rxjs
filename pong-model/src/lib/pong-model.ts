@@ -1,1 +1,1 @@
-export * from './match-factory';
+export * from './game-factory';

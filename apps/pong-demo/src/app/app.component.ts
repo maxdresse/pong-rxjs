@@ -1,6 +1,6 @@
 import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { createMatch } from '@pong/pong-model';
+import { createGame } from '@pong/pong-model';
 
 @Component({
   standalone: true,
@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
         throw Error('canvas element not defined');
       }
       this.zone.runOutsideAngular(() => {
-        const result = createMatch({
+        const result = createGame({
           control: undefined!,
           userInput1: undefined!,
           userInput2: undefined!,

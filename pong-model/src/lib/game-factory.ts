@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { IMatchDef, IObj, MatchFactory } from './types'
+import { IGameDef, IObj, GameFactory } from './types'
 import { b2Vec2, b2World, DrawShapes, DrawJoints, DrawAABBs, DrawCenterOfMasses, DrawPairs, b2Draw } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 import { attachResizer } from './canvas-resizer';
@@ -8,19 +8,19 @@ import { createDynamicRectBody, createEdge, createStaticRectBody } from './b2d-u
 interface ILoopDef {
     draw: DebugDraw;
     world: b2World;
-    matchDef: IMatchDef;
+    gameDef: IGameDef;
     paused: boolean;
 }
 
 const defaultZoom = 3;
 
-const createLoop = ({ draw, world, paused, matchDef }: ILoopDef) => {
+const createLoop = ({ draw, world, paused, gameDef }: ILoopDef) => {
     const l = () => {
         // for each iteration
         // update simulation
         world.Step(1000 / 16, { positionIterations: 3, velocityIterations: 8 });
         // call debug draw
-        draw.Prepare(0, 0, matchDef.zoomFactor ?? defaultZoom, true); // center, zoom, flipy
+        draw.Prepare(0, 0, gameDef.zoomFactor ?? defaultZoom, true); // center, zoom, flipy
         DrawShapes(draw, world);
         DrawJoints(draw, world);
         DrawAABBs(draw, world);
@@ -47,7 +47,7 @@ export const setupWorld = () => {
     return { world, bodies };
 };
 
-export const createMatch: MatchFactory = (def: IMatchDef) => {
+export const createGame: GameFactory = (def: IGameDef) => {
     
 
 
@@ -65,7 +65,7 @@ export const createMatch: MatchFactory = (def: IMatchDef) => {
 
     const draw = new DebugDraw(def.canvas.getContext('2d')!);
     // create main loop
-    const loop = createLoop({ draw, matchDef: def, world, paused: false});
+    const loop = createLoop({ draw, gameDef: def, world, paused: false});
     const aspectRatio = 1;
     const { detachResizer } = attachResizer(def.canvas, aspectRatio);
     // todo: wire loop execution to match control

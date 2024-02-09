@@ -23,18 +23,18 @@ export interface IScore {
     player2: number;
 }
 
-export interface IMatch {
+export interface IGame {
     objects$: Observable<Array<IObj>>;
     tearDown: () => void;
 }
 
-export enum MatchControlAction {
+export enum GameControlAction {
     RUN,
     PAUSE
 }
 
-export interface IMatchControl {
-    actions$: Observable<MatchControlAction>;
+export interface IGameControl {
+    actions$: Observable<GameControlAction>;
 }
 
 export interface GameIntent<T extends number, P> {
@@ -51,12 +51,12 @@ export interface GameEffect {
     apply(sn: GameSnapshot): void;
 }
 
-export interface IMatchDef {
-    control: IMatchControl;
+export interface IGameDef {
+    control: IGameControl;
     userInput1: IUserInput;
     userInput2: IUserInput;
     canvas: HTMLCanvasElement;
     zoomFactor?: number;
 }
 
-export type MatchFactory = (def: IMatchDef) => IMatch; 
+export type GameFactory = (def: IGameDef) => IGame; 
