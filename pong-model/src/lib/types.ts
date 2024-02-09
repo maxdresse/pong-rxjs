@@ -15,17 +15,8 @@ export interface IObj {
     pos: Vc2;
 }
 
-export interface IUserInputEvent {
-    // should support arrow keys
-}
-
-export interface IUserInput {
-    events$: Observable<IUserInputEvent>;
-}
-
 export interface IScore {
-    player1: number;
-    player2: number;
+    playerToScore: [number, number];
 }
 
 export interface IGame {
@@ -47,9 +38,12 @@ export interface GameEffect {
     apply(sn: GameSituation): void;
 }
 
+export interface EffectContext {}
+
+export type EffectFactory = (ctx: EffectContext) => GameEffect;
 
 export interface IGameDef {
-    effects: Observable<GameEffect>;
+    effectFactories: Array<EffectFactory>;
     canvas: HTMLCanvasElement;
     zoomFactor?: number;
 }
