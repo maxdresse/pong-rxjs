@@ -39,27 +39,23 @@ export interface GameEffect {
     apply(sn: GameSituation): void;
 }
 
-export interface EffectContext {
+export interface IntentContext {
     gameSituation: GameSituation;
 }
 
 export type InputFactory = (ctx: { onFrame$: Observable<void> }) => Observable<SomeGameIntent>;
 
-export interface IntentResponder {
-    toEffect(intent: SomeGameIntent): GameEffect;
-}
+export type IntentResponder = (intent: SomeGameIntent, ctx: IntentContext) => GameEffect;
 
 export interface GameEvent {
 
 }
 
-export interface EventResponder {
-    toIntent(event: GameEvent): SomeGameIntent;
-}
+export type EventResponder = (event: GameEvent) => SomeGameIntent;
 
 export interface GameLogic {
     intentResponder: IntentResponder;
-    eventResponder: EventResponder;
+    eventResponder?: EventResponder;
 }
 
 export interface IGameDef {

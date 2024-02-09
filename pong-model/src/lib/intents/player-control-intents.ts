@@ -1,4 +1,4 @@
-import { GameIntent, Player, Vc2 } from '../types';
+import { GameIntent, Player, SomeGameIntent, Vc2 } from '../types';
 
 export interface MovePlayerPayload {
     player: Player;
@@ -14,4 +14,8 @@ export function createMovePlayerIntent(payload: MovePlayerPayload): MovePlayerIn
         type: MOVE_PLAYER_INTENT,
         payload
     };
+}
+
+export function isMovePlayerIntent(intent: SomeGameIntent): intent is MovePlayerIntent {
+    return intent.type === MOVE_PLAYER_INTENT;
 }
