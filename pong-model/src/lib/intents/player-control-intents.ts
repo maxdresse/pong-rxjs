@@ -1,6 +1,7 @@
-import { GameIntent, Vc2 } from '../types';
+import { GameIntent, Player, Vc2 } from '../types';
 
 export interface MovePlayerPayload {
+    player: Player;
     direction: Vc2;
 };
 

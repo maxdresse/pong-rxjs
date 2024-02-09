@@ -1,6 +1,11 @@
 import { b2Body } from '@box2d/core';
 import { Observable } from 'rxjs';
 
+export const enum Player {
+    PLAYER1 = 0,
+    PLAYER2 = 1
+} ;
+
 export interface Vc2 {
     x: number;
     y: number;
@@ -43,12 +48,12 @@ export interface GameIntent<T extends number, P> {
 };
 
 
-export interface GameSnapshot {
-    player1Body: b2Body;
+export interface GameSituation {
+    playerBodies: [b2Body, b2Body];
 }
 
-export interface GameEffect {
-    apply(sn: GameSnapshot): void;
+export interface GameEffect<P> {
+    apply(sn: GameSituation, payload: P): void;
 }
 
 export interface IGameDef {
