@@ -58,11 +58,18 @@ export interface GameLogic {
     eventResponder?: EventResponder;
 }
 
+export interface GameParameters {
+    zoomFactor: number;
+    paused: boolean;
+    positionIterations: number;
+    velocityIterations: number;
+    timeStep: number;
+}
+
 export interface IGameDef {
     canvas: HTMLCanvasElement;
     inputFactory?: InputFactory;
     gameLogic?: GameLogic;
-    zoomFactor?: number;
 }
 
 export type GameFactory = (def: IGameDef) => IGame; 
