@@ -33,6 +33,7 @@ export type SomeGameIntent = GameIntent<number, unknown>;
 
 export interface GameSituation {
     playerBodies: [b2Body, b2Body];
+    params: GameParameters;
 }
 
 export interface GameEffect {
