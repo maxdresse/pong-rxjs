@@ -2,6 +2,7 @@ import { Observable, merge } from 'rxjs';
 import { InputFactory, Player, Vc2 } from '../types';
 import { MovePlayerIntent, createMovePlayerIntent } from '../intents/player-control-intents';
 import { UNIT_VECTOR_UP, UNIT_VECTOR_DOWN, UNIT_VECTOR_LEFT, UNIT_VECTOR_RIGHT } from './input-constants';
+import { combineInputs } from './input-utils';
 
 function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent) => Vc2 | undefined): InputFactory {
     return _ctx => new Observable<MovePlayerIntent>(subscriber => {
@@ -39,10 +40,9 @@ function getWASDKeyboardInput(player: Player): InputFactory {
     return getKeyboardInputFromMapping(player, ev => wasdKeys2Dir[ev.code]);
 }
 
-export function getKeyboardInput(player: Player): InputFactory {
-    return ctx => {
-        const first = getArrowKeyboardInput(player)(ctx);
-        const second = getWASDKeyboardInput(player)(ctx);
-        return merge(first, second);
-    };  
+export function getKeyboardInput(): InputFactory {
+    return combineInputs(
+        getWASDKeyboardInput(Player.PLAYER1),
+        getArrowKeyboardInput(Player.PLAYER2)
+    );
 }
