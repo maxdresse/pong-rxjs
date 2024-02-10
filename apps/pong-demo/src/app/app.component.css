@@ -4,10 +4,18 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    flex-flow: row nowrap;
+    flex-flow: column nowrap;
 }
-canvas {
+
+.canvas-wrapper {
     flex: 1 1 auto;
+    position: relative;
+}
+
+canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .debug-ui {
