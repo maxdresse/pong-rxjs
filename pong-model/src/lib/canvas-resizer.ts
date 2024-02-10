@@ -10,11 +10,11 @@ export const attachResizer = (canvas: HTMLCanvasElement, aspectRatio$: Observabl
         if (keepWidth) {
             // case html canvas is "too broad" for the desired aspect ratio
             newWidth = width * window.devicePixelRatio;
-            newHeight = newWidth / aspectRatio;
+            newHeight = newWidth / htmlAspectRatio;
         } else {
             // case html canvas is "too thin"
             newHeight = height * window.devicePixelRatio;
-            newWidth = newHeight * aspectRatio;
+            newWidth = newHeight * htmlAspectRatio;
         }
         canvas.width = newWidth;
         canvas.height = newHeight;
