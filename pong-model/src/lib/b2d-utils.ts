@@ -19,7 +19,7 @@ export function createBox(world: b2World, size: Vc2, bodyDef: b2BodyDef) {
 }
 
 export function createEdge(world: b2World, a: Vc2, b: Vc2) {
-    const body = world.CreateBody({ position: (new b2Vec2(a.x, a.y).Subtract(b)).Scale(0.5) });
+    const body = world.CreateBody({ position: (new b2Vec2(b.x, b.y).Subtract(a)).Scale(0.5) });
     const shape = new b2EdgeShape();
     shape.SetTwoSided(a, b);
     body.CreateFixture({ shape: shape });

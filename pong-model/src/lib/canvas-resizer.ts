@@ -6,7 +6,6 @@ export const attachResizer = (canvas: HTMLCanvasElement, aspectRatio$: Observabl
         // aspect ratio is currently unused but might be needed
         // for other future rendererers
         const { width, height } = canvas.getBoundingClientRect();
-        console.log(canvas.getBoundingClientRect())
         canvas.width = width * window.devicePixelRatio;
         canvas.height = height * window.devicePixelRatio;
 
