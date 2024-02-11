@@ -1,12 +1,20 @@
-import { b2World, b2PolygonShape, b2BodyDef, b2BodyType, b2EdgeShape, b2Vec2, b2CircleShape, b2FixtureDef } from '@box2d/core';
+import { b2World, b2PolygonShape, b2BodyDef, b2BodyType, b2EdgeShape, b2Vec2, b2CircleShape, b2FixtureDef, b2MassData } from '@box2d/core';
 import { Vc2 } from './types';
 import { defaultDamping } from './physical-constants';
 import { defaultDensity } from './physical-constants';
 import { defaultRestitutionThreshold, defaultRestitution } from './physical-constants';
+import { ballDensity } from './physical-constants';
 
-export function createDynamicRectBody(world: b2World, position: Vc2, size: Vc2) {
+export function createDynamicRectBody(world: b2World, position: Vc2, size: Vc2, mass?: number) {
     const bodyDef: b2BodyDef = { position, type: b2BodyType.b2_dynamicBody, enabled: true, linearDamping: defaultDamping };
-    return createBox(world, size, bodyDef);
+    const body = createBox(world, size, bodyDef);
+    if (mass) {
+        const m = new b2MassData();
+        body.GetMassData(m);
+        m.mass = mass;
+        body.SetMassData(m);
+    }
+    return body;
 }
 
 export function createStaticRectBody(world: b2World, position: Vc2, size: Vc2) {
@@ -34,7 +42,9 @@ export function createBall(world: b2World, position: Vc2, radius: number) {
     const body = world.CreateBody(bodyDef);
     body.SetBullet(true);
     const shape = new b2CircleShape(radius);
-    body.CreateFixture(applyDefaultRestitution({ shape }));
+    const fd = applyDefaultRestitution({ shape })
+    fd.density = ballDensity;
+    body.CreateFixture(fd);
     return body;
 }
 

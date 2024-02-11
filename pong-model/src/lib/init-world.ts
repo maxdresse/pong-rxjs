@@ -1,7 +1,8 @@
 import { b2Body, b2Vec2, b2World } from '@box2d/core';
 import { createBall, createDynamicRectBody, createEdge } from './b2d-utils';
-import { WORLD_BOUNDARY_LEFT, WORLD_BOUNDARY_BOTTOM, WORLD_BOUNDARY_TOP, WORLD_BOUNDARY_RIGHT, PLAYER_START_POS } from './physical-constants';
+import { WORLD_BOUNDARY_LEFT, WORLD_BOUNDARY_BOTTOM, WORLD_BOUNDARY_TOP, WORLD_BOUNDARY_RIGHT, PLAYER_START_POS, playerMass } from './physical-constants';
 import { PLAYER_SIZE } from './physical-constants';
+import { Vc2 } from './types';
 
 export const initWorld = () => {
     // create box 2d world
@@ -29,10 +30,14 @@ export const initWorld = () => {
 };
 
 function initPlayers(world: b2World) {
-    const player1Body = createDynamicRectBody(world, PLAYER_START_POS, PLAYER_SIZE);
+    const player1Body = createPlayer(world, PLAYER_START_POS);
     const reflectedStartPos = { x: -PLAYER_START_POS.x, y: PLAYER_START_POS.y};
-    const player2Body = createDynamicRectBody(world, reflectedStartPos , PLAYER_SIZE);
+    const player2Body = createPlayer(world, reflectedStartPos);
     return { player1Body, player2Body };
+}
+
+function createPlayer(world: b2World, pos: Vc2) {
+    return createDynamicRectBody(world, pos, PLAYER_SIZE, playerMass);
 }
 
 function initWorldBoundaries(world: b2World): void {
