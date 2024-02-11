@@ -7,8 +7,8 @@ export const initWorld = () => {
     // create box 2d world
     const gravity = new b2Vec2(0, 0);
     const world = b2World.Create(gravity);
-    const { player1Body, player2Body } = initPlayers(world);
     initWorldBoundaries(world);
+    const { player1Body, player2Body } = initPlayers(world);
     
     const tearDownWorld = () => {
         let b = world.GetBodyList();
