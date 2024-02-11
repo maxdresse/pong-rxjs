@@ -37,7 +37,7 @@ function initPlayers(world: b2World) {
 }
 
 function createPlayer(world: b2World, pos: Vc2) {
-    return createDynamicRectBody(world, pos, PLAYER_SIZE, playerMass);
+    return createDynamicRectBody(world, pos, PLAYER_SIZE, { mass: playerMass, fixedRotation: true });
 }
 
 function initWorldBoundaries(world: b2World): void {

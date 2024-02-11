@@ -1,4 +1,4 @@
-export const MOVE_IMPULSE_FACTOR = 10;
+export const MOVE_IMPULSE_FACTOR = 4;
 export const defaultDamping = 0.0001;
 export const defaultDensity = 10;
 
