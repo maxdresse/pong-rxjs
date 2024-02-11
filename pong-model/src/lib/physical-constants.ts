@@ -14,5 +14,7 @@ export const WORLD_BOUNDARY_BOTTOM = -WORLD_BOUNDARY_TOP;
 export const PLAYER_INITIAL_H_DISTANCE = 8
 export const PLAYER_SIZE = { x: 1, y: 5 };
 export const PLAYER_START_POS = { x: WORLD_BOUNDARY_LEFT + PLAYER_INITIAL_H_DISTANCE, y: 0 };
+export const defaultRestitutionThreshold = 0;
+export const defaultRestitution = 1;
 
 

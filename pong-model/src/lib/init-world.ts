@@ -1,5 +1,5 @@
 import { b2Body, b2Vec2, b2World } from '@box2d/core';
-import { createDynamicRectBody, createEdge } from './b2d-utils';
+import { createBall, createDynamicRectBody, createEdge } from './b2d-utils';
 import { WORLD_BOUNDARY_LEFT, WORLD_BOUNDARY_BOTTOM, WORLD_BOUNDARY_TOP, WORLD_BOUNDARY_RIGHT, PLAYER_START_POS } from './physical-constants';
 import { PLAYER_SIZE } from './physical-constants';
 
@@ -7,8 +7,12 @@ export const initWorld = () => {
     // create box 2d world
     const gravity = new b2Vec2(0, 0);
     const world = b2World.Create(gravity);
+    // boundaries
     initWorldBoundaries(world);
+    // players
     const { player1Body, player2Body } = initPlayers(world);
+    // ball
+    initBall(world);
     
     const tearDownWorld = () => {
         let b = world.GetBodyList();
@@ -42,3 +46,6 @@ function initWorldBoundaries(world: b2World): void {
     createEdge(world, { x: WORLD_BOUNDARY_LEFT, y: WORLD_BOUNDARY_TOP }, { x: WORLD_BOUNDARY_RIGHT, y: WORLD_BOUNDARY_TOP });
 }
 
+function initBall(world: b2World) {
+    return createBall(world, b2Vec2.ZERO, 2);
+}
