@@ -4,20 +4,27 @@ import { MovePlayerIntent, createMovePlayerIntent } from '../intents/player-cont
 import { UNIT_VECTOR_UP, UNIT_VECTOR_DOWN, UNIT_VECTOR_LEFT, UNIT_VECTOR_RIGHT } from './input-constants';
 import { combineInputs } from './input-utils';
 
-type SymbolicDir = 'u' | 'd' | 'l' | 'r';
-
-const smybolicDir2Dir: Record<SymbolicDir, Vc2> = {
-    u: UNIT_VECTOR_UP,
-    d: UNIT_VECTOR_DOWN,
-    l: UNIT_VECTOR_LEFT,
-    r: UNIT_VECTOR_RIGHT,
+const enum SymbolicDirection {
+    UP = 1, // need truthy values
+    DOWN,
+    LEFT,
+    RIGHT
 };
 
-function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent) => SymbolicDir | undefined): InputFactory {
+const smybolicDir2VectorDir: Record<SymbolicDirection, Vc2> = {
+    [SymbolicDirection.UP]: UNIT_VECTOR_UP,
+    [SymbolicDirection.DOWN]: UNIT_VECTOR_DOWN,
+    [SymbolicDirection.LEFT]: UNIT_VECTOR_LEFT,
+    [SymbolicDirection.RIGHT]: UNIT_VECTOR_RIGHT,
+};
+
+function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | undefined): InputFactory {
     return ({ onFrame$ }) => new Observable<MovePlayerIntent>(subscriber => {
-        const keyBuf: Array<SymbolicDir> = [];
+        // on every frame, check the current keybuffer and
+        // trigger a player move intent if a direction is presetn
+        const keyBuf: Array<SymbolicDirection> = [];
         const sub = onFrame$.subscribe(() => {
-            const dir = smybolicDir2Dir[keyBuf[0]];
+            const dir = smybolicDir2VectorDir[keyBuf[0]];
             if (!dir) {
                 return;
             }
@@ -53,22 +60,22 @@ function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent)
     });  
 }
 
-const arrowKeys2SymbolicDir: Record<string, SymbolicDir> = {
-    ArrowUp: 'u',
-    ArrowDown: 'd',
-    ArrowLeft: 'l',
-    ArrowRight: 'r',
+const arrowKeys2SymbolicDir: Record<string, SymbolicDirection> = {
+    ArrowUp: SymbolicDirection.UP,
+    ArrowDown: SymbolicDirection.DOWN,
+    ArrowLeft: SymbolicDirection.LEFT,
+    ArrowRight: SymbolicDirection.RIGHT,
 };
 
 export function getArrowKeyboardInput(player: Player): InputFactory {
     return getKeyboardInputFromMapping(player, ev => arrowKeys2SymbolicDir[ev.key]);
 }
 
-const wasdKeys2SymbolicDir: Record<string, SymbolicDir> = {
-    KeyW: 'u',
-    KeyS: 'd',
-    KeyA: 'l',
-    KeyD: 'r',
+const wasdKeys2SymbolicDir: Record<string, SymbolicDirection> = {
+    KeyW: SymbolicDirection.UP,
+    KeyS: SymbolicDirection.DOWN,
+    KeyA: SymbolicDirection.LEFT,
+    KeyD: SymbolicDirection.RIGHT,
 };
 
 function getWASDKeyboardInput(player: Player): InputFactory {
