@@ -18,6 +18,9 @@ function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent)
         const keyBuf: Array<SymbolicDir> = [];
         const sub = onFrame$.subscribe(() => {
             const dir = smybolicDir2Dir[keyBuf[0]];
+            if (!dir) {
+                return;
+            }
             subscriber.next(createMovePlayerIntent({ player, direction: dir}));
         });
         const cbDown: Parameters<(typeof window.addEventListener<'keydown'>)>[1] = ev => {
@@ -25,7 +28,10 @@ function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent)
             if (!sd) {
                 return;
             }
-            keyBuf.unshift(sd);
+            const idx = keyBuf.indexOf(sd);
+            if (idx < 0) {
+                keyBuf.unshift(sd);
+            }
         };
         const cbUp: Parameters<(typeof window.addEventListener<'keyup'>)>[1] = ev => {
             const sd = ev2Dir(ev);
