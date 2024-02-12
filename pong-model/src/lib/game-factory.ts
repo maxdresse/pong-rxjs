@@ -1,5 +1,5 @@
-import { BehaviorSubject, Subject, map } from 'rxjs';
-import { IGameDef, IObj, GameFactory, GameParameters } from './types'
+import { BehaviorSubject, Subject, map, merge } from 'rxjs';
+import { IGameDef, IObj, GameFactory, GameParameters, GameEffect, SomeGameEvent } from './types'
 import { b2World } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 import { attachResizer } from './canvas-resizer';
@@ -35,9 +35,15 @@ const createLoop = ({ draw, world, params }: ILoopDef) => {
 export const createGame: GameFactory = (def: IGameDef) => {
 
     const objectsSub$ = new Subject<Array<IObj>>();
-    // create world
+    // events
     const gameLogic = getGameLogic(def);
-    const { world, playerBodies, tearDownWorld } = initWorld(gameLogic);
+    const eventSubj$ = new Subject<SomeGameEvent>();
+    const events$ = eventSubj$.pipe(
+        map(gameLogic.eventResponder)
+    );
+    const onEvent = (ev: SomeGameEvent) => eventSubj$.next(ev);
+    // create world
+    const { world, playerBodies, tearDownWorld } = initWorld({ onEvent });
     
     // create main loop
     const draw = new DebugDraw(def.canvas.getContext('2d')!);
@@ -47,9 +53,13 @@ export const createGame: GameFactory = (def: IGameDef) => {
     // controls
     const gameSituation = { playerBodies, params };
     const inputFactory = getAllInputs(def);
-    const sub = inputFactory({ onFrame$ }).pipe(
-        map(intent => gameLogic.intentResponder(intent))
-    ).subscribe(effect => effect.apply(gameSituation))
+    const inputs$ = inputFactory({ onFrame$ }).pipe(
+        map(gameLogic.intentResponder)
+    );
+
+    // wire events and controls to effects
+    const sub = merge(inputs$, events$)
+        .subscribe(effect => effect.apply(gameSituation))
 
     // canvas size management
     const aspectRatio$ = new BehaviorSubject<number>(defaultAspectRatio);

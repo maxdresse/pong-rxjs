@@ -1,4 +1,4 @@
-import { b2Vec2 } from '@box2d/core';
+import { PLAYER_WALL_SLOWDOWN_FACTOR } from '../physical-constants';
 import { GameEffect, GameSituation, Player } from '../types';
 
 export function createBigPlayerSlowdownEffect({ player }: {player: Player;} ):  GameEffect {
@@ -9,7 +9,7 @@ export function createBigPlayerSlowdownEffect({ player }: {player: Player;} ):  
                 return;
             }
             setTimeout(() => {
-                body.SetLinearVelocity(body.GetLinearVelocity().Clone().Scale(0.35));
+                body.SetLinearVelocity(body.GetLinearVelocity().Clone().Scale(PLAYER_WALL_SLOWDOWN_FACTOR));
             }, 0);
         }
     }

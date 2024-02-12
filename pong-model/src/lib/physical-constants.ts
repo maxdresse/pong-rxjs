@@ -23,6 +23,7 @@ export const defaultRestitutionThreshold = 0;
 export const defaultRestitution = 1;
 export const ballDensity = 0.5;
 export const playerMass = undefined;
+export const PLAYER_WALL_SLOWDOWN_FACTOR = 0.35;
 
 
 

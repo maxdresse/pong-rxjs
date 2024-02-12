@@ -4,8 +4,8 @@ import { getPlayer, isPlayer, isWall } from './body-user-data';
 import { createPlayerHitsWallEvent } from './events/player-hits-wall-event';
 
 export function contactToEvent(contact: b2Contact): SomeGameEvent | null {
-    const a = contact.GetFixtureA().GetBody().GetUserData();
-    const b = contact.GetFixtureB().GetBody().GetUserData();
+    const a = contact.GetFixtureA().GetBody();
+    const b = contact.GetFixtureB().GetBody();
     const bodies = [a, b];
     const playerBodies: Array<b2Body> = [];
     const wallBodies: Array<b2Body> = [];

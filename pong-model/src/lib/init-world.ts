@@ -2,12 +2,16 @@ import { b2Body, b2ContactListener, b2Vec2, b2World } from '@box2d/core';
 import { createBall, createDynamicRectBody, createEdge } from './b2d-utils';
 import { PLAYER_START_POS, playerMass } from './physical-constants';
 import { PLAYER_SIZE } from './physical-constants';
-import { EventResponder, Player, Vc2 } from './types';
+import { EventResponder, Player, SomeGameEvent, Vc2 } from './types';
 import { W_LOWER_LEFT, W_UPPER_LEFT, W_LOWER_RIGHT, W_UPPER_RIGHT } from './physical-constants';
 import { getPlayerUserData, getWallUserData } from './body-user-data';
 import { contactToEvent } from './contact-to-event';
 
-export const initWorld = ({ eventResponder }: { eventResponder: EventResponder }) => {
+export interface InitWorlProps {
+    onEvent: (ev: SomeGameEvent) => void;
+}
+
+export const initWorld = ({ onEvent }: InitWorlProps) => {
     // create box 2d world
     const gravity = new b2Vec2(0, 0);
     const world = b2World.Create(gravity);
@@ -21,7 +25,7 @@ export const initWorld = ({ eventResponder }: { eventResponder: EventResponder }
         BeginContact: (contact) => {
             const ev = contactToEvent(contact);
             if (ev) {
-                eventResponder(ev);
+                onEvent(ev);
             }
         },
         EndContact: () => {},
