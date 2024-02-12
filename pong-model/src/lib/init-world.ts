@@ -2,10 +2,10 @@ import { b2Body, b2ContactListener, b2Vec2, b2World } from '@box2d/core';
 import { createBall, createDynamicRectBody, createEdge } from './b2d-utils';
 import { PLAYER_START_POS, playerMass } from './physical-constants';
 import { PLAYER_SIZE } from './physical-constants';
-import { EventResponder, Player, SomeGameEvent, Vc2 } from './types';
+import { Player, SomeGameEvent, Vc2 } from './types';
 import { W_LOWER_LEFT, W_UPPER_LEFT, W_LOWER_RIGHT, W_UPPER_RIGHT } from './physical-constants';
 import { getPlayerUserData, getWallUserData } from './body-user-data';
-import { contactToEvent } from './contact-to-event';
+import { createContactListener } from './contact-listener';
 
 export interface InitWorlProps {
     onEvent: (ev: SomeGameEvent) => void;
@@ -21,20 +21,10 @@ export const initWorld = ({ onEvent }: InitWorlProps) => {
     const { player1Body, player2Body } = initPlayers(world);
     // ball
     initBall(world);
-    const constactListener: b2ContactListener = {
-        BeginContact: (contact) => {
-            const ev = contactToEvent(contact);
-            if (ev) {
-                onEvent(ev);
-            }
-        },
-        EndContact: () => {},
-        PreSolve: () => {},
-        PostSolve: () => {}
-
-    };
+    // wire contact listener to event callback
+    const constactListener: b2ContactListener = createContactListener(onEvent);
     world.SetContactListener(constactListener);
-
+    // setup teardown handle for our caller
     const tearDownWorld = () => {
         let b = world.GetBodyList();
         while (!!b) {

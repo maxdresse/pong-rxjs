@@ -8,9 +8,7 @@ export function createBigPlayerSlowdownEffect({ player }: {player: Player;} ):  
             if (!body) {
                 return;
             }
-            setTimeout(() => {
-                body.SetLinearVelocity(body.GetLinearVelocity().Clone().Scale(PLAYER_WALL_SLOWDOWN_FACTOR));
-            }, 0);
+            body.SetLinearVelocity(body.GetLinearVelocity().Clone().Scale(PLAYER_WALL_SLOWDOWN_FACTOR));
         }
     }
 };
