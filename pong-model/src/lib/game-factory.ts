@@ -36,7 +36,8 @@ export const createGame: GameFactory = (def: IGameDef) => {
 
     const objectsSub$ = new Subject<Array<IObj>>();
     // create world
-    const { world, playerBodies, tearDownWorld } = initWorld();
+    const gameLogic = getGameLogic(def);
+    const { world, playerBodies, tearDownWorld } = initWorld(gameLogic);
     
     // create main loop
     const draw = new DebugDraw(def.canvas.getContext('2d')!);
@@ -46,7 +47,6 @@ export const createGame: GameFactory = (def: IGameDef) => {
     // controls
     const gameSituation = { playerBodies, params };
     const inputFactory = getAllInputs(def);
-    const gameLogic = getGameLogic(def);
     const sub = inputFactory({ onFrame$ }).pipe(
         map(intent => gameLogic.intentResponder(intent))
     ).subscribe(effect => effect.apply(gameSituation))

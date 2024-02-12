@@ -2,10 +2,12 @@ import { b2Body, b2ContactListener, b2Vec2, b2World } from '@box2d/core';
 import { createBall, createDynamicRectBody, createEdge } from './b2d-utils';
 import { PLAYER_START_POS, playerMass } from './physical-constants';
 import { PLAYER_SIZE } from './physical-constants';
-import { Vc2 } from './types';
+import { EventResponder, Player, Vc2 } from './types';
 import { W_LOWER_LEFT, W_UPPER_LEFT, W_LOWER_RIGHT, W_UPPER_RIGHT } from './physical-constants';
+import { getPlayerUserData, getWallUserData } from './body-user-data';
+import { contactToEvent } from './contact-to-event';
 
-export const initWorld = () => {
+export const initWorld = ({ eventResponder }: { eventResponder: EventResponder }) => {
     // create box 2d world
     const gravity = new b2Vec2(0, 0);
     const world = b2World.Create(gravity);
@@ -17,15 +19,9 @@ export const initWorld = () => {
     initBall(world);
     const constactListener: b2ContactListener = {
         BeginContact: (contact) => {
-            // todo: refactor to be non-hacky
-            const a = contact.GetFixtureA().GetBody().GetUserData();
-            const b = contact.GetFixtureB().GetBody().GetUserData();
-            const set = ["edge", "player"];
-            if (set.includes(a) && set.includes(b)) {
-                const playerBody = a === "edge" ? contact.GetFixtureB().GetBody() : contact.GetFixtureA().GetBody();
-                setTimeout(() => {
-                    playerBody.SetLinearVelocity(playerBody.GetLinearVelocity().Clone().Scale(0.35));
-                }, 0);
+            const ev = contactToEvent(contact);
+            if (ev) {
+                eventResponder(ev);
             }
         },
         EndContact: () => {},
@@ -50,19 +46,19 @@ export const initWorld = () => {
 };
 
 function initPlayers(world: b2World) {
-    const player1Body = createPlayer(world, PLAYER_START_POS);
+    const player1Body = createPlayer(world, PLAYER_START_POS, Player.PLAYER1);
     const reflectedStartPos = { x: -PLAYER_START_POS.x, y: PLAYER_START_POS.y};
-    const player2Body = createPlayer(world, reflectedStartPos);
+    const player2Body = createPlayer(world, reflectedStartPos, Player.PLAYER2);
     return { player1Body, player2Body };
 }
 
-function createPlayer(world: b2World, pos: Vc2) {
+function createPlayer(world: b2World, pos: Vc2, player: Player) {
     return createDynamicRectBody(world, pos, PLAYER_SIZE,
-         { mass: playerMass, fixedRotation: true, userData: 'player' });
+         { mass: playerMass, fixedRotation: true, userData: getPlayerUserData(player) });
 }
 
 function initWorldBoundaries(world: b2World): void {
-    const opts =  { userData: 'edge' };
+    const opts =  { userData: getWallUserData() };
     // LEFT
     createEdge(world, W_LOWER_LEFT, W_UPPER_LEFT, opts);
     // RIGHT

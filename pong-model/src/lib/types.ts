@@ -52,11 +52,11 @@ export interface GameEvent<T extends number, P> {
 export type SomeGameEvent = GameEvent<number, unknown>;
 
 
-export type EventResponder = (event: SomeGameEvent) => SomeGameIntent;
+export type EventResponder = (event: SomeGameEvent) => GameEffect;
 
 export interface GameLogic {
     intentResponder: IntentResponder;
-    eventResponder?: EventResponder;
+    eventResponder: EventResponder;
 }
 
 export interface GameParameters {
