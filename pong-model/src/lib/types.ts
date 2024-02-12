@@ -31,9 +31,15 @@ export interface GameIntent<T extends number, P> {
 
 export type SomeGameIntent = GameIntent<number, unknown>;
 
+export interface Score {
+    goalsToWin: number;
+    playerToScore: [number, number];
+}
+
 export interface GameSituation {
     playerBodies: [b2Body, b2Body];
     params: GameParameters;
+    score: Score
 }
 
 export interface GameEffect {

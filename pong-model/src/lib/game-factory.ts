@@ -9,6 +9,7 @@ import { getDefaultParameters } from './default-parameters';
 import { getAllInputs } from './input/get-all-inputs';
 import { getGameLogic } from './logic';
 import { defaultAspectRatio } from './render-constants';
+import { createInitialScore } from './score';
 
 interface ILoopDef {
     draw: DebugDraw;
@@ -50,8 +51,9 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const params: GameParameters = getDefaultParameters();
     const { loop, onFrame$ } = createLoop({ draw, params, world });
 
+    const score = createInitialScore();
     // controls
-    const gameSituation = { playerBodies, params };
+    const gameSituation = { playerBodies, params, score };
     const inputFactory = getAllInputs(def);
     const inputs$ = inputFactory({ onFrame$ }).pipe(
         map(gameLogic.intentResponder)
