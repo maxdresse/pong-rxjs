@@ -17,6 +17,7 @@ export const initWorld = () => {
     initBall(world);
     const constactListener: b2ContactListener = {
         BeginContact: (contact) => {
+            // todo: refactor to be non-hacky
             const a = contact.GetFixtureA().GetBody().GetUserData();
             const b = contact.GetFixtureB().GetBody().GetUserData();
             const set = ["edge", "player"];
