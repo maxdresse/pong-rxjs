@@ -18,7 +18,7 @@ export const PLAYER_DENSITY = 100;
 export const defaultRestitutionThreshold = 0;
 export const defaultRestitution = 1;
 export const ballDensity = 0.5;
-export const playerMass = 200;
+export const playerMass = undefined;
 
 
 
