@@ -1,8 +1,9 @@
-import { b2Body, b2Vec2, b2World } from '@box2d/core';
+import { b2Body, b2ContactListener, b2Vec2, b2World } from '@box2d/core';
 import { createBall, createDynamicRectBody, createEdge } from './b2d-utils';
-import { WORLD_BOUNDARY_LEFT, WORLD_BOUNDARY_BOTTOM, WORLD_BOUNDARY_TOP, WORLD_BOUNDARY_RIGHT, PLAYER_START_POS, playerMass } from './physical-constants';
+import { PLAYER_START_POS, playerMass } from './physical-constants';
 import { PLAYER_SIZE } from './physical-constants';
 import { Vc2 } from './types';
+import { W_LOWER_LEFT, W_UPPER_LEFT, W_LOWER_RIGHT, W_UPPER_RIGHT } from './physical-constants';
 
 export const initWorld = () => {
     // create box 2d world
@@ -14,7 +15,25 @@ export const initWorld = () => {
     const { player1Body, player2Body } = initPlayers(world);
     // ball
     initBall(world);
-    
+    const constactListener: b2ContactListener = {
+        BeginContact: (contact) => {
+            const a = contact.GetFixtureA().GetBody().GetUserData();
+            const b = contact.GetFixtureB().GetBody().GetUserData();
+            const set = ["edge", "player"];
+            if (set.includes(a) && set.includes(b)) {
+                const playerBody = a === "edge" ? contact.GetFixtureB().GetBody() : contact.GetFixtureA().GetBody();
+                setTimeout(() => {
+                    playerBody.SetLinearVelocity(playerBody.GetLinearVelocity().Clone().Scale(0.35));
+                }, 0);
+            }
+        },
+        EndContact: () => {},
+        PreSolve: () => {},
+        PostSolve: () => {}
+
+    };
+    world.SetContactListener(constactListener);
+
     const tearDownWorld = () => {
         let b = world.GetBodyList();
         while (!!b) {
@@ -37,18 +56,20 @@ function initPlayers(world: b2World) {
 }
 
 function createPlayer(world: b2World, pos: Vc2) {
-    return createDynamicRectBody(world, pos, PLAYER_SIZE, { mass: playerMass, fixedRotation: true });
+    return createDynamicRectBody(world, pos, PLAYER_SIZE,
+         { mass: playerMass, fixedRotation: true, userData: 'player' });
 }
 
 function initWorldBoundaries(world: b2World): void {
+    const opts =  { userData: 'edge' };
     // LEFT
-    createEdge(world, { x: WORLD_BOUNDARY_LEFT, y: WORLD_BOUNDARY_BOTTOM }, { x: WORLD_BOUNDARY_LEFT, y: WORLD_BOUNDARY_TOP });
+    createEdge(world, W_LOWER_LEFT, W_UPPER_LEFT, opts);
     // RIGHT
-    createEdge(world, { x: WORLD_BOUNDARY_RIGHT, y: WORLD_BOUNDARY_BOTTOM }, { x: WORLD_BOUNDARY_RIGHT, y: WORLD_BOUNDARY_TOP });
+    createEdge(world, W_LOWER_RIGHT, W_UPPER_RIGHT, opts);
     // BOTTOM
-    createEdge(world, { x: WORLD_BOUNDARY_LEFT, y: WORLD_BOUNDARY_BOTTOM }, { x: WORLD_BOUNDARY_RIGHT, y: WORLD_BOUNDARY_BOTTOM });
+    createEdge(world, W_LOWER_LEFT, W_LOWER_RIGHT, opts);
     // TOP
-    createEdge(world, { x: WORLD_BOUNDARY_LEFT, y: WORLD_BOUNDARY_TOP }, { x: WORLD_BOUNDARY_RIGHT, y: WORLD_BOUNDARY_TOP });
+    createEdge(world, W_UPPER_LEFT, W_UPPER_RIGHT, opts);
 }
 
 function initBall(world: b2World) {

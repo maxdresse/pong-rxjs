@@ -9,14 +9,15 @@ export function createDynamicRectBody(
     world: b2World,
     position: Vc2,
     size: Vc2,
-    opts: {mass?: number, fixedRotation?: boolean }) {
-    const { mass, fixedRotation } = opts ?? {};
+    opts: {mass?: number, fixedRotation?: boolean, userData?: any }) {
+    const { mass, fixedRotation, userData } = opts ?? {};
     const bodyDef: b2BodyDef = { 
         position, 
         type: b2BodyType.b2_dynamicBody,
         enabled: true,
         linearDamping: defaultDamping,
-        fixedRotation: fixedRotation
+        fixedRotation,
+        userData
     };
     const body = createBox(world, size, bodyDef);
     if (mass) {
@@ -40,8 +41,9 @@ export function createBox(world: b2World, size: Vc2, bodyDef: b2BodyDef) {
     return body;
 }
 
-export function createEdge(world: b2World, a: Vc2, b: Vc2) {
-    const body = world.CreateBody();
+export function createEdge(world: b2World, a: Vc2, b: Vc2, opts?: { userData?: any}) {
+    const { userData } = opts ?? {};
+    const body = world.CreateBody({ userData });
     const shape = new b2EdgeShape();
     shape.SetTwoSided(a, b);
     body.CreateFixture(applyDefaultRestitutionAndDensity({ shape: shape }));
