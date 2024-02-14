@@ -31,7 +31,7 @@ export interface GameIntent<T extends number, P> {
 
 export type SomeGameIntent = GameIntent<number, unknown>;
 
-export type ObjectType = 'goal' | 'wall' | 'player' | 'ball';
+export type GameObjectType = 'goal' | 'wall' | 'player' | 'ball';
 
 export interface Score {
     goalsToWin: number;

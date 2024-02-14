@@ -1,37 +1,40 @@
-import { b2Body, b2Contact, b2ContactListener } from '@box2d/core';
+import { b2Contact, b2ContactListener } from '@box2d/core';
 import { SomeGameEvent } from './types';
-import { getOwningPlayer, getPlayer, isBall, isGoal, isPlayer, isWall } from './body-user-data';
+import { getBallUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createPlayerHitsWallEvent } from './events/player-hits-wall-event';
 import { createGoalScoredEvent } from './events/goal-scored-event';
+
+type ContactData  = {
+    ball?:  Array<ReturnType<typeof getBallUserData>>;
+    player?:  Array<ReturnType<typeof getPlayerUserData>>;
+    goal?:  Array<ReturnType<typeof getGoalUserData>>;
+    wall?:  Array<ReturnType<typeof getWallUserData>>;
+  };
+
 
 function contactToEvent(contact: b2Contact): SomeGameEvent | null {
     const a = contact.GetFixtureA().GetBody();
     const b = contact.GetFixtureB().GetBody();
     const bodies = [a, b];
-    const playerBodies: Array<b2Body> = [];
-    const wallBodies: Array<b2Body> = [];
-    const goalBodies: Array<b2Body> = [];
-    const ballBodies: Array<b2Body> = [];
+    const cd: ContactData = {};
     bodies.forEach(b => {
-        if (isPlayer(b)) {
-            playerBodies.push(b);
-        } else if (isWall(b)) {
-            wallBodies.push(b);
-        } else if (isGoal(b)) {
-            goalBodies.push(b);
-        } else if (isBall(b)) {
-            ballBodies.push(b);
+        const userData = b.GetUserData();
+        const type = userData?.type as keyof ContactData;
+        if (type !== undefined) {
+            if (!cd[type]) {
+                cd[type] = [];
+            }
+            cd[type]!.push(userData);
         }
     });
-    if (playerBodies.length && wallBodies.length) {
-        const playerBody = playerBodies[0];
-        const player = getPlayer(playerBody);
+    if (cd.player?.length && cd.wall?.length) {
+        const player = cd.player?.[0].player;
         if (player !== undefined) {
-            return createPlayerHitsWallEvent(player)
+            return createPlayerHitsWallEvent(player);
         }
     }
-    if (ballBodies.length && goalBodies.length) {
-        const player = getOwningPlayer(goalBodies[0]);
+    if (cd.ball?.length && cd.goal?.length) {
+        const player = cd.goal?.[0]?.owningPlayer;
         if (player !== undefined) {
             return createGoalScoredEvent(player)
         }
