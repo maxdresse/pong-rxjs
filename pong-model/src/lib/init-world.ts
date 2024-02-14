@@ -4,7 +4,7 @@ import { PLAYER_START_POS, playerMass } from './physical-constants';
 import { PLAYER_SIZE } from './physical-constants';
 import { Player, SomeGameEvent, Vc2 } from './types';
 import { W_LOWER_LEFT, W_UPPER_LEFT, W_LOWER_RIGHT, W_UPPER_RIGHT } from './physical-constants';
-import { getPlayerUserData, getWallUserData } from './body-user-data';
+import { getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createContactListener } from './contact-listener';
 import { playerRestitution } from './physical-constants';
 
@@ -57,15 +57,17 @@ function createPlayer(world: b2World, pos: Vc2, player: Player) {
 }
 
 function initWorldBoundaries(world: b2World): void {
-    const opts =  { userData: getWallUserData() };
+    const optsWall =  { userData: getWallUserData() };
+    const optsGoal =  { userData: getGoalUserData() };
+    
     // LEFT
-    createEdge(world, W_LOWER_LEFT, W_UPPER_LEFT, opts);
+    createEdge(world, W_LOWER_LEFT, W_UPPER_LEFT, optsGoal);
     // RIGHT
-    createEdge(world, W_LOWER_RIGHT, W_UPPER_RIGHT, opts);
+    createEdge(world, W_LOWER_RIGHT, W_UPPER_RIGHT, optsGoal);
     // BOTTOM
-    createEdge(world, W_LOWER_LEFT, W_LOWER_RIGHT, opts);
+    createEdge(world, W_LOWER_LEFT, W_LOWER_RIGHT, optsWall);
     // TOP
-    createEdge(world, W_UPPER_LEFT, W_UPPER_RIGHT, opts);
+    createEdge(world, W_UPPER_LEFT, W_UPPER_RIGHT, optsWall);
 }
 
 function initBall(world: b2World) {
