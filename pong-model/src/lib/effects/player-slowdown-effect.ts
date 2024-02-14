@@ -1,14 +1,15 @@
 import { PLAYER_WALL_SLOWDOWN_FACTOR } from '../physical-constants';
 import { GameEffect, GameSituation, Player } from '../types';
 
-export function createBigPlayerSlowdownEffect({ player }: {player: Player;} ):  GameEffect {
+export function createPlayerSlowdownEffect({ player, slowDownFactor }: {player: Player; slowDownFactor?: number} ):  GameEffect {
     return {
         apply: ({ playerBodies }: GameSituation) => {
             const body = playerBodies[player];
             if (!body) {
                 return;
             }
-            body.SetLinearVelocity(body.GetLinearVelocity().Clone().Scale(PLAYER_WALL_SLOWDOWN_FACTOR));
+            const factor = slowDownFactor ?? PLAYER_WALL_SLOWDOWN_FACTOR;
+            body.SetLinearVelocity(body.GetLinearVelocity().Clone().Scale(factor));
         }
     }
 };

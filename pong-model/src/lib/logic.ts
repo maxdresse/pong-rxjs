@@ -1,4 +1,4 @@
-import { createBigPlayerSlowdownEffect } from './effects/big-player-slowdown-effect';
+import { createPlayerSlowdownEffect } from './effects/player-slowdown-effect';
 import { createMovePlayerEffect } from './effects/move-player-effect';
 import { isPlayerHitsWallEvent } from './events/player-hits-wall-event';
 import { isMovePlayerIntent } from './intents/player-control-intents';
@@ -13,7 +13,7 @@ const defaultGameLogic: GameLogic = {
     },
     eventResponder: (event) => {
         if (isPlayerHitsWallEvent(event)) {
-            return createBigPlayerSlowdownEffect({ player: event.payload.player });
+            return createPlayerSlowdownEffect({ player: event.payload.player });
         }
         throw Error('unknown event');
     }

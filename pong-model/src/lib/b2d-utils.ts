@@ -1,31 +1,32 @@
-import { b2World, b2PolygonShape, b2BodyDef, b2BodyType, b2EdgeShape, b2CircleShape, b2FixtureDef, b2MassData } from '@box2d/core';
+import { b2World, b2PolygonShape, b2BodyDef, b2BodyType, b2EdgeShape, b2CircleShape, b2FixtureDef, b2MassData, b2Fixture } from '@box2d/core';
 import { Vc2 } from './types';
 import { defaultDamping } from './physical-constants';
 import { defaultDensity } from './physical-constants';
 import { defaultRestitutionThreshold, defaultRestitution } from './physical-constants';
 import { ballDensity } from './physical-constants';
 
+export type FixtureDefChanger = (fd: b2FixtureDef) => b2FixtureDef;
+
 export function createDynamicRectBody(
     world: b2World,
     position: Vc2,
     size: Vc2,
-    opts: {mass?: number, fixedRotation?: boolean, userData?: any }) {
-    const { mass, fixedRotation, userData } = opts ?? {};
+    opts: { fixedRotation?: boolean, userData?: any, restitution?: number }) {
+    const { fixedRotation, userData, restitution } = opts ?? {};
     const bodyDef: b2BodyDef = { 
         position, 
         type: b2BodyType.b2_dynamicBody,
         enabled: true,
         linearDamping: defaultDamping,
         fixedRotation,
-        userData
+        userData,
     };
-    const body = createBox(world, size, bodyDef);
-    if (mass) {
-        const m = new b2MassData();
-        body.GetMassData(m);
-        m.mass = mass;
-        body.SetMassData(m);
-    }
+    const body = createBox(world, size, bodyDef, fd => {
+        if (typeof restitution === 'number') {
+            fd.restitution = restitution;
+        }
+        return fd;
+    });
     return body;
 }
 
@@ -33,11 +34,15 @@ export function createStaticRectBody(world: b2World, position: Vc2, size: Vc2) {
     return createBox(world, size, { position });
 }
 
-export function createBox(world: b2World, size: Vc2, bodyDef: b2BodyDef) {
+export function createBox(world: b2World, size: Vc2, bodyDef: b2BodyDef, fdc?: FixtureDefChanger) {
     const body = world.CreateBody(bodyDef);
     const shape = new b2PolygonShape();
     shape.SetAsBox(size.x, size.y, { x: 0, y: 0});
-    body.CreateFixture(applyDefaultRestitutionAndDensity({ shape: shape }));
+    let fd = applyDefaultRestitutionAndDensity({ shape: shape });
+    if (fdc) {
+        fd = fdc(fd);
+    }
+    body.CreateFixture(fd);
     return body;
 }
 

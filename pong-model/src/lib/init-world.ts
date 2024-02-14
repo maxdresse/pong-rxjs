@@ -6,6 +6,7 @@ import { Player, SomeGameEvent, Vc2 } from './types';
 import { W_LOWER_LEFT, W_UPPER_LEFT, W_LOWER_RIGHT, W_UPPER_RIGHT } from './physical-constants';
 import { getPlayerUserData, getWallUserData } from './body-user-data';
 import { createContactListener } from './contact-listener';
+import { playerRestitution } from './physical-constants';
 
 export interface InitWorlProps {
     onEvent: (ev: SomeGameEvent) => void;
@@ -48,7 +49,11 @@ function initPlayers(world: b2World) {
 
 function createPlayer(world: b2World, pos: Vc2, player: Player) {
     return createDynamicRectBody(world, pos, PLAYER_SIZE,
-         { mass: playerMass, fixedRotation: true, userData: getPlayerUserData(player) });
+         { 
+            fixedRotation: true,
+            restitution: playerRestitution,
+            userData: getPlayerUserData(player)
+         });
 }
 
 function initWorldBoundaries(world: b2World): void {
