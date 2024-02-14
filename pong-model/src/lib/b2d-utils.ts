@@ -55,8 +55,8 @@ export function createEdge(world: b2World, a: Vc2, b: Vc2, opts?: { userData?: a
     return body;
 }
 
-export function createBall(world: b2World, position: Vc2, radius: number) {
-    const bodyDef = { position, type: b2BodyType.b2_dynamicBody, enabled: true };
+export function createBall(world: b2World, position: Vc2, radius: number, userData: any) {
+    const bodyDef = { position, type: b2BodyType.b2_dynamicBody, enabled: true, userData };
     const body = world.CreateBody(bodyDef);
     body.SetBullet(true);
     const shape = new b2CircleShape(radius);

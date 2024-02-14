@@ -6,7 +6,7 @@ export function createKickoffEffect(playerToReceiveBall: Player): GameEffect {
             ballBody.SetTransformXY(0, 0, 0);
             ballBody.SetAngularVelocity(0);
             const dir = { x: 0, y: 0 };
-            dir.x = playerToReceiveBall === Player.PLAYER1 ? -10 : 10;
+            dir.x = playerToReceiveBall === Player.PLAYER1 ? -0.5 : 0.5;
             ballBody.SetLinearVelocity(dir)
         }
     };
