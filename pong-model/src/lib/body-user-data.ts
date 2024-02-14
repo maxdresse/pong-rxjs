@@ -1,9 +1,9 @@
 import { b2Body } from '@box2d/core';
-import { Player } from './types';
+import { ObjectType, Player } from './types';
 
-const playerType = 'player';
-const wallType = 'wall';
-const goalType = 'goal';
+const playerType: ObjectType = 'player';
+const wallType: ObjectType = 'wall';
+const goalType: ObjectType = 'goal';
 
 export function getWallUserData() {
     return { type: wallType };

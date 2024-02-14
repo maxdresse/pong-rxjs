@@ -21,7 +21,7 @@ export const initWorld = ({ onEvent }: InitWorlProps) => {
     // players
     const { player1Body, player2Body } = initPlayers(world);
     // ball
-    initBall(world);
+    const ballBody = initBall(world);
     // wire contact listener to event callback
     const constactListener: b2ContactListener = createContactListener(onEvent);
     world.SetContactListener(constactListener);
@@ -36,6 +36,7 @@ export const initWorld = ({ onEvent }: InitWorlProps) => {
     return { 
         world,
         playerBodies: [player1Body, player2Body] as [b2Body, b2Body],
+        ballBody,
         tearDownWorld
         };
 };

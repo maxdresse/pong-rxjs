@@ -44,7 +44,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
     );
     const onEvent = (ev: SomeGameEvent) => eventSubj$.next(ev);
     // create world
-    const { world, playerBodies, tearDownWorld } = initWorld({ onEvent });
+    const { world, playerBodies, ballBody, tearDownWorld } = initWorld({ onEvent });
     
     // create main loop
     const draw = new DebugDraw(def.canvas.getContext('2d')!);
@@ -53,7 +53,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
 
     const score = createInitialScore();
     // controls
-    const gameSituation = { playerBodies, params, score };
+    const gameSituation = { playerBodies, ballBody, params, score };
     const inputFactory = getAllInputs(def);
     const inputs$ = inputFactory({ onFrame$ }).pipe(
         map(gameLogic.intentResponder)
