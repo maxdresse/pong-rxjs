@@ -3,6 +3,7 @@ import { SomeGameEvent } from './types';
 import { getBallUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createPlayerHitsWallEvent } from './events/player-hits-wall-event';
 import { createGoalScoredEvent } from './events/goal-scored-event';
+import { WithRequired } from './type-utils';
 
 type ContactData  = {
     ball?:  Array<ReturnType<typeof getBallUserData>>;
@@ -27,13 +28,28 @@ function contactToEvent(contact: b2Contact): SomeGameEvent | null {
             cd[type]!.push(userData);
         }
     });
-    if (cd.player?.length && cd.wall?.length) {
-        const player = cd.player?.[0].player;
-        if (player !== undefined) {
-            return createPlayerHitsWallEvent(player);
-        }
+    if (cd.player?.length) {
+        return onPlayerContact(cd as Parameters<typeof onPlayerContact>[0]);
     }
-    if (cd.ball?.length && cd.goal?.length) {
+    if (cd.ball?.length) {
+        return onBallContact(cd as Parameters<typeof onBallContact>[0]);
+    }
+    return null;
+}
+
+function onPlayerContact(cd: WithRequired<ContactData, "player">): SomeGameEvent | null {
+    const player = cd.player?.[0].player;
+    if (player === undefined) {
+        return null;
+    }
+    if(cd.wall?.length) {
+        return createPlayerHitsWallEvent(player);
+    }
+    return null;
+}
+
+function onBallContact(cd: WithRequired<ContactData, "ball">): SomeGameEvent | null {
+    if (cd.goal?.length) {
         const player = cd.goal?.[0]?.owningPlayer;
         if (player !== undefined) {
             return createGoalScoredEvent(player)
@@ -41,6 +57,7 @@ function contactToEvent(contact: b2Contact): SomeGameEvent | null {
     }
     return null;
 }
+
 export function createContactListener(onEvent: (ev: SomeGameEvent) => void): b2ContactListener {
     return {
         BeginContact: (contact) => {
