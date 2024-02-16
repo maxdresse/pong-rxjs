@@ -10,7 +10,7 @@ type ContactData  = {
     player?:  Array<ReturnType<typeof getPlayerUserData>>;
     goal?:  Array<ReturnType<typeof getGoalUserData>>;
     wall?:  Array<ReturnType<typeof getWallUserData>>;
-  };
+};
 
 
 function contactToEvent(contact: b2Contact): SomeGameEvent | null {

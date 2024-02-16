@@ -7,6 +7,7 @@ import { W_LOWER_LEFT, W_UPPER_LEFT, W_LOWER_RIGHT, W_UPPER_RIGHT } from './phys
 import { getBallUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createContactListener } from './contact-listener';
 import { playerRestitution } from './physical-constants';
+import { createContactFilter } from './contact-filter';
 
 export interface InitWorlProps {
     onEvent: (ev: SomeGameEvent) => void;
@@ -25,6 +26,7 @@ export const initWorld = ({ onEvent }: InitWorlProps) => {
     // wire contact listener to event callback
     const constactListener: b2ContactListener = createContactListener(onEvent);
     world.SetContactListener(constactListener);
+    world.SetContactFilter(createContactFilter())
     // setup teardown handle for our caller
     const tearDownWorld = () => {
         let b = world.GetBodyList();

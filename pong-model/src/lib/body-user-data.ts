@@ -5,6 +5,11 @@ const wallType = 'wall';
 const goalType = 'goal';
 const ballType = 'ball';
 
+export type UserDataUnion = ReturnType<typeof getBallUserData> |
+    ReturnType<typeof getPlayerUserData> |
+    ReturnType<typeof getGoalUserData> |
+    ReturnType<typeof getWallUserData>;
+
 export function getWallUserData() {
     return { type: wallType } as const;
 }
