@@ -1,5 +1,5 @@
 import { GameParameters } from './types';
-import { b2World, DrawShapes, DrawJoints, DrawAABBs, DrawCenterOfMasses, DrawPairs } from '@box2d/core';
+import { b2World, DrawShapes, DrawJoints } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 
 export function drawAll(draw: DebugDraw, params: GameParameters, world: b2World) {
