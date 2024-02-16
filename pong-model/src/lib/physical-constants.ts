@@ -31,5 +31,6 @@ export const PLAYER_WALL_SLOWDOWN_FACTOR = 0.35;
 export const playerRestitution = 0;
 
 export const FENCE_SIZE = { x: 3, y: WORLD_HEIGHT };
+export const BALL_KICKOFF_VELOCITY = 0.011;
 
 
