@@ -1,7 +1,7 @@
 import { b2World, b2PolygonShape, b2BodyDef, b2BodyType, b2EdgeShape, b2CircleShape, b2FixtureDef, b2MassData, b2Fixture } from '@box2d/core';
 import { Vc2 } from './types';
-import { defaultDamping } from './physical-constants';
-import { defaultDensity } from './physical-constants';
+import { DEFAULT_DAMPING } from './physical-constants';
+import { DEFAULT_DENSITY } from './physical-constants';
 import { defaultRestitutionThreshold, defaultRestitution } from './physical-constants';
 import { ballDensity } from './physical-constants';
 
@@ -17,7 +17,7 @@ export function createDynamicRectBody(
         position, 
         type: b2BodyType.b2_dynamicBody,
         enabled: true,
-        linearDamping: defaultDamping,
+        linearDamping: DEFAULT_DAMPING,
         fixedRotation,
         userData,
     };
@@ -67,7 +67,7 @@ export function createBall(world: b2World, position: Vc2, radius: number, userDa
 }
 
 function applyDefaultRestitutionAndDensity(fixtureDef: b2FixtureDef): b2FixtureDef {
-    fixtureDef.density = defaultDensity;
+    fixtureDef.density = DEFAULT_DENSITY;
     fixtureDef.restitutionThreshold = defaultRestitutionThreshold;
     fixtureDef.restitution= defaultRestitution;
     return fixtureDef;
