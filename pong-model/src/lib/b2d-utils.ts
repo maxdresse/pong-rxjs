@@ -37,7 +37,7 @@ export function createStaticRectBody(world: b2World, position: Vc2, size: Vc2) {
 export function createBox(world: b2World, size: Vc2, bodyDef: b2BodyDef, fdc?: FixtureDefChanger) {
     const body = world.CreateBody(bodyDef);
     const shape = new b2PolygonShape();
-    shape.SetAsBox(size.x, size.y, { x: 0, y: 0});
+    shape.SetAsBox(size.x / 2, size.y / 2, { x: 0, y: 0});
     let fd = applyDefaultRestitutionAndDensity({ shape: shape });
     if (fdc) {
         fd = fdc(fd);
