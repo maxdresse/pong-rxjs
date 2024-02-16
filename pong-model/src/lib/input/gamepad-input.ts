@@ -2,7 +2,7 @@ import { Observable, Subscription } from 'rxjs';
 import { InputFactory } from '../types';
 import { createMovePlayerIntent } from '../intents/player-control-intents';
 
-export function getAllGamepadInput(): InputFactory {
+export function getGamepadInput(): InputFactory {
     return ({ onFrame$ }) => new Observable(subscriber => {
         let sub: Subscription;
         let gpIdx = -1;
@@ -24,10 +24,10 @@ export function getAllGamepadInput(): InputFactory {
                 const resultBuf: Array<number | undefined> = [undefined, undefined];
                 const stickThreshold = 0.1;
                 gp.axes.slice(0, 8).forEach((v, i) => {
-                    if (v < stickThreshold) {
+                    if (Math.abs(v) < stickThreshold) {
                         return; 
                     }
-                    resultBuf[i % 2] = v;
+                    resultBuf[i % 2] = ((i % 2) ? -1 : 1) * v;
                 });
                 if (resultBuf.some(b => b !== undefined)) {
                     const direction = { x: resultBuf[0] ?? 0, y: resultBuf[1] ?? 0};
@@ -36,6 +36,7 @@ export function getAllGamepadInput(): InputFactory {
                 }
             });
           };
+        // todo: is subscribing to this event listener necessary?
         window.addEventListener('gamepadconnected', cb);
         subscriber.add(() => {
             window.removeEventListener('gamepadconnected', cb);
