@@ -8,7 +8,8 @@ export function getGamepadInput(): InputFactory {
         sub = onFrame$.subscribe(() => {
             // need to actively poll gamepads in navigator
             // in order to get current state
-            const gpds = navigator.getGamepads().filter(x => !!x) as Array<Gamepad>;
+            const gpds = (navigator.getGamepads() ?? [])
+                .filter(x => !!x) as Array<Gamepad>; 
             if (!gpds?.length) {
                 return;
             }
