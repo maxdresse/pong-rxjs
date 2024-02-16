@@ -1,10 +1,10 @@
-import { b2Body, b2ContactListener, b2Vec2, b2World } from '@box2d/core';
-import { createBall, createDynamicRectBody, createEdge } from './b2d-utils';
-import { PLAYER_START_POS, playerMass } from './physical-constants';
+import { b2Body, b2BodyDef, b2ContactListener, b2Vec2, b2World } from '@box2d/core';
+import { createBall, createBox, createDynamicRectBody, createEdge } from './b2d-utils';
+import { BALL_INITIAL_POS, FENCE_SIZE, PLAYER_START_POS, playerMass } from './physical-constants';
 import { PLAYER_SIZE } from './physical-constants';
 import { Player, SomeGameEvent, Vc2 } from './types';
 import { W_LOWER_LEFT, W_UPPER_LEFT, W_LOWER_RIGHT, W_UPPER_RIGHT } from './physical-constants';
-import { getBallUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
+import { getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createContactListener } from './contact-listener';
 import { playerRestitution } from './physical-constants';
 import { createContactFilter } from './contact-filter';
@@ -19,6 +19,8 @@ export const initWorld = ({ onEvent }: InitWorlProps) => {
     const world = b2World.Create(gravity);
     // boundaries
     initWorldBoundaries(world);
+    // fence
+    initFence(world);
     // players
     const { player1Body, player2Body } = initPlayers(world);
     // ball
@@ -74,5 +76,10 @@ function initWorldBoundaries(world: b2World): void {
 }
 
 function initBall(world: b2World) {
-    return createBall(world, b2Vec2.ZERO, 2, getBallUserData());
+    return createBall(world, BALL_INITIAL_POS, 2, getBallUserData());
+}
+
+function initFence(world: b2World) {
+    const bodyDef: b2BodyDef = { position: { x: 0, y: 0 }, userData: getFenceUserData() };
+    return createBox(world, FENCE_SIZE, bodyDef);
 }

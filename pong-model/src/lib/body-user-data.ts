@@ -1,14 +1,16 @@
 import { Player } from './types';
 
-const playerType = 'player';
-const wallType = 'wall';
-const goalType = 'goal';
-const ballType = 'ball';
+export const playerType = 'player';
+export const wallType = 'wall';
+export const goalType = 'goal';
+export const ballType = 'ball';
+export const fenceType = 'fence';
 
 export type UserDataUnion = ReturnType<typeof getBallUserData> |
     ReturnType<typeof getPlayerUserData> |
     ReturnType<typeof getGoalUserData> |
-    ReturnType<typeof getWallUserData>;
+    ReturnType<typeof getWallUserData> |
+    ReturnType<typeof getFenceUserData>;
 
 export function getWallUserData() {
     return { type: wallType } as const;
@@ -24,4 +26,8 @@ export function getPlayerUserData(player: Player) {
 
 export function getBallUserData() {
     return { type: ballType } as const;
+}
+
+export function getFenceUserData() {
+    return { type: fenceType } as const;
 }

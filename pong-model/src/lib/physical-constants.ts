@@ -10,6 +10,7 @@ const WORLD_BOUNDARY_TOP = 40;
 const WORLD_BOUNDARY_RIGHT = 60;
 const WORLD_BOUNDARY_LEFT = -WORLD_BOUNDARY_RIGHT;
 const WORLD_BOUNDARY_BOTTOM = -WORLD_BOUNDARY_TOP;
+const WORLD_HEIGHT = WORLD_BOUNDARY_TOP;
 export const W_LOWER_LEFT = { x: WORLD_BOUNDARY_LEFT, y: WORLD_BOUNDARY_BOTTOM };
 export const W_UPPER_LEFT = { x: WORLD_BOUNDARY_LEFT, y: WORLD_BOUNDARY_TOP };
 export const W_LOWER_RIGHT = { x: WORLD_BOUNDARY_RIGHT, y: WORLD_BOUNDARY_BOTTOM };
@@ -22,10 +23,11 @@ export const PLAYER_DENSITY = 100;
 export const defaultRestitutionThreshold = 0;
 export const defaultRestitution = 0.85;
 export const ballDensity = 0.5;
+export const BALL_INITIAL_POS = { x: 4, y: 0 };
 export const playerMass = undefined;
 export const PLAYER_WALL_SLOWDOWN_FACTOR = 0.35;
 export const playerRestitution = 0;
 
-
+export const FENCE_SIZE = { x: 1.5, y: WORLD_HEIGHT };
 
 

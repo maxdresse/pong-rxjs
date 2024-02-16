@@ -1,14 +1,14 @@
 import { b2ContactFilter, b2Fixture } from '@box2d/core';
-import { UserDataUnion } from './body-user-data';
+import { UserDataUnion, ballType, fenceType } from './body-user-data';
 
 export function createContactFilter(): b2ContactFilter {
     return {
       ShouldCollide: (fixtureA, fixtureB) => {
-          const tA = fixtToType(fixtureA);
-          const tB = fixtToType(fixtureB);
-          void (tA);
-          void(tB);
-          return true
+          const types =  [fixtToType(fixtureA), fixtToType(fixtureB)];
+          if (types.includes(ballType) && types.includes(fenceType)) {
+            return false;
+          }
+          return true;
       },  
     };
 }
