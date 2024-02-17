@@ -1,6 +1,6 @@
-export const MOVE_IMPULSE_FACTOR = 1.18;
+export const MOVE_IMPULSE_FACTOR = 0.985;
 export const DEFAULT_DAMPING = 0.00005;
-export const DEFAULT_DENSITY = 4;
+export const DEFAULT_DENSITY = 3.5;
 
 export const defaultPositionIterations = 3;
 export const defaultVelocityIterations = 8;
