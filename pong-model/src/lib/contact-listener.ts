@@ -1,7 +1,7 @@
 import { b2Contact, b2ContactListener } from '@box2d/core';
 import { SomeGameEvent } from './types';
 import { getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
-import { createPlayerHitsWallEvent } from './events/player-hits-wall-event';
+import { createPlayerHitsObstacleEvent as createPlayerHitsObstacleEvent } from './events/player-hits-obstacle-event';
 import { createGoalScoredEvent } from './events/goal-scored-event';
 import { WithRequired } from './type-utils';
 
@@ -45,7 +45,7 @@ function onPlayerContact(cd: WithRequired<ContactData, "player">): SomeGameEvent
     }
     // goal, fence, wall are all the same from a player's perspective
     if(cd.wall?.length || cd.goal?.length || cd.fence?.length) {
-        return createPlayerHitsWallEvent(player);
+        return createPlayerHitsObstacleEvent(player);
     }
     return null;
 }

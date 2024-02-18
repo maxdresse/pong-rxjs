@@ -1,6 +1,6 @@
 import { createPlayerSlowdownEffect } from './effects/player-slowdown-effect';
 import { createMovePlayerEffect } from './effects/move-player-effect';
-import { isPlayerHitsWallEvent } from './events/player-hits-wall-event';
+import { isPlayerHitsObstacleEvent } from './events/player-hits-obstacle-event';
 import { isMovePlayerIntent } from './intents/player-control-intents';
 import { GameLogic, IGameDef } from './types';
 import { isGoalScoredEvent } from './events/goal-scored-event';
@@ -15,7 +15,7 @@ const defaultGameLogic: GameLogic = {
         throw Error('unknown intent');
     },
     eventResponder: (event) => {
-        if (isPlayerHitsWallEvent(event)) {
+        if (isPlayerHitsObstacleEvent(event)) {
             return createPlayerSlowdownEffect({ player: event.payload.player });
         } else if (isGoalScoredEvent(event)) {
             const other = otherPlayer(event.payload.player);
