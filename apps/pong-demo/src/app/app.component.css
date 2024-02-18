@@ -19,6 +19,7 @@ canvas {
 }
 
 .debug-ui {
+    display: none;
     flex: 0 0 200px;
     background-color: grey;
 }

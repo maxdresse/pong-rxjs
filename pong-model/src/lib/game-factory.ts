@@ -65,7 +65,8 @@ export const createGame: GameFactory = (def: IGameDef) => {
 
     // canvas size management
     const aspectRatio$ = new BehaviorSubject<number>(defaultAspectRatio);
-    const { detachResizer } = attachResizer(def.canvas, aspectRatio$);
+    const { detachResizer, devicePxPerMeter$: devicePxPerMeter } = attachResizer(def.canvas, aspectRatio$);
+    sub.add(devicePxPerMeter.subscribe(pxPerMtr => params.zoomFactor = pxPerMtr));
 
     // tip off game loop
     requestAnimationFrame(loop);
