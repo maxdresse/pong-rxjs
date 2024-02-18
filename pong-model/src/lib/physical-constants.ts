@@ -1,4 +1,3 @@
-export const MOVE_IMPULSE_FACTOR = 0.985;
 export const DEFAULT_DAMPING = 0.00005;
 export const DEFAULT_DENSITY = 3.5;
 
@@ -25,12 +24,16 @@ export const PLAYER_START_POS = { x: WORLD_BOUNDARY_LEFT + PLAYER_INITIAL_H_DIST
 export const PLAYER_DENSITY = 100;
 export const DEFAULT_RESTITUTION_THRESHOLD = 0;
 export const DEFAULT_RESTITUTION = 0.85;
-export const BALL_DENSITY = 0.5;
-export const BALL_INITIAL_POS = { x: 4, y: 0 };
 export const PLAYER_MASS = undefined;
 export const PLAYER_WALL_SLOWDOWN_FACTOR = 0.35;
 export const PLAYER_RESTITUTION = 0;
 export const PLAYER_FRICTION = 0.2;
+export const PLAYER_DAMPING = DEFAULT_DAMPING;  
+
+export const MOVE_IMPULSE_FACTOR = 0.985;
+
+export const BALL_DENSITY = 0.5;
+export const BALL_INITIAL_POS = { x: 4, y: 0 };
 
 export const FENCE_SIZE = { x: 3, y: WORLD_HEIGHT };
 export const BALL_KICKOFF_VELOCITY = 0.011;

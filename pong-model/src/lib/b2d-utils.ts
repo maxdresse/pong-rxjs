@@ -11,13 +11,14 @@ export function createDynamicRectBody(
     world: b2World,
     position: Vc2,
     size: Vc2,
-    opts: { fixedRotation?: boolean, userData?: any, restitution?: number, friction?: number }) {
-    const { fixedRotation, userData, restitution, friction } = opts ?? {};
+    opts: { fixedRotation?: boolean, userData?: any,
+            restitution?: number, friction?: number, damping?: number }) {
+    const { fixedRotation, userData, restitution, friction, damping } = opts ?? {};
     const bodyDef: b2BodyDef = { 
         position, 
         type: b2BodyType.b2_dynamicBody,
         enabled: true,
-        linearDamping: DEFAULT_DAMPING,
+        linearDamping: damping ?? DEFAULT_DAMPING,
         fixedRotation,
         userData,
     };
