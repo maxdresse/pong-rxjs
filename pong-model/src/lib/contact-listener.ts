@@ -1,6 +1,6 @@
 import { b2Contact, b2ContactListener } from '@box2d/core';
 import { SomeGameEvent } from './types';
-import { getBallUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
+import { getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createPlayerHitsWallEvent } from './events/player-hits-wall-event';
 import { createGoalScoredEvent } from './events/goal-scored-event';
 import { WithRequired } from './type-utils';
@@ -10,6 +10,7 @@ type ContactData  = {
     player?:  Array<ReturnType<typeof getPlayerUserData>>;
     goal?:  Array<ReturnType<typeof getGoalUserData>>;
     wall?:  Array<ReturnType<typeof getWallUserData>>;
+    fence?:  Array<ReturnType<typeof getFenceUserData>>;
 };
 
 
@@ -42,7 +43,8 @@ function onPlayerContact(cd: WithRequired<ContactData, "player">): SomeGameEvent
     if (player === undefined) {
         return null;
     }
-    if(cd.wall?.length) {
+    // goal, fence, wall are all the same from a player's perspective
+    if(cd.wall?.length || cd.goal?.length || cd.fence?.length) {
         return createPlayerHitsWallEvent(player);
     }
     return null;
