@@ -1,12 +1,12 @@
 import { b2Body, b2BodyDef, b2ContactListener, b2Vec2, b2World } from '@box2d/core';
 import { createBall, createBox, createDynamicRectBody, createEdge } from './b2d-utils';
-import { BALL_INITIAL_POS, FENCE_SIZE, PLAYER_START_POS, playerMass } from './physical-constants';
+import { BALL_INITIAL_POS, FENCE_SIZE, PLAYER_START_POS, PLAYER_MASS, PLAYER_FRICTION } from './physical-constants';
 import { PLAYER_SIZE } from './physical-constants';
 import { Player, SomeGameEvent, Vc2 } from './types';
 import { W_LOWER_LEFT, W_UPPER_LEFT, W_LOWER_RIGHT, W_UPPER_RIGHT } from './physical-constants';
 import { getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createContactListener } from './contact-listener';
-import { playerRestitution } from './physical-constants';
+import { PLAYER_RESTITUTION } from './physical-constants';
 import { createContactFilter } from './contact-filter';
 
 export interface InitWorlProps {
@@ -56,7 +56,8 @@ function createPlayer(world: b2World, pos: Vc2, player: Player) {
     return createDynamicRectBody(world, pos, PLAYER_SIZE,
          { 
             fixedRotation: true,
-            restitution: playerRestitution,
+            restitution: PLAYER_RESTITUTION,
+            friction: PLAYER_FRICTION,
             userData: getPlayerUserData(player)
          });
 }

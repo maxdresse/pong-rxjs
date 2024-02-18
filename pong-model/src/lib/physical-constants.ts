@@ -2,9 +2,9 @@ export const MOVE_IMPULSE_FACTOR = 0.985;
 export const DEFAULT_DAMPING = 0.00005;
 export const DEFAULT_DENSITY = 3.5;
 
-export const defaultPositionIterations = 3;
-export const defaultVelocityIterations = 8;
-export const defaultTimeStep = 1000 / 16;
+export const DEFAULT_POS_ITERATIONS = 3;
+export const DEFAULT_VEL_ITERATIONS = 8;
+export const DEFAULT_TIME_STEP = 1000 / 16;
 
 const WORLD_BOUNDARY_TOP = 40;
 const WORLD_BOUNDARY_RIGHT = 60;
@@ -23,13 +23,14 @@ export const PLAYER_INITIAL_H_DISTANCE = 8
 export const PLAYER_SIZE = { x: 2, y: 14 };
 export const PLAYER_START_POS = { x: WORLD_BOUNDARY_LEFT + PLAYER_INITIAL_H_DISTANCE, y: 0 };
 export const PLAYER_DENSITY = 100;
-export const defaultRestitutionThreshold = 0;
-export const defaultRestitution = 0.85;
-export const ballDensity = 0.5;
+export const DEFAULT_RESTITUTION_THRESHOLD = 0;
+export const DEFAULT_RESTITUTION = 0.85;
+export const BALL_DENSITY = 0.5;
 export const BALL_INITIAL_POS = { x: 4, y: 0 };
-export const playerMass = undefined;
+export const PLAYER_MASS = undefined;
 export const PLAYER_WALL_SLOWDOWN_FACTOR = 0.35;
-export const playerRestitution = 0;
+export const PLAYER_RESTITUTION = 0;
+export const PLAYER_FRICTION = 0.2;
 
 export const FENCE_SIZE = { x: 3, y: WORLD_HEIGHT };
 export const BALL_KICKOFF_VELOCITY = 0.011;
