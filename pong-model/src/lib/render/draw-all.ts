@@ -3,7 +3,8 @@ import { b2World, DrawShapes, DrawJoints, b2Fixture, b2ShapeType, b2CircleShape,
 import { DebugDraw } from "@box2d/debug-draw";
 import { UserDataUnion } from '../body-user-data';
 import { drawBall } from './draw-ball';
-import { drawPlayer } from './draw-utils';
+import { drawPlayer } from './draw-player';
+import { drawFence } from './draw-fence';
 
 export function debugDrawAll(draw: DebugDraw, params: GameParameters, world: b2World) {
     draw.Prepare(0, 0, params.zoomFactor, true); // center, zoom, flipy
@@ -17,7 +18,8 @@ export function debugDrawAll(draw: DebugDraw, params: GameParameters, world: b2W
 
 const objTypeToDrawFct: { [key in UserDataUnion['type']]?: (ctx: CanvasRenderingContext2D, b: b2Body) => void } = {
     ball: drawBall,
-    player: drawPlayer
+    player: drawPlayer,
+    fence: drawFence
 };
 
 export function drawAll(ctx: CanvasRenderingContext2D, params: GameParameters, world: b2World) {

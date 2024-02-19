@@ -1,21 +1,20 @@
 import { b2Body, b2CircleShape, b2Fixture, b2ShapeType, b2Vec2 } from '@box2d/core';
+import { drawInBodyContext } from './draw-utils';
 
 export function drawBall(ctx: CanvasRenderingContext2D, body: b2Body): void {
-    const xf = body.GetTransform();
+    drawInBodyContext(ctx, body, () => {
+        drawCircularFixtures(body, ctx);
+    });
+}
 
-    ctx.save();
-    ctx.translate(xf.p.x, xf.p.y);
-    ctx.rotate(xf.q.GetAngle());
-
+function drawCircularFixtures(body: b2Body, ctx: CanvasRenderingContext2D) {
     for (let f: b2Fixture | null = body.GetFixtureList(); f; f = f.GetNext()) {
         const shape = f.GetShape();
         const shapeType = shape.GetType();
         if (shapeType === b2ShapeType.e_circle) {
             drawCircle(ctx, shape as b2CircleShape);
-        } 
+        }
     }
-
-    ctx.restore();
 }
 
 function drawCircle(ctx: CanvasRenderingContext2D, shape: b2CircleShape): void {
