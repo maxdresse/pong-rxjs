@@ -29,6 +29,8 @@ export function drawAll(ctx: CanvasRenderingContext2D, params: GameParameters, w
         ctx.translate(xf.p.x, xf.p.y);
         ctx.rotate(xf.q.GetAngle());
 
+        
+
         for (let f: b2Fixture | null = b.GetFixtureList(); f; f = f.GetNext()) {
             const shape = f.GetShape();
             const shapeType = shape.GetType();

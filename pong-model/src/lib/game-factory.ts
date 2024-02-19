@@ -1,9 +1,7 @@
 import { BehaviorSubject, Subject, map, merge } from 'rxjs';
 import { IGameDef, IObj, GameFactory, GameParameters, GameEffect, SomeGameEvent, IRenderer } from './types'
 import { b2World } from '@box2d/core';
-import { DebugDraw } from "@box2d/debug-draw";
 import { attachResizer } from './canvas-resizer';
-import { debugDrawAll } from './render/draw-all';
 import { initWorld } from './init-world';
 import { getDefaultParameters } from './default-parameters';
 import { getAllInputs } from './input/get-all-inputs';
