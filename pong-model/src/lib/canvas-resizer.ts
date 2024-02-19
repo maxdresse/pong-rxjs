@@ -1,10 +1,10 @@
 import { BehaviorSubject, Observable, Subject, combineLatest } from 'rxjs';
-import { defaultZoom } from './render-constants';
+import { DEFAULT_ZOOM } from './render/render-constants';
 import { WORLD_HEIGHT, WORLD_WIDTH } from './physical-constants';
 
 export const attachResizer = (canvas: HTMLCanvasElement, aspectRatio$: Observable<number>): { detachResizer: () => void; devicePxPerMeter$: Observable<number> } => {
     const sizeChanged$ = new Subject<void>();
-    const devicePxPerMeter$ = new BehaviorSubject<number>(defaultZoom);
+    const devicePxPerMeter$ = new BehaviorSubject<number>(DEFAULT_ZOOM);
     const onResize = (aspectRatio: number) => {
         // aspect ratio is currently unused but might be needed
         // for other future rendererers

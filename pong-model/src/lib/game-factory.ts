@@ -1,23 +1,24 @@
 import { BehaviorSubject, Subject, map, merge } from 'rxjs';
-import { IGameDef, IObj, GameFactory, GameParameters, GameEffect, SomeGameEvent } from './types'
+import { IGameDef, IObj, GameFactory, GameParameters, GameEffect, SomeGameEvent, IRenderer } from './types'
 import { b2World } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 import { attachResizer } from './canvas-resizer';
-import { drawAll } from './draw-all';
+import { debugDrawAll } from './render/draw-all';
 import { initWorld } from './init-world';
 import { getDefaultParameters } from './default-parameters';
 import { getAllInputs } from './input/get-all-inputs';
 import { getGameLogic } from './logic';
-import { defaultAspectRatio } from './render-constants';
+import { DEFAULT_ASPECT_RATIO } from './render/render-constants';
 import { createInitialScore } from './score';
+import { createRenderer } from './render/renderer';
 
 interface ILoopDef {
-    draw: DebugDraw;
+    renderer: IRenderer;
     world: b2World;
     params: GameParameters;
 }
 
-const createLoop = ({ draw, world, params }: ILoopDef) => {
+const createLoop = ({ renderer, world, params }: ILoopDef) => {
     const onFrame$ = new Subject<void>();
     const { timeStep, paused, positionIterations, velocityIterations} = params;
     const loop = () => {
@@ -26,7 +27,7 @@ const createLoop = ({ draw, world, params }: ILoopDef) => {
             positionIterations,
             velocityIterations 
         });
-        drawAll(draw, params, world);
+        renderer.draw(world);
         if (!paused) {
             requestAnimationFrame(loop);
         }
@@ -47,9 +48,13 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const { world, playerBodies, ballBody, tearDownWorld } = initWorld({ onEvent });
     
     // create main loop
-    const draw = new DebugDraw(def.canvas.getContext('2d')!);
+    const ctx = def.canvas.getContext('2d');
+    if (!ctx) {
+        throw Error('unexpected null context');
+    }
     const params: GameParameters = getDefaultParameters();
-    const { loop, onFrame$ } = createLoop({ draw, params, world });
+    const renderer = createRenderer(ctx, params)
+    const { loop, onFrame$ } = createLoop({ renderer, params, world });
 
     const score = createInitialScore();
     // controls
@@ -64,7 +69,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
         .subscribe(effect => effect.apply(gameSituation))
 
     // canvas size management
-    const aspectRatio$ = new BehaviorSubject<number>(defaultAspectRatio);
+    const aspectRatio$ = new BehaviorSubject<number>(DEFAULT_ASPECT_RATIO);
     const { detachResizer, devicePxPerMeter$: devicePxPerMeter } = attachResizer(def.canvas, aspectRatio$);
     sub.add(devicePxPerMeter.subscribe(pxPerMtr => params.zoomFactor = pxPerMtr));
 

@@ -1,8 +1,8 @@
-import { GameParameters } from './types';
+import { GameParameters } from '../types';
 import { b2World, DrawShapes, DrawJoints, b2Fixture, b2ShapeType, b2CircleShape, b2Vec2 } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 
-export function drawAll(draw: DebugDraw, params: GameParameters, world: b2World) {
+export function debugDrawAll(draw: DebugDraw, params: GameParameters, world: b2World) {
     draw.Prepare(0, 0, params.zoomFactor, true); // center, zoom, flipy
     DrawShapes(draw, world);
     DrawJoints(draw, world);
@@ -12,7 +12,7 @@ export function drawAll(draw: DebugDraw, params: GameParameters, world: b2World)
     draw.Finish();
 }
 
-export function drawAllX(ctx: CanvasRenderingContext2D, params: GameParameters, world: b2World) {
+export function drawAll(ctx: CanvasRenderingContext2D, params: GameParameters, world: b2World) {
     const zoom = params.zoomFactor;
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.save();

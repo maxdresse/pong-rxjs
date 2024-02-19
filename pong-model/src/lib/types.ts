@@ -1,5 +1,9 @@
-import { b2Body } from '@box2d/core';
+import { b2Body, b2World } from '@box2d/core';
 import { Observable } from 'rxjs';
+
+export interface IRenderer {
+    draw(world: b2World): void;
+}
 
 export const enum Player {
     PLAYER1 = 0,
@@ -59,7 +63,6 @@ export interface GameEvent<T extends number, P> {
 };
 
 export type SomeGameEvent = GameEvent<number, unknown>;
-
 
 export type EventResponder = (event: SomeGameEvent) => GameEffect;
 
