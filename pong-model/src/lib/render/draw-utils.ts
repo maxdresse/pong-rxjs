@@ -1,4 +1,4 @@
-import { b2Body, b2Fixture, b2PolygonShape, b2ShapeType } from '@box2d/core';
+import { b2Body, b2EdgeShape, b2Fixture, b2PolygonShape, b2ShapeType } from '@box2d/core';
 
 export function drawPolygonalFixtures(body: b2Body, ctx: CanvasRenderingContext2D, colors: { fill: string; stroke: string }) {
     for (let f: b2Fixture | null = body.GetFixtureList(); f; f = f.GetNext()) {
@@ -33,4 +33,13 @@ export function drawInBodyContext(ctx: CanvasRenderingContext2D, body: b2Body, d
     drawFct();
 
     ctx.restore();
+}
+export function drawLineShape({ ctx, shape, color }: { ctx: CanvasRenderingContext2D; shape: b2EdgeShape; color: string; }): void {
+    const p1 = shape.m_vertex1;
+    const p2 = shape.m_vertex2;
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.strokeStyle = color;
+    ctx.stroke();
 }

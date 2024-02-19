@@ -77,6 +77,7 @@ export interface GameParameters {
     positionIterations: number;
     velocityIterations: number;
     timeStep: number;
+    colorScheme: IColorScheme;
 }
 
 export interface IGameDef {
@@ -86,3 +87,16 @@ export interface IGameDef {
 }
 
 export type GameFactory = (def: IGameDef) => IGame; 
+
+export interface IFillStroke {
+    fill: string;
+    stroke: string;
+}
+
+export interface IColorScheme {
+    background: string;
+    ball: IFillStroke;
+    player: IFillStroke;
+    fence: IFillStroke;
+    wall: string;
+}

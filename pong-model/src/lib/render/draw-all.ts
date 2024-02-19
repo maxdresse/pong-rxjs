@@ -1,10 +1,11 @@
-import { GameParameters } from '../types';
+import { GameParameters, IColorScheme } from '../types';
 import { b2World, DrawShapes, DrawJoints, b2Fixture, b2ShapeType, b2CircleShape, b2Vec2, b2BodyDef, b2Body } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 import { UserDataUnion } from '../body-user-data';
 import { drawBall } from './draw-ball';
 import { drawPlayer } from './draw-player';
 import { drawFence } from './draw-fence';
+import { drawWall } from './draw-wall';
 
 export function debugDrawAll(draw: DebugDraw, params: GameParameters, world: b2World) {
     draw.Prepare(0, 0, params.zoomFactor, true); // center, zoom, flipy
@@ -16,10 +17,12 @@ export function debugDrawAll(draw: DebugDraw, params: GameParameters, world: b2W
     draw.Finish();
 }
 
-const objTypeToDrawFct: { [key in UserDataUnion['type']]?: (ctx: CanvasRenderingContext2D, b: b2Body) => void } = {
+const objTypeToDrawFct: { [key in UserDataUnion['type']]?: (ctx: CanvasRenderingContext2D, b: b2Body, cs: IColorScheme) => void } = {
     ball: drawBall,
     player: drawPlayer,
-    fence: drawFence
+    fence: drawFence,
+    wall: drawWall,
+    goal: drawWall
 };
 
 export function drawAll(ctx: CanvasRenderingContext2D, params: GameParameters, world: b2World) {
@@ -36,7 +39,7 @@ export function drawAll(ctx: CanvasRenderingContext2D, params: GameParameters, w
         const type = b.GetUserData()?.type as UserDataUnion['type'];
         const drawFct = objTypeToDrawFct[type];
         if (drawFct) {
-            drawFct(ctx, b);
+            drawFct(ctx, b, params.colorScheme);
         }
     }
     

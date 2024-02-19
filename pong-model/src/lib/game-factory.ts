@@ -51,7 +51,9 @@ export const createGame: GameFactory = (def: IGameDef) => {
         throw Error('unexpected null context');
     }
     const params: GameParameters = getDefaultParameters();
-    const renderer = createRenderer(ctx, params)
+    const renderer = createRenderer(ctx, params);
+
+    def.canvas.style.backgroundColor = params.colorScheme.background;
     const { loop, onFrame$ } = createLoop({ renderer, params, world });
 
     const score = createInitialScore();
