@@ -2,7 +2,7 @@ import { GameParameters } from './types';
 import { DEFAULT_POS_ITERATIONS, DEFAULT_VEL_ITERATIONS } from './physical-constants';
 import { DEFAULT_ZOOM } from './render/render-constants';
 import { DEFAULT_TIME_STEP } from './physical-constants';
-import { EIGHTIES_DARK_SCHEME } from './render/color-schemes/eighties-dark';
+import { EIGHTIES_DARK_SCHEME } from './render/color-schemes/eighties';
 
 export function getDefaultParameters(): GameParameters {
     return {

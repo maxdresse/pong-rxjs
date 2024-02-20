@@ -1,5 +1,5 @@
 import { IColorScheme } from '../../types';
-import { lighten, rgb } from './color-utils';
+import { darken, lighten, rgb } from './color-utils';
 
 const r = rgb;
 
@@ -24,4 +24,21 @@ export const EIGHTIES_DARK_SCHEME: IColorScheme = {
         stroke: r(lighten(ePurple), 0.5)
     },
     wall: r(eWhite)
+}
+
+export const EIGHTIES_LIGHT_SCHEME: IColorScheme = {
+    background: r(eWhite),
+    player: {
+        fill: r(eDarkPurple),
+        stroke: r(darken(eDarkPurple))
+    },
+    ball: {
+        fill: r(ePink),
+        stroke: r(darken(ePink))
+    },
+    fence: {
+        fill: r(eLightBlue, 0.5),
+        stroke: r(darken(eLightBlue), 0.5)
+    },
+    wall: r(eDarkPurple)
 }

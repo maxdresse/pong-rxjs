@@ -10,5 +10,13 @@ export function rgb(rgb: Array<number>, a = 1): string {
 const colorDelta = 30;
 
 export function lighten(cols: Array<number>): Array<number> {
-    return cols.map((c, idx) => idx <= 2 ? Math.max(0, c + colorDelta) : c);
+    return translateCol(cols, colorDelta);
+}
+
+export function darken(cols: Array<number>): Array<number> {
+    return translateCol(cols, -colorDelta);
+}
+
+export function translateCol(cols: Array<number>, d: number): Array<number> {
+    return cols.map((c, idx) => idx <= 2 ? Math.max(0, c + d) : c);
 }
