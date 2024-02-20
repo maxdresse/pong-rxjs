@@ -34,7 +34,7 @@ export const EIGHTIES_LIGHT_SCHEME: IColorScheme = {
     },
     ball: {
         fill: r(ePink),
-        stroke: r(darken(ePink))
+        stroke: 'black'
     },
     fence: {
         fill: r(eLightBlue, 0.5),
