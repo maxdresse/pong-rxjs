@@ -1,6 +1,6 @@
-import { b2Body, b2PolygonShape, b2Shape, b2ShapeType } from '@box2d/core';
+import { b2Body, b2PolygonShape, b2Shape, b2ShapeType, b2Vec2 } from '@box2d/core';
 import { drawInBodyContext, drawPolygonalFixtures } from './draw-utils';
-import { IColorScheme } from '../types';
+import { IColorScheme, Vc2 } from '../types';
 
 
 export function drawPlayer(ctx: CanvasRenderingContext2D, body: b2Body, cs: IColorScheme): void {
@@ -31,6 +31,8 @@ export function drawPaddle(body: b2Body, ctx: CanvasRenderingContext2D, colors: 
         const vertices = shape.m_vertices;
         ctx.beginPath();
         ctx.moveTo(vertices[0].x, vertices[0].y);
+        arcBetween(ctx, vertices[0], vertices[1], true);
+        arcBetween(ctx, vertices[2], vertices[3], false);
         for (let i = 1; i < vertexCount; i++) {
             ctx.lineTo(vertices[i].x, vertices[i].y);
         }
@@ -40,4 +42,10 @@ export function drawPaddle(body: b2Body, ctx: CanvasRenderingContext2D, colors: 
         ctx.strokeStyle = colors.stroke;
         ctx.stroke();
     }
+}
+
+function arcBetween(ctx: CanvasRenderingContext2D, a: Vc2, b: Vc2, ccw: boolean): void {
+    const middle = new b2Vec2(a.x, a.y).Add(b).Scale(0.5);
+    const radius = new b2Vec2(a.x, a.y).Subtract(b).Scale(0.5).Length();
+    ctx.arc(middle.x, middle.y, radius, 0, Math.PI, ccw);
 }

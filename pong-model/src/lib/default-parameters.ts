@@ -11,6 +11,6 @@ export function getDefaultParameters(): GameParameters {
         positionIterations: DEFAULT_POS_ITERATIONS,
         velocityIterations: DEFAULT_VEL_ITERATIONS,
         timeStep: DEFAULT_TIME_STEP,
-        colorScheme: EIGHTIES_LIGHT_SCHEME
+        colorScheme: EIGHTIES_DARK_SCHEME
     };
 }
