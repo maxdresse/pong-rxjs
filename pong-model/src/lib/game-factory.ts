@@ -37,6 +37,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
 
     const objectsSub$ = new Subject<Array<IObj>>();
     // events
+    const score = createInitialScore();
     const gameLogic = getGameLogic(def);
     const eventSubj$ = new Subject<SomeGameEvent>();
     const events$ = eventSubj$.pipe(
@@ -57,10 +58,9 @@ export const createGame: GameFactory = (def: IGameDef) => {
     def.canvas.style.backgroundColor = params.colorScheme.background;
     const { loop, onFrame$ } = createLoop({ renderer, params, world });
 
-    const score = createInitialScore();
     // controls
     const gameSituation = { playerBodies, ballBody, params, score };
-    const inputFactory = getAllInputs(def);
+    const inputFactory = getAllInputs();
     const inputs$ = inputFactory({ onFrame$ }).pipe(
         map(gameLogic.intentResponder)
     );

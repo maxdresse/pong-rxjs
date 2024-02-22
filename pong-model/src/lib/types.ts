@@ -82,8 +82,6 @@ export interface GameParameters {
 
 export interface IGameDef {
     canvas: HTMLCanvasElement;
-    inputFactory?: InputFactory;
-    gameLogic?: GameLogic;
 }
 
 export type GameFactory = (def: IGameDef) => IGame; 
