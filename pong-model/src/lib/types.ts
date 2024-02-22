@@ -103,6 +103,6 @@ export interface UIInput {
     score: IScore;
 }
 
-export interface UI {
+export interface UIData     {
     input$: Observable<UIInput>;
 }

@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subject, map, merge } from 'rxjs';
+import { BehaviorSubject, Subject, map, merge, of } from 'rxjs';
 import { IGameDef, IObj, GameFactory, GameParameters, GameEffect, SomeGameEvent, IRenderer } from './types'
 import { b2World } from '@box2d/core';
 import { attachResizer } from './canvas-resizer';
@@ -10,6 +10,7 @@ import { DEFAULT_ASPECT_RATIO } from './render/render-constants';
 import { createInitialScore } from './score';
 import { createRenderer } from './render/renderer';
 import { forOneOrMany } from './array-utils';
+import { initUI } from './ui/ui';
 
 interface ILoopDef {
     renderer: IRenderer;
@@ -73,6 +74,9 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const aspectRatio$ = new BehaviorSubject<number>(DEFAULT_ASPECT_RATIO);
     const { detachResizer, devicePxPerMeter$: devicePxPerMeter } = attachResizer(def.canvas, aspectRatio$);
     sub.add(devicePxPerMeter.subscribe(pxPerMtr => params.zoomFactor = pxPerMtr));
+
+    // ui
+    initUI(def.canvas, { input$: of({ score: { playerToScore: [0, 0] }}) });
 
     // tip off game loop
     requestAnimationFrame(loop);
