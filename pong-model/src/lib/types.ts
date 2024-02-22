@@ -2,7 +2,7 @@ import { b2Body, b2World } from '@box2d/core';
 import { Observable } from 'rxjs';
 
 export interface IRenderer {
-    draw(world: b2World): void;
+    draw(world: b2World): void;   
 }
 
 export const enum Player {
@@ -55,7 +55,7 @@ export interface GameEffect {
 
 export type InputFactory = (ctx: { onFrame$: Observable<void> }) => Observable<SomeGameIntent>;
 
-export type IntentResponder = (intent: SomeGameIntent) => GameEffect;
+export type IntentResponder = (intent: SomeGameIntent) => GameEffect | Array<GameEffect>;
 
 export interface GameEvent<T extends number, P> {
     type: T;
@@ -64,7 +64,7 @@ export interface GameEvent<T extends number, P> {
 
 export type SomeGameEvent = GameEvent<number, unknown>;
 
-export type EventResponder = (event: SomeGameEvent) => GameEffect;
+export type EventResponder = (event: SomeGameEvent) => GameEffect | Array<GameEffect>;
 
 export interface GameLogic {
     intentResponder: IntentResponder;
@@ -99,4 +99,12 @@ export interface IColorScheme {
     player: IFillStroke;
     fence: IFillStroke;
     wall: string;
+}
+
+export interface UIInput {
+    score: IScore;
+}
+
+export interface UI {
+    input$: Observable<UIInput>;
 }

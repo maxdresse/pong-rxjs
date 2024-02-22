@@ -9,6 +9,7 @@ import { getGameLogic } from './logic';
 import { DEFAULT_ASPECT_RATIO } from './render/render-constants';
 import { createInitialScore } from './score';
 import { createRenderer } from './render/renderer';
+import { forOneOrMany } from './array-utils';
 
 interface ILoopDef {
     renderer: IRenderer;
@@ -66,7 +67,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
 
     // wire events and controls to effects
     const sub = merge(inputs$, events$)
-        .subscribe(effect => effect.apply(gameSituation))
+        .subscribe(effect => forOneOrMany(effect, e => e.apply(gameSituation)));
 
     // canvas size management
     const aspectRatio$ = new BehaviorSubject<number>(DEFAULT_ASPECT_RATIO);
