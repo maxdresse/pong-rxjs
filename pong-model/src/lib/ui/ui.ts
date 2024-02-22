@@ -21,9 +21,11 @@ function mountUIElement(canvas: HTMLCanvasElement, initFct: (el: HTMLDivElement)
     stl.position = 'absolute';
     stl.width = '50px';
     stl.height = '50px';
+    stl.lineHeight = '50px';
     stl.border = 'solid white 1px';
     stl.bottom = '0';
     stl.color = 'white';
+    stl.textAlign = 'center';
     initFct(uiEl);
     const canvasParent = canvas.parentElement;
     if (!canvasParent) {
