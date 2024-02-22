@@ -5,7 +5,7 @@ import { attachResizer } from './canvas-resizer';
 import { initWorld } from './init-world';
 import { getDefaultParameters } from './default-parameters';
 import { getAllInputs } from './input/get-all-inputs';
-import { getGameLogic } from './logic';
+import { createGameLogic } from './logic';
 import { DEFAULT_ASPECT_RATIO } from './render/render-constants';
 import { createInitialScore } from './score';
 import { createRenderer } from './render/renderer';
@@ -38,7 +38,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const objectsSub$ = new Subject<Array<IObj>>();
     // events
     const score = createInitialScore();
-    const gameLogic = getGameLogic(def);
+    const gameLogic = createGameLogic({ score });
     const eventSubj$ = new Subject<SomeGameEvent>();
     const events$ = eventSubj$.pipe(
         map(gameLogic.eventResponder)

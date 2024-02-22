@@ -10,17 +10,12 @@ export function drawPlayer(ctx: CanvasRenderingContext2D, body: b2Body, cs: ICol
     });
 }
 
-let lastShape: b2PolygonShape;
 export function drawPaddle(body: b2Body, ctx: CanvasRenderingContext2D, colors: { fill: string; stroke: string }) {
     const f = body.GetFixtureList();
     if (!f) {
         return;
     }
     const shape = f.GetShape() as b2PolygonShape;
-    if (JSON.stringify(lastShape?.m_vertices) !== JSON.stringify(shape.m_vertices)) {
-        console.log(shape?.m_vertices);
-        lastShape = shape;
-    }
     const shapeType = shape.GetType();
     if (shapeType === b2ShapeType.e_polygon) {
         const vertexCount = shape.m_count;

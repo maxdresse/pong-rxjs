@@ -1,9 +1,16 @@
 import { GameEffect, GameSituation } from '../types';
 
-export function createChangeScoreEffect(playerToScore: GameSituation['score']['playerToScore']): GameEffect {
+type PlayerToScore = GameSituation['score']['playerToScore'];
+
+export function createChangeScoreEffect(scoreMutationFn: (playerToScore: PlayerToScore) => void): GameEffect {
     return {
         apply: (gameSituation) => {
-            gameSituation.score.playerToScore = playerToScore;
+            // cpy
+            const tmp = JSON.parse(JSON.stringify(gameSituation.score.playerToScore));
+            // mutate 
+            scoreMutationFn(tmp);
+            // set
+            gameSituation.score.playerToScore = tmp;
         }
     };
 }
