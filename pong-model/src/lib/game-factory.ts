@@ -38,7 +38,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
 
     const objectsSub$ = new Subject<Array<IObj>>();
     // events
-    const [score] = createInitialScore();
+    const [score, playerToScore$] = createInitialScore();
     const gameLogic = createGameLogic({ score });
     const eventSubj$ = new Subject<SomeGameEvent>();
     const events$ = eventSubj$.pipe(
@@ -76,7 +76,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
     sub.add(devicePxPerMeter.subscribe(pxPerMtr => params.zoomFactor = pxPerMtr));
 
     // ui
-    initUI(def.canvas, { input$: of({ score: { playerToScore: [0, 0] }}) });
+    initUI(def.canvas, { score$: playerToScore$ });
 
     // tip off game loop
     requestAnimationFrame(loop);

@@ -19,10 +19,6 @@ export interface IObj {
     pos: Vc2;
 }
 
-export interface IScore {
-    playerToScore: [number, number];
-}
-
 export interface IGame {
     objects$: Observable<Array<IObj>>;
     tearDown: () => void;
@@ -99,9 +95,9 @@ export interface IColorScheme {
 }
 
 export interface UIInput {
-    score: IScore;
+    score: Score;
 }
 
 export interface UIData     {
-    input$: Observable<UIInput>;
+    score$: Observable<Score['playerToScore']>;
 }

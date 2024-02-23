@@ -1,26 +1,32 @@
-import { Player, UIData, UIInput } from '../types';
+import { Player, Score, UIData, UIInput } from '../types';
 
 export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
     mountUIElement(canvas, el => {
         el.style.left = '0';
-        uiData.input$.subscribe(d => updateUIEl(el, d, Player.PLAYER1))
+        subscribeToScore(uiData, el, Player.PLAYER1);
     });
     mountUIElement(canvas, el => {
         el.style.right = '0';
-        uiData.input$.subscribe(d => updateUIEl(el, d, Player.PLAYER2))
+        subscribeToScore(uiData, el, Player.PLAYER2);
     });
 }
 
-function updateUIEl(el: HTMLDivElement, d: UIInput, pl: Player): void {
-    el.innerText = d.score.playerToScore[pl] + '';
+function subscribeToScore(uiData: UIData, el: HTMLDivElement, player: Player) {
+    uiData.score$.subscribe(p2s => updateUIEl(el, p2s, player));
 }
 
+function updateUIEl(el: HTMLDivElement, p2s: Score['playerToScore'], pl: Player): void {
+    el.innerText = p2s[pl] + '';
+}
+
+const PLAYER_STATUS_W = '50px';
+const PLAYER_STATUS_H = '50px';
 function mountUIElement(canvas: HTMLCanvasElement, initFct: (el: HTMLDivElement) => void) {
     const uiEl = document.createElement('div');
     const stl = uiEl.style;
     stl.position = 'absolute';
-    stl.width = '50px';
-    stl.height = '50px';
+    stl.width = PLAYER_STATUS_W;
+    stl.height = PLAYER_STATUS_H;
     stl.lineHeight = '50px';
     stl.border = 'solid white 1px';
     stl.bottom = '0';

@@ -2,7 +2,7 @@ import { createPlayerSlowdownEffect } from './effects/player-slowdown-effect';
 import { createMovePlayerEffect } from './effects/move-player-effect';
 import { isPlayerHitsObstacleEvent } from './events/player-hits-obstacle-event';
 import { isMovePlayerIntent } from './intents/player-control-intents';
-import { GameLogic, IGameDef, IScore } from './types';
+import { GameLogic, IGameDef, Score } from './types';
 import { isGoalScoredEvent } from './events/goal-scored-event';
 import { createKickoffEffect } from './effects/kickoff-effect';
 import { otherPlayer } from './player-utils';
@@ -10,7 +10,7 @@ import { createChangeScoreEffect } from './effects/change-score-effect';
 
 
 
-export function createGameLogic({ score }: { score: IScore }): GameLogic {
+export function createGameLogic({ score }: { score: Score }): GameLogic {
     return {
         intentResponder: (intent) => {
             if (isMovePlayerIntent(intent)) {
