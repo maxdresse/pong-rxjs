@@ -1,4 +1,5 @@
 import { Player, Score, UIData, UIInput } from '../types';
+import { PLAYER_STATUS_W, PLAYER_STATUS_H, PLAYER_STATUS_LH, PLAYER_STATUS_BORDER_WIDTH, PLAYER_STATUS_ALIGNMENT } from './ui-constants';
 
 export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
     mountUIElement(canvas, el => {
@@ -19,17 +20,15 @@ function updateUIEl(el: HTMLDivElement, p2s: Score['playerToScore'], pl: Player)
     el.innerText = p2s[pl] + '';
 }
 
-const PLAYER_STATUS_W = '50px';
-const PLAYER_STATUS_H = '50px';
 function mountUIElement(canvas: HTMLCanvasElement, initFct: (el: HTMLDivElement) => void) {
     const uiEl = document.createElement('div');
     const stl = uiEl.style;
     stl.position = 'absolute';
     stl.width = PLAYER_STATUS_W;
     stl.height = PLAYER_STATUS_H;
-    stl.lineHeight = '50px';
-    stl.border = 'solid white 1px';
-    stl.bottom = '0';
+    stl.lineHeight = PLAYER_STATUS_LH;
+    stl.border = `solid white ${PLAYER_STATUS_BORDER_WIDTH}`;
+    stl.bottom = PLAYER_STATUS_ALIGNMENT;
     stl.color = 'white';
     stl.textAlign = 'center';
     initFct(uiEl);
