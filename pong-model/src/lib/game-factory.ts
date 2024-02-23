@@ -39,7 +39,8 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const objectsSub$ = new Subject<Array<IObj>>();
     // events
     const [score, playerToScore$] = createInitialScore();
-    const gameLogic = createGameLogic({ score });
+    const params: GameParameters = getDefaultParameters();
+    const gameLogic = createGameLogic({ score, params });
     const eventSubj$ = new Subject<SomeGameEvent>();
     const events$ = eventSubj$.pipe(
         map(gameLogic.eventResponder)
@@ -53,7 +54,6 @@ export const createGame: GameFactory = (def: IGameDef) => {
     if (!ctx) {
         throw Error('unexpected null context');
     }
-    const params: GameParameters = getDefaultParameters();
     const renderer = createRenderer(ctx, params);
 
     def.canvas.style.backgroundColor = params.colorScheme.background;

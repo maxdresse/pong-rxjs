@@ -2,7 +2,9 @@ import { GameParameters } from './types';
 import { DEFAULT_POS_ITERATIONS, DEFAULT_VEL_ITERATIONS } from './physical-constants';
 import { DEFAULT_ZOOM } from './render/render-constants';
 import { DEFAULT_TIME_STEP } from './physical-constants';
-import { EIGHTIES_DARK_SCHEME, EIGHTIES_LIGHT_SCHEME } from './render/color-schemes/eighties';
+import { EIGHTIES_DARK_SCHEME } from './render/color-schemes/eighties';
+
+const GOALS_TO_WIN = 5;
 
 export function getDefaultParameters(): GameParameters {
     return {
@@ -11,6 +13,7 @@ export function getDefaultParameters(): GameParameters {
         positionIterations: DEFAULT_POS_ITERATIONS,
         velocityIterations: DEFAULT_VEL_ITERATIONS,
         timeStep: DEFAULT_TIME_STEP,
-        colorScheme: EIGHTIES_DARK_SCHEME
+        colorScheme: EIGHTIES_DARK_SCHEME,
+        goalsToWin: GOALS_TO_WIN
     };
 }

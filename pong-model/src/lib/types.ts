@@ -73,6 +73,7 @@ export interface GameParameters {
     velocityIterations: number;
     timeStep: number;
     colorScheme: IColorScheme;
+    goalsToWin: number;
 }
 
 export interface IGameDef {
