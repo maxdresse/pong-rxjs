@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
 import { Score } from './types';
-import { createObsValue } from './obs-value';
+import { createObservableProperty } from './observable-property';
 
 export function createInitialScore(): [Score, Observable<Score["playerToScore"]>] {
     const initialVal = [0, 0];
-    return createObsValue("playerToScore", initialVal) as unknown as [Score, Observable<Score["playerToScore"]>]; 
+    return createObservableProperty("playerToScore", initialVal) as unknown as [Score, Observable<Score["playerToScore"]>]; 
 }
