@@ -1,12 +1,12 @@
-import { Player, Score, UIData, UIInput } from '../types';
+import { GameParameters, IColorScheme, Player, Score, UIData } from '../types';
 import { PLAYER_STATUS_W, PLAYER_STATUS_H, PLAYER_STATUS_LH, PLAYER_STATUS_BORDER_WIDTH, PLAYER_STATUS_ALIGNMENT } from './ui-constants';
 
-export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
-    mountUIElement(canvas, el => {
+export function initUI(canvas: HTMLCanvasElement, uiData: UIData ): void {
+    mountUIElement(canvas, uiData, el => {
         el.style.left = '0';
         subscribeToScore(uiData, el, Player.PLAYER1);
     });
-    mountUIElement(canvas, el => {
+    mountUIElement(canvas, uiData, el => {
         el.style.right = '0';
         subscribeToScore(uiData, el, Player.PLAYER2);
     });
@@ -20,16 +20,17 @@ function updateUIEl(el: HTMLDivElement, p2s: Score['playerToScore'], pl: Player)
     el.innerText = p2s[pl] + '';
 }
 
-function mountUIElement(canvas: HTMLCanvasElement, initFct: (el: HTMLDivElement) => void) {
+function mountUIElement(canvas: HTMLCanvasElement, uiData: UIData, initFct: (el: HTMLDivElement) => void) {
+    const colorScheme = uiData.params.colorScheme;
     const uiEl = document.createElement('div');
     const stl = uiEl.style;
     stl.position = 'absolute';
     stl.width = PLAYER_STATUS_W;
     stl.height = PLAYER_STATUS_H;
     stl.lineHeight = PLAYER_STATUS_LH;
-    stl.border = `solid white ${PLAYER_STATUS_BORDER_WIDTH}`;
+    stl.border = `solid ${colorScheme.text} ${PLAYER_STATUS_BORDER_WIDTH}`;
     stl.bottom = PLAYER_STATUS_ALIGNMENT;
-    stl.color = 'white';
+    stl.color = colorScheme.text;
     stl.textAlign = 'center';
     initFct(uiEl);
     const canvasParent = canvas.parentElement;

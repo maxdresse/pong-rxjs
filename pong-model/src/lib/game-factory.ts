@@ -76,7 +76,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
     sub.add(devicePxPerMeter.subscribe(pxPerMtr => params.zoomFactor = pxPerMtr));
 
     // ui
-    initUI(def.canvas, { score$: playerToScore$ });
+    initUI(def.canvas, { score$: playerToScore$, params });
 
     // tip off game loop
     requestAnimationFrame(loop);

@@ -92,12 +92,10 @@ export interface IColorScheme {
     player: IFillStroke;
     fence: IFillStroke;
     wall: string;
-}
-
-export interface UIInput {
-    score: Score;
+    text: string;
 }
 
 export interface UIData     {
     score$: Observable<Score['playerToScore']>;
+    params: GameParameters;
 }
