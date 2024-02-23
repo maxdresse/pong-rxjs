@@ -38,7 +38,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
 
     const objectsSub$ = new Subject<Array<IObj>>();
     // events
-    const score = createInitialScore();
+    const [score] = createInitialScore();
     const gameLogic = createGameLogic({ score });
     const eventSubj$ = new Subject<SomeGameEvent>();
     const events$ = eventSubj$.pipe(

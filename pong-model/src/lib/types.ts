@@ -38,7 +38,6 @@ export type SomeGameIntent = GameIntent<number, unknown>;
 export type GameObjectType = 'goal' | 'wall' | 'player' | 'ball';
 
 export interface Score {
-    goalsToWin: number;
     playerToScore: [number, number];
 }
 
