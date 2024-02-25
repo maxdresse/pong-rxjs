@@ -42,6 +42,7 @@ export interface GameSituation {
     ballBody: b2Body;
     params: GameParameters;
     score: Score
+    startLoop: () => void
 }
 
 export interface GameEffect {
@@ -99,4 +100,5 @@ export interface IColorScheme {
 export interface UIData     {
     score$: Observable<Score['playerToScore']>;
     params: GameParameters;
+    onUiIntent(intent: SomeGameIntent): void
 }

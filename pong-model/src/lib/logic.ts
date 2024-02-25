@@ -8,6 +8,8 @@ import { createKickoffEffect } from './effects/kickoff-effect';
 import { otherPlayer } from './player-utils';
 import { createChangeScoreEffect } from './effects/change-score-effect';
 import { createWinVisualizationEffect } from './effects/win-visualization-effect';
+import { isPauseIntent, isPlayIntent } from './intents/play-pause-intent';
+import { createPauseEffect, createPlayEffect } from './effects/play-pause-effect';
 
 
 
@@ -21,6 +23,10 @@ export function createGameLogic({ score, params }: GameLogitInit): GameLogic {
         intentResponder: (intent) => {
             if (isMovePlayerIntent(intent)) {
                 return createMovePlayerEffect(intent.payload) ;
+            } else if (isPauseIntent(intent)) {
+                return createPauseEffect();
+            } else if (isPlayIntent(intent)) {
+                return createPlayEffect();
             }
             throw Error('unknown intent');
         },

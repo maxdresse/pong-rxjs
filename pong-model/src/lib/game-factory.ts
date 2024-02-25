@@ -1,5 +1,5 @@
 import { BehaviorSubject, Subject, map, merge, of } from 'rxjs';
-import { IGameDef, IObj, GameFactory, GameParameters, GameEffect, SomeGameEvent, IRenderer } from './types'
+import { IGameDef, IObj, GameFactory, GameParameters, GameEffect, SomeGameEvent, IRenderer, SomeGameIntent } from './types'
 import { b2World } from '@box2d/core';
 import { attachResizer } from './canvas-resizer';
 import { initWorld } from './init-world';
@@ -20,7 +20,7 @@ interface ILoopDef {
 
 const createLoop = ({ renderer, world, params }: ILoopDef) => {
     const onFrame$ = new Subject<void>();
-    const { timeStep, paused, positionIterations, velocityIterations} = params;
+    const { timeStep, positionIterations, velocityIterations} = params;
     const loop = () => {
         onFrame$.next();
         world.Step(timeStep, { 
@@ -28,7 +28,7 @@ const createLoop = ({ renderer, world, params }: ILoopDef) => {
             velocityIterations 
         });
         renderer.draw(world);
-        if (!paused) {
+        if (!params.paused) {
             requestAnimationFrame(loop);
         }
     };
@@ -59,10 +59,14 @@ export const createGame: GameFactory = (def: IGameDef) => {
     def.canvas.style.backgroundColor = params.colorScheme.background;
     const { loop, onFrame$ } = createLoop({ renderer, params, world });
 
+    // ui
+    const uiIntent$ = new Subject<SomeGameIntent>();
+    initUI(def.canvas, { score$: playerToScore$, params, onUiIntent: i => uiIntent$.next(i) });
+
     // controls
-    const gameSituation = { playerBodies, ballBody, params, score };
+    const gameSituation = { playerBodies, ballBody, params, score, startLoop: () => requestAnimationFrame(loop) };
     const inputFactory = getAllInputs();
-    const inputs$ = inputFactory({ onFrame$ }).pipe(
+    const inputs$ = merge(inputFactory({ onFrame$ }), uiIntent$).pipe(
         map(gameLogic.intentResponder)
     );
 
@@ -75,11 +79,8 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const { detachResizer, devicePxPerMeter$: devicePxPerMeter } = attachResizer(def.canvas, aspectRatio$);
     sub.add(devicePxPerMeter.subscribe(pxPerMtr => params.zoomFactor = pxPerMtr));
 
-    // ui
-    initUI(def.canvas, { score$: playerToScore$, params });
-
     // tip off game loop
-    requestAnimationFrame(loop);
+    gameSituation.startLoop();
 
     return {
         objects$: objectsSub$,

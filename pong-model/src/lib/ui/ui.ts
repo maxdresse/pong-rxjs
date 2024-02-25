@@ -1,7 +1,8 @@
+import { createPauseIntent, createPlayIntent } from '../intents/play-pause-intent';
 import { GameParameters, IColorScheme, Player, Score, UIData } from '../types';
 import { PLAYER_STATUS_W, PLAYER_STATUS_H, PLAYER_STATUS_LH, PLAYER_STATUS_BORDER_WIDTH, PLAYER_STATUS_ALIGNMENT } from './ui-constants';
 
-export function initUI(canvas: HTMLCanvasElement, uiData: UIData ): void {
+export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
     mountUIElement(canvas, uiData, el => {
         el.style.left = '0';
         subscribeToScore(uiData, el, Player.PLAYER1);
@@ -9,6 +10,12 @@ export function initUI(canvas: HTMLCanvasElement, uiData: UIData ): void {
     mountUIElement(canvas, uiData, el => {
         el.style.right = '0';
         subscribeToScore(uiData, el, Player.PLAYER2);
+    });
+    window.addEventListener('keydown', ev => {
+        if (ev.code === 'Space') {
+            const intent = uiData.params.paused ? createPlayIntent() : createPauseIntent();
+            uiData.onUiIntent(intent);
+        }
     });
 }
 
