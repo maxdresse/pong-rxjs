@@ -4,7 +4,7 @@ import { b2World } from '@box2d/core';
 import { attachResizer } from './canvas-resizer';
 import { initWorld } from './init-world';
 import { getDefaultParameters } from './default-parameters';
-import { getAllInputs } from './input/get-all-inputs';
+import { getAllGameInputs } from './input/get-all-inputs';
 import { createGameLogic } from './logic';
 import { DEFAULT_ASPECT_RATIO } from './render/render-constants';
 import { createInitialScore } from './score';
@@ -60,17 +60,18 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const { loop, onFrame$ } = createLoop({ renderer, params, world });
 
     // ui
-    const uiIntent$ = new Subject<SomeGameIntent>();
-    initUI(def.canvas, { score$: playerToScore$, params, onUiIntent: i => uiIntent$.next(i) });
+    const uiControlIntents$ = new Subject<SomeGameIntent>();
+    initUI(def.canvas, { score$: playerToScore$, params, onUiIntent: i => uiControlIntents$.next(i) });
 
     // controls
-    const gameSituation = { playerBodies, ballBody, params, score, startLoop: () => requestAnimationFrame(loop) };
-    const inputFactory = getAllInputs();
-    const inputs$ = merge(inputFactory({ onFrame$ }), uiIntent$).pipe(
+    const gameInputFactory = getAllGameInputs();
+    const gameControlIntents$ = gameInputFactory({ onFrame$ });
+    const inputs$ = merge(gameControlIntents$, uiControlIntents$).pipe(
         map(gameLogic.intentResponder)
     );
 
     // wire events and controls to effects
+    const gameSituation = { playerBodies, ballBody, params, score, startLoop: () => requestAnimationFrame(loop) };
     const sub = merge(inputs$, events$)
         .subscribe(effect => forOneOrMany(effect, e => e.apply(gameSituation)));
 

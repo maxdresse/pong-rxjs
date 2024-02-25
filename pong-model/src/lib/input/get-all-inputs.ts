@@ -2,7 +2,7 @@ import { getGamepadInput } from './gamepad-input';
 import { combineInputs } from './input-utils';
 import { getKeyboardInput } from './keyboard-input';
 
-export function getAllInputs() {
+export function getAllGameInputs() {
     return getKeyboardAndGamepadInput();
 }
 
