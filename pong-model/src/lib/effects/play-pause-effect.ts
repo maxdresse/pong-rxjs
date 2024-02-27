@@ -2,9 +2,8 @@ import { GameEffect } from '../types';
 
 export function createPlayEffect(): GameEffect {
     return {
-        apply: ({ params, startLoop }) => {
+        apply: ({ params }) => {
             params.paused = false;
-            startLoop();
         }
     };
 }

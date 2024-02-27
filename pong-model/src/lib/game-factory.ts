@@ -22,15 +22,16 @@ const createLoop = ({ renderer, world, params }: ILoopDef) => {
     const onFrame$ = new Subject<void>();
     const { timeStep, positionIterations, velocityIterations} = params;
     const loop = () => {
-        onFrame$.next();
-        world.Step(timeStep, { 
-            positionIterations,
-            velocityIterations 
-        });
-        renderer.draw(world);
         if (!params.paused) {
-            requestAnimationFrame(loop);
+            onFrame$.next();
+            world.Step(timeStep, { 
+                positionIterations,
+                velocityIterations 
+            });
         }
+        renderer.draw(world);
+        requestAnimationFrame(loop);
+        
     };
     return { loop, onFrame$ };
 }

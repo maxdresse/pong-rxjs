@@ -41,8 +41,7 @@ export interface GameSituation {
     playerBodies: [b2Body, b2Body];
     ballBody: b2Body;
     params: GameParameters;
-    score: Score
-    startLoop: () => void
+    score: Score;
 }
 
 export interface GameEffect {
