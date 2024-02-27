@@ -10,6 +10,8 @@ import { createChangeScoreEffect } from './effects/change-score-effect';
 import { createWinVisualizationEffect } from './effects/win-visualization-effect';
 import { isPauseIntent, isPlayIntent } from './intents/play-pause-intent';
 import { createPauseEffect, createPlayEffect } from './effects/play-pause-effect';
+import { isToggleThemeIntent } from './intents/toggle-theme-intent';
+import { createToggleThemeEffect } from './effects/toggle-theme-effect';
 
 
 
@@ -27,6 +29,8 @@ export function createGameLogic({ score, params }: GameLogitInit): GameLogic {
                 return createPauseEffect();
             } else if (isPlayIntent(intent)) {
                 return createPlayEffect();
+            } else if (isToggleThemeIntent(intent)) {
+                return createToggleThemeEffect();
             }
             throw Error('unknown intent');
         },

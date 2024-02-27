@@ -1,7 +1,14 @@
 import { createPauseIntent, createPlayIntent } from '../intents/play-pause-intent';
+import { createToggleThemeIntent } from '../intents/toggle-theme-intent';
 import { Player, Score, UIData } from '../types';
 import { initPausedUI } from './paused-ui';
 import { PLAYER_STATUS_W, PLAYER_STATUS_H, PLAYER_STATUS_LH, PLAYER_STATUS_BORDER_WIDTH, PLAYER_STATUS_ALIGNMENT } from './ui-constants';
+
+const UI_KEY_EVENT_TO_HANDLER: { [key: string]: (uiData: UIData) => void } = {
+    Space: uiData => togglePlayPause(uiData),
+    KeyT: uiData => toggleTheme(uiData)
+};
+
 
 export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
     mountUIElement(canvas, uiData, el => {
@@ -13,12 +20,22 @@ export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
         subscribeToScore(uiData, el, Player.PLAYER2);
     });
     window.addEventListener('keydown', ev => {
-        if (ev.code === 'Space') {
-            const intent = uiData.params.paused ? createPlayIntent() : createPauseIntent();
-            uiData.onUiIntent(intent);
+        const handler = UI_KEY_EVENT_TO_HANDLER[ev.code];
+        if (handler) {
+            handler(uiData);
         }
     });
     initPausedUI(canvas, uiData);
+}
+
+function togglePlayPause(uiData: UIData) {
+    const intent = uiData.params.paused ? createPlayIntent() : createPauseIntent();
+    uiData.onUiIntent(intent);
+}
+
+function toggleTheme(uiData: UIData) {
+    const intent = createToggleThemeIntent();
+    uiData.onUiIntent(intent);
 }
 
 function subscribeToScore(uiData: UIData, el: HTMLDivElement, player: Player) {

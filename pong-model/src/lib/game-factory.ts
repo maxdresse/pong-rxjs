@@ -57,6 +57,9 @@ export const createGame: GameFactory = (def: IGameDef) => {
     }
     const renderer = createRenderer(ctx, params);
 
+    const updateBg = () => {
+        //
+    }
     def.canvas.style.backgroundColor = params.colorScheme.background;
     const { loop, onFrame$ } = createLoop({ renderer, params, world });
 

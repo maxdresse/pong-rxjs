@@ -1,0 +1,6 @@
+import { EIGHTIES_DARK_SCHEME, EIGHTIES_LIGHT_SCHEME } from './eighties';
+
+export const ALL_COLOR_SCHEMES = [
+    EIGHTIES_DARK_SCHEME,
+    EIGHTIES_LIGHT_SCHEME
+];
