@@ -18,10 +18,3 @@ export function getDefaultParameters(): GameParameters {
         goalsToWin: GOALS_TO_WIN,
     }, 'paused', 'paused$', false);
 }
-
-function getPausedState(initialVal: boolean): { paused: boolean, paused$: Observable<boolean> } {
-    const [obj, paused$] = createObservableProperty('paused', initialVal);
-    // not working!!! getter setters are removed
-    return Object.assign(obj, { paused$ });
-
-}
