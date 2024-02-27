@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 
-export function createObservableProperty<T, K extends string>(propName: K, initialVal: T): [ { K: T }, Observable<T> ] {
+export function createObservableProperty<T, K extends string>(propName: K, initialVal: T): [ { [key in K]: T }, Observable<T> ] {
     const v$ = new BehaviorSubject<T>(initialVal);
     return [
         {
@@ -10,7 +10,7 @@ export function createObservableProperty<T, K extends string>(propName: K, initi
             set [propName](newS: T) {
                 v$.next(newS);
             }
-        } as { K: T}, 
+        } as { [key in K]: T}, 
         v$.asObservable()
     ];
 }

@@ -1,5 +1,6 @@
 import { createPauseIntent, createPlayIntent } from '../intents/play-pause-intent';
-import { GameParameters, IColorScheme, Player, Score, UIData } from '../types';
+import { Player, Score, UIData } from '../types';
+import { initPausedUI } from './paused-ui';
 import { PLAYER_STATUS_W, PLAYER_STATUS_H, PLAYER_STATUS_LH, PLAYER_STATUS_BORDER_WIDTH, PLAYER_STATUS_ALIGNMENT } from './ui-constants';
 
 export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
@@ -17,6 +18,7 @@ export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
             uiData.onUiIntent(intent);
         }
     });
+    initPausedUI(canvas, uiData);
 }
 
 function subscribeToScore(uiData: UIData, el: HTMLDivElement, player: Player) {
