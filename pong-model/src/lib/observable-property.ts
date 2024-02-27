@@ -14,3 +14,16 @@ export function createObservableProperty<T, K extends string>(propName: K, initi
         v$.asObservable()
     ];
 }
+
+export function addObservableProperty<Ob, T, K extends string>(obj: Ob, propName: K, initialVal: T) {
+    const v$ = new BehaviorSubject<T>(initialVal);
+    Object.defineProperty(obj, propName, {
+        get: function() {
+            return v$.getValue();
+        },
+        set: function(x) {
+            v$.next(x);
+        }
+    });
+    return obj;
+}
