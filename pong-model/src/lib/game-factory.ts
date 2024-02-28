@@ -56,11 +56,6 @@ export const createGame: GameFactory = (def: IGameDef) => {
         throw Error('unexpected null context');
     }
     const renderer = createRenderer(ctx, params);
-
-    const updateBg = () => {
-        //
-    }
-    def.canvas.style.backgroundColor = params.colorScheme.background;
     const { loop, onFrame$ } = createLoop({ renderer, params, world });
 
     // ui

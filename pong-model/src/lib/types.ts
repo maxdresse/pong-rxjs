@@ -69,7 +69,6 @@ export interface GameLogic {
 export interface GameParameters {
     zoomFactor: number;
     paused: boolean;
-    paused$: Observable<boolean>;
     positionIterations: number;
     velocityIterations: number;
     timeStep: number;
