@@ -27,7 +27,7 @@ function updateFromPausedState(canvas: HTMLCanvasElement, params: GameParameters
 function updateCssTextColor(canvas: HTMLCanvasElement, params: GameParameters) {
     const p = canvas.parentElement!;
     if (!p) {
-        console.error('no canvas parent, could update theme');
+        console.error('no canvas parent, could not update from theme');
     }
     p.style.setProperty(TEXT_COL_CSS_PROP, params.colorScheme.text);
 }
