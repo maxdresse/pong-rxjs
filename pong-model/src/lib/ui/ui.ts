@@ -20,18 +20,6 @@ export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
     });
 }
 
-function mountGamepadConfigElement(canvas: HTMLCanvasElement, uiData: UIData) {
-    mountUIElement(canvas, (el, _textcol) => {
-        const stl = el.style;
-        stl.left = '0';
-        stl.width = '100%';
-        stl.display = 'flex';
-        stl.fontSize = '7pt';
-        stl.textAlign = 'left';
-        subscribeToGamepadConfig(uiData, el);
-    });
-}
-
 function mountPlayerScoreElements(canvas: HTMLCanvasElement, uiData: UIData) {
     mountUIElement(canvas, (el, textcol) => {
         const stl = el.style;
@@ -47,12 +35,25 @@ function mountPlayerScoreElements(canvas: HTMLCanvasElement, uiData: UIData) {
     });
 }
 
+function mountGamepadConfigElement(canvas: HTMLCanvasElement, uiData: UIData) {
+    mountUIElement(canvas, (el, _textcol) => {
+        const stl = el.style;
+        stl.left = '0';
+        stl.width = '100%';
+        stl.display = 'flex';
+        stl.fontSize = '7pt';
+        stl.textAlign = 'left';
+        stl.opacity = '0.8';
+        subscribeToGamepadConfig(uiData, el);
+    });
+}
+
 function subscribeToGamepadConfig(uiData: UIData, el: HTMLDivElement) {
     uiData.gamePadConfig$.subscribe(gpcf => {
         const gpds = Object.values(gpcf.playerToGamePad)
             .filter(x => !!x) as Array<Gamepad>;
         el.innerHTML = `
-                ${gpds.map((gp: Gamepad, idx) => `<label style="margin-${idx % 0 ? 'right' : 'left'}: auto">${gp.id}|${gp.index}</label>`)}
+                ${gpds.map((gp: Gamepad) => `<label style="margin: 0 auto">${gp.id} | ${gp.index}</label>`)}
             `;
     });
 }
