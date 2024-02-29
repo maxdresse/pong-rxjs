@@ -1,4 +1,4 @@
-import { b2Contact, b2ContactListener } from '@box2d/core';
+import { b2Body, b2Contact, b2ContactListener } from '@box2d/core';
 import { SomeGameEvent } from './types';
 import { getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createPlayerHitsObstacleEvent as createPlayerHitsObstacleEvent } from './events/player-hits-obstacle-event';
@@ -17,7 +17,7 @@ type ContactData  = {
 function contactToEvent(contact: b2Contact): SomeGameEvent | null {
     const a = contact.GetFixtureA().GetBody();
     const b = contact.GetFixtureB().GetBody();
-    const bodies = [a, b];
+    const bodies = [a, b] as const;
     const cd: ContactData = {};
     bodies.forEach(b => {
         const userData = b.GetUserData();
@@ -30,7 +30,7 @@ function contactToEvent(contact: b2Contact): SomeGameEvent | null {
         }
     });
     if (cd.player?.length) {
-        return onPlayerContact(cd as Parameters<typeof onPlayerContact>[0]);
+        return onPlayerContact(cd as Parameters<typeof onPlayerContact>[0], contact, bodies);
     }
     if (cd.ball?.length) {
         return onBallContact(cd as Parameters<typeof onBallContact>[0]);
@@ -38,7 +38,7 @@ function contactToEvent(contact: b2Contact): SomeGameEvent | null {
     return null;
 }
 
-function onPlayerContact(cd: WithRequired<ContactData, "player">): SomeGameEvent | null {
+function onPlayerContact(cd: WithRequired<ContactData, "player">, contact: b2Contact, bodies: readonly [b2Body, b2Body]): SomeGameEvent | null {
     const player = cd.player?.[0].player;
     if (player === undefined) {
         return null;
@@ -46,6 +46,16 @@ function onPlayerContact(cd: WithRequired<ContactData, "player">): SomeGameEvent
     // goal, fence, wall are all the same from a player's perspective
     if(cd.wall?.length || cd.goal?.length || cd.fence?.length) {
         return createPlayerHitsObstacleEvent(player);
+    }
+    if (cd.player?.length) {
+        const normal = contact.GetManifold().localNormal;
+        if (normal) {
+            const deltaV = bodies[0].GetLinearVelocity().Subtract(bodies[1].GetLinearVelocity());
+            const impactIntensity = normal.Dot(deltaV);
+            if (impactIntensity > 0.03) {
+                return 
+            }
+        }
     }
     return null;
 }

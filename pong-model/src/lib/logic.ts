@@ -12,6 +12,8 @@ import { isPauseIntent, isPlayIntent } from './intents/play-pause-intent';
 import { createPauseEffect, createPlayEffect } from './effects/play-pause-effect';
 import { isToggleThemeIntent } from './intents/toggle-theme-intent';
 import { createToggleThemeEffect } from './effects/toggle-theme-effect';
+import { isHitBallHardEvent } from './events/player-hits-ball-hard';
+import { createForceFeedbackEffect } from './effects/force-feedback-effect';
 
 
 
@@ -39,6 +41,8 @@ export function createGameLogic({ score, params }: GameLogitInit): GameLogic {
                 return createPlayerSlowdownEffect({ player: event.payload.player });
             } else if (isGoalScoredEvent(event)) {
                 return handleGoal(event, score, params);
+            } else if (isHitBallHardEvent(event)) {
+                return createForceFeedbackEffect(event.payload.player);
             }
             throw Error('unknown event');
         }
