@@ -7,7 +7,7 @@ import { GoalScoredPayload, isGoalScoredEvent } from './events/goal-scored-event
 import { createKickoffEffect } from './effects/kickoff-effect';
 import { otherPlayer } from './player-utils';
 import { createChangeScoreEffect } from './effects/change-score-effect';
-import { createWinVisualizationEffect } from './effects/win-visualization-effect';
+import { createPlayerWinsEffect } from './effects/player-wins-effect';
 import { isPauseIntent, isPlayIntent } from './intents/play-pause-intent';
 import { createPauseEffect, createPlayEffect } from './effects/play-pause-effect';
 import { isToggleThemeIntent } from './intents/toggle-theme-intent';
@@ -52,9 +52,13 @@ function handleGoal(event: GameEvent<101, GoalScoredPayload>, score: Score, para
         return [createChangeScoreEffect(p2s => p2s[scoringPlayer]++), createKickoffEffect(scoringPlayer)];
     }
     // case player wins
-    return [createChangeScoreEffect(p2s => {
-        p2s[Player.PLAYER1] = 0;
-        p2s[Player.PLAYER2] = 0;
-    }), createWinVisualizationEffect(scoringPlayer)]
+    return [
+        createChangeScoreEffect(p2s => {
+            p2s[Player.PLAYER1] = 0;
+            p2s[Player.PLAYER2] = 0;
+        }),
+        createPlayerWinsEffect(scoringPlayer),
+        createKickoffEffect(scoringPlayer)
+    ];
 }
 
