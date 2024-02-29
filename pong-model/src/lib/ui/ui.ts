@@ -12,6 +12,10 @@ const UI_KEY_EVENT_TO_HANDLER: { [key: string]: (uiData: UIData) => void } = {
 export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
     mountPlayerScoreElements(canvas, uiData);
     mountGamepadConfigElement(canvas, uiData);
+    registerKeyHandlers(uiData);
+}
+
+function registerKeyHandlers(uiData: UIData) {
     window.addEventListener('keydown', ev => {
         const handler = UI_KEY_EVENT_TO_HANDLER[ev.code];
         if (handler) {
