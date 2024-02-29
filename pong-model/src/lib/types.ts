@@ -85,6 +85,7 @@ export interface GameParameters {
     timeStep: number;
     colorScheme: IColorScheme;
     goalsToWin: number;
+    gamePadConfig: GamepadConfig;
     userMessage?: UserMessage;
 }
 
@@ -112,4 +113,8 @@ export interface UIData     {
     score$: Observable<Score['playerToScore']>;
     params: GameParameters;
     onUiIntent(intent: SomeGameIntent): void
+}
+
+export interface GamepadConfig {
+    playerToGamePad: { [key in Player]: Gamepad | null };
 }

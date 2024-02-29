@@ -14,6 +14,7 @@ export function getDefaultParameters(): GameParameters {
         timeStep: DEFAULT_TIME_STEP,
         colorScheme: EIGHTIES_DARK_SCHEME,
         goalsToWin: GOALS_TO_WIN,
-        paused: false
+        paused: false,
+        gamePadConfig: { playerToGamePad: [null, null] }
     };
 }

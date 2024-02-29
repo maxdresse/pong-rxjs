@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subject, map, merge, of } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, map, merge, of } from 'rxjs';
 import { IGameDef, IObj, GameFactory, GameParameters, GameEffect, SomeGameEvent, IRenderer, SomeGameIntent } from './types'
 import { b2World } from '@box2d/core';
 import { attachResizer } from './canvas-resizer';
@@ -11,6 +11,7 @@ import { createInitialScore } from './score';
 import { createRenderer } from './render/renderer';
 import { forOneOrMany } from './array-utils';
 import { initUI } from './ui/ui';
+import { getGamepadConfig } from './gamepad-config';
 
 interface ILoopDef {
     renderer: IRenderer;
@@ -62,6 +63,14 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const uiControlIntents$ = new Subject<SomeGameIntent>();
     initUI(def.canvas, { score$: playerToScore$, params, onUiIntent: i => uiControlIntents$.next(i) });
 
+    const sub = new Subscription();
+
+    // gamepad watcher
+    const gamePadConfig$ = getGamepadConfig();
+    sub.add(
+        gamePadConfig$.subscribe(gpcf => params.gamePadConfig = gpcf)
+    );
+
     // controls
     const gameInputFactory = getAllGameInputs();
     const gameControlIntents$ = gameInputFactory({ onFrame$ });
@@ -71,9 +80,10 @@ export const createGame: GameFactory = (def: IGameDef) => {
 
     // wire events and controls to effects
     const gameSituation = { playerBodies, ballBody, params, score, startLoop: () => requestAnimationFrame(loop) };
-    const sub = merge(inputs$, events$)
-        .subscribe(effect => forOneOrMany(effect, e => e.apply(gameSituation)));
-
+    sub.add(
+        merge(inputs$, events$)
+           .subscribe(effect => forOneOrMany(effect, e => e.apply(gameSituation)))
+    );
     // canvas size management
     const aspectRatio$ = new BehaviorSubject<number>(DEFAULT_ASPECT_RATIO);
     const { detachResizer, devicePxPerMeter$: devicePxPerMeter } = attachResizer(def.canvas, aspectRatio$);
