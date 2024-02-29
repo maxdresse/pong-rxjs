@@ -37,6 +37,6 @@ export const BALL_INITIAL_POS = { x: 4, y: 0 };
 
 export const FENCE_SIZE = { x: 3, y: WORLD_HEIGHT };
 export const BALL_KICKOFF_VELOCITY = 0.011;
-export const HARD_HIT_THRESHOLD = 0.04;
+export const HARD_HIT_THRESHOLD = 0.045;
 
 
