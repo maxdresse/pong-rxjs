@@ -4,6 +4,8 @@ import { getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, 
 import { createPlayerHitsObstacleEvent as createPlayerHitsObstacleEvent } from './events/player-hits-obstacle-event';
 import { createGoalScoredEvent } from './events/goal-scored-event';
 import { WithRequired } from './type-utils';
+import { createHitBallHardEvent } from './events/player-hits-ball-hard';
+import { HARD_HIT_THRESHOLD } from './physical-constants';
 
 type ContactData  = {
     ball?:  Array<ReturnType<typeof getBallUserData>>;
@@ -52,8 +54,8 @@ function onPlayerContact(cd: WithRequired<ContactData, "player">, contact: b2Con
         if (normal) {
             const deltaV = bodies[0].GetLinearVelocity().Subtract(bodies[1].GetLinearVelocity());
             const impactIntensity = normal.Dot(deltaV);
-            if (impactIntensity > 0.03) {
-                return 
+            if (impactIntensity > HARD_HIT_THRESHOLD) {
+                return createHitBallHardEvent(cd.player[0].player);
             }
         }
     }
