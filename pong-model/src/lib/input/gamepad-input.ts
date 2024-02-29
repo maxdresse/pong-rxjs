@@ -14,8 +14,9 @@ export function getGamepadInput(): InputFactory {
                 return;
             }
             gpds.forEach((gp, gpIdx) => {
-                // scan first 2 axes
-                const axisCount = 2;
+                // scan only 1 axis, players seem to be confused
+                // if more than one axis works
+                const axisCount = 1;
                 const resultBuf: Array<number | undefined> = [undefined, undefined];
                 const stickThreshold = 0.1;
                 gp.axes.slice(0, axisCount * 2).forEach((v, i) => {
