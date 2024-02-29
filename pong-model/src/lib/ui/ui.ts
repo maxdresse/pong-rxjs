@@ -9,29 +9,51 @@ const UI_KEY_EVENT_TO_HANDLER: { [key: string]: (uiData: UIData) => void } = {
     KeyT: uiData => toggleTheme(uiData)
 };
 
-
 export function initUI(canvas: HTMLCanvasElement, uiData: UIData): void {
-    mountUIElement(canvas, uiData, (el, textcol) => {
-        const stl = el.style;
-        stl.left = '0';
-        initPlayerScoreUIElement(stl, textcol);
-        subscribeToScore(uiData, el, Player.PLAYER1);
-    });
-    mountUIElement(canvas, uiData, (el, textcol) => {
-        const stl = el.style;
-        stl.right = '0';
-        stl.width = PLAYER_STATUS_W;
-        stl.height = PLAYER_STATUS_H;
-        stl.lineHeight = PLAYER_STATUS_LH;
-        stl.border = `solid ${textcol}  ${PLAYER_STATUS_BORDER_WIDTH}`;
-        stl.bottom = PLAYER_STATUS_ALIGNMENT;
-        subscribeToScore(uiData, el, Player.PLAYER2);
-    });
+    mountPlayerScoreElements(canvas, uiData);
+    mountGamepadConfigElement(canvas, uiData);
     window.addEventListener('keydown', ev => {
         const handler = UI_KEY_EVENT_TO_HANDLER[ev.code];
         if (handler) {
             handler(uiData);
         }
+    });
+}
+
+function mountGamepadConfigElement(canvas: HTMLCanvasElement, uiData: UIData) {
+    mountUIElement(canvas, (el, _textcol) => {
+        const stl = el.style;
+        stl.left = '0';
+        stl.width = '100%';
+        stl.display = 'flex';
+        stl.fontSize = '7pt';
+        stl.textAlign = 'left';
+        subscribeToGamepadConfig(uiData, el);
+    });
+}
+
+function mountPlayerScoreElements(canvas: HTMLCanvasElement, uiData: UIData) {
+    mountUIElement(canvas, (el, textcol) => {
+        const stl = el.style;
+        stl.left = '0';
+        initPlayerScoreUIElement(stl, textcol);
+        subscribeToScore(uiData, el, Player.PLAYER1);
+    });
+    mountUIElement(canvas, (el, textcol) => {
+        const stl = el.style;
+        stl.right = '0';
+        initPlayerScoreUIElement(stl, textcol);
+        subscribeToScore(uiData, el, Player.PLAYER2);
+    });
+}
+
+function subscribeToGamepadConfig(uiData: UIData, el: HTMLDivElement) {
+    uiData.gamePadConfig$.subscribe(gpcf => {
+        const gpds = Object.values(gpcf.playerToGamePad)
+            .filter(x => !!x) as Array<Gamepad>;
+        el.innerHTML = `
+                ${gpds.map((gp: Gamepad, idx) => `<label style="margin-${idx % 0 ? 'right' : 'left'}: auto">${gp.id}|${gp.index}</label>`)}
+            `;
     });
 }
 
@@ -61,12 +83,11 @@ function updateUIEl(el: HTMLDivElement, p2s: Score['playerToScore'], pl: Player)
     el.innerText = p2s[pl] + '';
 }
 
-function mountUIElement(canvas: HTMLCanvasElement, uiData: UIData, initFct: (el: HTMLDivElement, textcol: string) => void) {
+function mountUIElement(canvas: HTMLCanvasElement, initFct: (el: HTMLDivElement, textcol: string) => void) {
     const textcol = `var(${TEXT_COL_CSS_PROP}, white)`;
     const uiEl = document.createElement('div');
     const stl = uiEl.style;
     stl.position = 'absolute';
-    
     stl.color = textcol;
     stl.textAlign = 'center';
     initFct(uiEl, textcol);

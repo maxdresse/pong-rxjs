@@ -111,6 +111,7 @@ export interface IColorScheme {
 
 export interface UIData     {
     score$: Observable<Score['playerToScore']>;
+    gamePadConfig$: Observable<GamepadConfig>;
     params: GameParameters;
     onUiIntent(intent: SomeGameIntent): void
 }

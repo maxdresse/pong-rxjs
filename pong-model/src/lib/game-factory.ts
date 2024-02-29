@@ -59,17 +59,21 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const renderer = createRenderer(ctx, params);
     const { loop, onFrame$ } = createLoop({ renderer, params, world });
 
-    // ui
-    const uiControlIntents$ = new Subject<SomeGameIntent>();
-    initUI(def.canvas, { score$: playerToScore$, params, onUiIntent: i => uiControlIntents$.next(i) });
-
     const sub = new Subscription();
-
     // gamepad watcher
     const gamePadConfig$ = getGamepadConfig();
     sub.add(
         gamePadConfig$.subscribe(gpcf => params.gamePadConfig = gpcf)
     );
+
+    // ui
+    const uiControlIntents$ = new Subject<SomeGameIntent>();
+    initUI(def.canvas, { 
+        score$: playerToScore$,
+        params,
+        onUiIntent: i => uiControlIntents$.next(i),
+        gamePadConfig$
+     });
 
     // controls
     const gameInputFactory = getAllGameInputs();
