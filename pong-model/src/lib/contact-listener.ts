@@ -52,7 +52,7 @@ function onPlayerContact(cd: WithRequired<ContactData, "player">, contact: b2Con
     if (cd.player?.length) {
         const normal = contact.GetManifold().localNormal;
         if (normal) {
-            const deltaV = bodies[0].GetLinearVelocity().Subtract(bodies[1].GetLinearVelocity());
+            const deltaV = bodies[0].GetLinearVelocity().Clone().Subtract(bodies[1].GetLinearVelocity());
             const impactIntensity = normal.Dot(deltaV);
             if (impactIntensity > HARD_HIT_THRESHOLD) {
                 return createHitBallHardEvent(cd.player[0].player);
