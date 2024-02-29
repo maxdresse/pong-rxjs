@@ -66,6 +66,17 @@ export interface GameLogic {
     eventResponder: EventResponder;
 }
 
+export const enum UserMessageType {
+    P1 = 1,
+    P2,
+    BOTH
+}
+
+export interface UserMessage {
+    type: UserMessageType;
+    msg: string;
+}
+
 export interface GameParameters {
     zoomFactor: number;
     paused: boolean;
@@ -74,6 +85,7 @@ export interface GameParameters {
     timeStep: number;
     colorScheme: IColorScheme;
     goalsToWin: number;
+    userMessage?: UserMessage;
 }
 
 export interface IGameDef {
