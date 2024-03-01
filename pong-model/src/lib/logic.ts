@@ -14,6 +14,7 @@ import { isToggleThemeIntent } from './intents/toggle-theme-intent';
 import { createToggleThemeEffect } from './effects/toggle-theme-effect';
 import { isHitBallHardEvent } from './events/player-hits-ball-hard';
 import { createForceFeedbackEffect } from './effects/force-feedback-effect';
+import { createResetPlayersEffect } from './effects/reset-players-effect';
 
 
 
@@ -62,6 +63,7 @@ function handleGoal(event: GameEvent<101, GoalScoredPayload>, score: Score, para
             p2s[Player.PLAYER2] = 0;
         }),
         createPlayerWinsEffect(scoringPlayer),
+        createResetPlayersEffect(),
         createKickoffEffect(scoringPlayer)
     ];
 }

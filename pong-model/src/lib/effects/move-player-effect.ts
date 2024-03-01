@@ -4,7 +4,10 @@ import { MOVE_IMPULSE_FACTOR } from '../physical-constants';
 
 export function createMovePlayerEffect({ player, direction }: {player: Player; direction: Vc2} ):  GameEffect {
     return {
-        apply: ({ playerBodies }: GameSituation) => {
+        apply: ({ playerBodies, params }: GameSituation) => {
+            if (params.paused) {
+                return;
+            }
             const body = playerBodies[player];
             if (!body) {
                 return;
