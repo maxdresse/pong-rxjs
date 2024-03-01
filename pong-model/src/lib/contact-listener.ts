@@ -32,7 +32,10 @@ function contactToEvent(contact: b2Contact): SomeGameEvent | null {
         }
     });
     if (cd.player?.length) {
-        return onPlayerContact(cd as Parameters<typeof onPlayerContact>[0], contact, bodies);
+        const ev = onPlayerContact(cd as Parameters<typeof onPlayerContact>[0], contact, bodies);
+        if (ev) {
+            return ev;
+        }
     }
     if (cd.ball?.length) {
         return onBallContact(cd as Parameters<typeof onBallContact>[0]);

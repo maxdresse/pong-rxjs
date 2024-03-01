@@ -62,9 +62,9 @@ function handleGoal(event: GameEvent<101, GoalScoredPayload>, score: Score, para
             p2s[Player.PLAYER1] = 0;
             p2s[Player.PLAYER2] = 0;
         }),
+        createKickoffEffect(scoringPlayer),
         createPlayerWinsEffect(scoringPlayer),
         createResetPlayersEffect(),
-        createKickoffEffect(scoringPlayer)
     ];
 }
 

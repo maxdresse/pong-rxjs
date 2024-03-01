@@ -37,7 +37,9 @@ export const BALL_DENSITY = 0.5;
 export const BALL_INITIAL_POS = { x: 4, y: 0 };
 
 export const FENCE_SIZE = { x: 3, y: WORLD_HEIGHT };
-export const BALL_KICKOFF_VELOCITY = 0.011;
+export const BALL_KICKOFF_VELOCITY = 0;
+export const BALL_KICKOFF_DELTA_X = 6;
 export const HARD_HIT_THRESHOLD = 0.045;
+export const KICKOFF_DELAY = 500;
 
 
