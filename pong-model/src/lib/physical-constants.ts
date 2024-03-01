@@ -1,4 +1,4 @@
-export const DEFAULT_DAMPING = 0.00005;
+export const DEFAULT_DAMPING = 0.001177;
 export const DEFAULT_DENSITY = 3.5;
 
 export const DEFAULT_POS_ITERATIONS = 3;
@@ -31,7 +31,7 @@ export const PLAYER_RESTITUTION = 0;
 export const PLAYER_FRICTION = 0.2;
 export const PLAYER_DAMPING = DEFAULT_DAMPING;  
 
-export const MOVE_IMPULSE_FACTOR = 0.985;
+export const MOVE_IMPULSE_FACTOR = 2.985;
 
 export const BALL_DENSITY = 0.5;
 export const BALL_INITIAL_POS = { x: 4, y: 0 };
