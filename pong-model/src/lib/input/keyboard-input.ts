@@ -4,8 +4,11 @@ import { MovePlayerIntent, createMovePlayerIntent } from '../intents/player-cont
 import { UNIT_VECTOR_UP, UNIT_VECTOR_DOWN, UNIT_VECTOR_LEFT, UNIT_VECTOR_RIGHT, UNIT_VECTOR_UPPER_LEFT, UNIT_VECTOR_UPPER_RIGHT, UNIT_VECTOR_LOWER_RIGHT, UNIT_VECTOR_LOWER_LEFT } from './input-constants';
 import { combineInputs } from './input-utils';
 
+// want truthy values to avoid errors when checking for truthiness
+// numeric values are bit shifts apart in order to easily compute
+// combined diagonal direction (like UP-LEFT) by addition
 const enum SymbolicDirection {
-    UP = 1, // need truthy values which are bit-shifts apart
+    UP = 1,
     DOWN = 2,
     LEFT = 4,
     RIGHT = 8
