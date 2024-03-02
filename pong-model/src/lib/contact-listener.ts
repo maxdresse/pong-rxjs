@@ -1,5 +1,5 @@
 import { b2Body, b2Contact, b2ContactListener } from '@box2d/core';
-import { SomeGameEvent } from './types';
+import { GameObjectType, SomeGameEvent } from './types';
 import { BallUserData, FenceUserData, GoalUserData, PlayerUserData, WallUserData, getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createPlayerHitsObstacleEvent as createPlayerHitsObstacleEvent } from './events/player-hits-obstacle-event';
 import { createGoalScoredEvent } from './events/goal-scored-event';
@@ -7,49 +7,22 @@ import { createHitBallHardEvent } from './events/player-hits-ball-hard';
 import { HARD_HIT_THRESHOLD } from './physical-constants';
 import { getFrameCount } from './frame-counter';
 
-type TypeToUserData  = {
-    ball?:  Array<ReturnType<typeof getBallUserData>>;
-    player?:  Array<ReturnType<typeof getPlayerUserData>>;
-    goal?:  Array<ReturnType<typeof getGoalUserData>>;
-    wall?:  Array<ReturnType<typeof getWallUserData>>;
-    fence?:  Array<ReturnType<typeof getFenceUserData>>;
-};
-
-const enum ContactObjT {
-    None = 0,
-    Ball = 1,
-    Player = 2,
-    Goal = 4,
-    Wall = 8,
-    Fence = 16
-};
-
 type ContactData<UserDataA, UserDataB> = {
     a: UserDataA,
     b: UserDataB,
     contact: b2Contact;
 };
 
-const typeToContactType: { [key in keyof TypeToUserData]: ContactObjT} = {
-    ball: ContactObjT.Ball,
-    player: ContactObjT.Player,
-    goal: ContactObjT.Goal,
-    wall: ContactObjT.Wall,
-    fence: ContactObjT.Fence
-};
-
-function getContactType(a: keyof TypeToUserData, b: keyof TypeToUserData) {
-    const aT = typeToContactType[a] ?? ContactObjT.None;
-    const bT = typeToContactType[b] ?? ContactObjT.None;
-    return aT + bT;
+function getContactType(a: GameObjectType, b: GameObjectType) {
+    return a + b;
 }
 
 const contactRegistry = {
-    [ContactObjT.Ball + ContactObjT.Player]: handleBallHasPlayerContact,
-    [ContactObjT.Ball + ContactObjT.Goal]: handleBallHitsGoal,
-    [ContactObjT.Player + ContactObjT.Goal]: handlePlayerHitsObstacle,
-    [ContactObjT.Player + ContactObjT.Wall]: handlePlayerHitsObstacle,
-    [ContactObjT.Player + ContactObjT.Fence]: handlePlayerHitsObstacle,
+    [GameObjectType.Ball + GameObjectType.Player]: handleBallHasPlayerContact,
+    [GameObjectType.Ball + GameObjectType.Goal]: handleBallHitsGoal,
+    [GameObjectType.Player + GameObjectType.Goal]: handlePlayerHitsObstacle,
+    [GameObjectType.Player + GameObjectType.Wall]: handlePlayerHitsObstacle,
+    [GameObjectType.Player + GameObjectType.Fence]: handlePlayerHitsObstacle,
 };
 
 function contactToEvent(contact: b2Contact): { ev: SomeGameEvent | null , contactType: number } {
@@ -61,7 +34,7 @@ function contactToEvent(contact: b2Contact): { ev: SomeGameEvent | null , contac
     if (handler) {
         const userDataArray = [a.GetUserData(), b.GetUserData()];
         // make sure numerically smaller type is supplied to handler first
-        if (typeToContactParticipantType(types[0])  > (typeToContactParticipantType(types[1]))) {
+        if (types[0]  > types[1]) {
             userDataArray.reverse();
         }
         const contData: ContactData<any, any> = {a: userDataArray[0], b: userDataArray[1], contact };
@@ -69,10 +42,6 @@ function contactToEvent(contact: b2Contact): { ev: SomeGameEvent | null , contac
         return { ev: handler(contData as any), contactType };
     }
     return { ev: null, contactType };
-}
-
-function typeToContactParticipantType(type: keyof TypeToUserData) {
-    return typeToContactType[type] ?? 0;
 }
 
 function extractBodies(contact: b2Contact) {

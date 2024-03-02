@@ -31,7 +31,14 @@ export interface GameIntent<T extends number, P> {
 
 export type SomeGameIntent = GameIntent<number, unknown>;
 
-export type GameObjectType = 'goal' | 'wall' | 'player' | 'ball';
+export const enum GameObjectType {
+    None = 0,
+    Ball = 1,
+    Player = 2,
+    Goal = 4,
+    Wall = 8,
+    Fence = 16
+};
 
 export interface Score {
     playerToScore: [number, number];

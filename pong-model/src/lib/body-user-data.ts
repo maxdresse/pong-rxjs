@@ -1,10 +1,10 @@
-import { Player } from './types';
+import { GameObjectType, Player } from './types';
 
-export const playerType = 'player';
-export const wallType = 'wall';
-export const goalType = 'goal';
-export const ballType = 'ball';
-export const fenceType = 'fence';
+export const playerType = GameObjectType.Player;
+export const wallType = GameObjectType.Wall;
+export const goalType = GameObjectType.Goal;
+export const ballType = GameObjectType.Ball;
+export const fenceType = GameObjectType.Fence;
 
 export type BallUserData = ReturnType<typeof getBallUserData>;
 

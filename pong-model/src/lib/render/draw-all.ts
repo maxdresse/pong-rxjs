@@ -1,4 +1,4 @@
-import { GameParameters, IColorScheme } from '../types';
+import { GameObjectType, GameParameters, IColorScheme } from '../types';
 import { b2World, DrawShapes, DrawJoints, b2Fixture, b2ShapeType, b2CircleShape, b2Vec2, b2BodyDef, b2Body } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 import { UserDataUnion } from '../body-user-data';
@@ -20,11 +20,11 @@ export function debugDrawAll(draw: DebugDraw, params: GameParameters, world: b2W
 }
 
 const objTypeToDrawFct: { [key in UserDataUnion['type']]?: (ctx: CanvasRenderingContext2D, b: b2Body, cs: IColorScheme) => void } = {
-    ball: drawBall,
-    player: drawPlayer,
-    fence: drawFence,
-    wall: drawWall,
-    goal: drawWall
+    [GameObjectType.Ball]: drawBall,
+    [GameObjectType.Player]: drawPlayer,
+    [GameObjectType.Fence]: drawFence,
+    [GameObjectType.Wall]: drawWall,
+    [GameObjectType.Goal]: drawWall
 };
 
 export function drawAll(ctx: CanvasRenderingContext2D, params: GameParameters, world: b2World) {
