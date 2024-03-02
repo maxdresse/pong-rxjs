@@ -47,9 +47,7 @@ function getContactType(a: keyof ContactData, b: keyof ContactData) {
 
 type ContactType = ReturnType<typeof getContactType>;
 
-const contactRegistry: {
-
-} = {
+const contactRegistry = {
     [ContactParticipantType.Ball + ContactParticipantType.Player]: ({ b, contact}: ContactDataNew<BallUserData, PlayerUserData>) => {
         const normal = contact.GetManifold().localNormal;
         const [aB, bB] = extractBodies(contact);
@@ -82,6 +80,15 @@ function contactToEvent(contact: b2Contact): { ev: SomeGameEvent | null , contac
         }
     });
     const contactType = getContactType(types[0], types[1]);
+    const handler = contactRegistry[contactType];
+    if (handler) {
+        const userDataArray = [a.GetUserData(), b.GetUserData()];
+        if (types[1] > types[0]) {
+            userDataArray.reverse();
+        }
+        return { ev: handler({a: userDataArray[0], b: userDataArray[1], contact}), contactType };
+    }
+
     const ev = createGameEvent(cd, contact, bodies);
     return { ev, contactType };
 }
