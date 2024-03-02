@@ -1,14 +1,13 @@
 import { b2Body, b2Contact, b2ContactListener } from '@box2d/core';
 import { SomeGameEvent } from './types';
-import { BallUserData, PlayerUserData, getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
+import { BallUserData, FenceUserData, GoalUserData, PlayerUserData, WallUserData, getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createPlayerHitsObstacleEvent as createPlayerHitsObstacleEvent } from './events/player-hits-obstacle-event';
 import { createGoalScoredEvent } from './events/goal-scored-event';
-import { WithRequired } from './type-utils';
 import { createHitBallHardEvent } from './events/player-hits-ball-hard';
 import { HARD_HIT_THRESHOLD } from './physical-constants';
 import { getFrameCount } from './frame-counter';
 
-type ContactData  = {
+type TypeToUserData  = {
     ball?:  Array<ReturnType<typeof getBallUserData>>;
     player?:  Array<ReturnType<typeof getPlayerUserData>>;
     goal?:  Array<ReturnType<typeof getGoalUserData>>;
@@ -16,7 +15,7 @@ type ContactData  = {
     fence?:  Array<ReturnType<typeof getFenceUserData>>;
 };
 
-const enum ContactParticipantType {
+const enum ContactObjT {
     None = 0,
     Ball = 1,
     Player = 2,
@@ -25,72 +24,55 @@ const enum ContactParticipantType {
     Fence = 16
 };
 
-type ContactDataNew<UserDataA, UserDataB> = {
+type ContactData<UserDataA, UserDataB> = {
     a: UserDataA,
     b: UserDataB,
     contact: b2Contact;
 };
 
-const typeToContactType: { [key in keyof ContactData]: ContactParticipantType} = {
-    ball: ContactParticipantType.Ball,
-    player: ContactParticipantType.Player,
-    goal: ContactParticipantType.Goal,
-    wall: ContactParticipantType.Wall,
-    fence: ContactParticipantType.Fence
+const typeToContactType: { [key in keyof TypeToUserData]: ContactObjT} = {
+    ball: ContactObjT.Ball,
+    player: ContactObjT.Player,
+    goal: ContactObjT.Goal,
+    wall: ContactObjT.Wall,
+    fence: ContactObjT.Fence
 };
 
-function getContactType(a: keyof ContactData, b: keyof ContactData) {
-    const aT = typeToContactType[a] ?? ContactParticipantType.None;
-    const bT = typeToContactType[b] ?? ContactParticipantType.None;
+function getContactType(a: keyof TypeToUserData, b: keyof TypeToUserData) {
+    const aT = typeToContactType[a] ?? ContactObjT.None;
+    const bT = typeToContactType[b] ?? ContactObjT.None;
     return aT + bT;
 }
 
-type ContactType = ReturnType<typeof getContactType>;
-
 const contactRegistry = {
-    [ContactParticipantType.Ball + ContactParticipantType.Player]: ({ b, contact}: ContactDataNew<BallUserData, PlayerUserData>) => {
-        const normal = contact.GetManifold().localNormal;
-        const [aB, bB] = extractBodies(contact);
-        const bodies = [aB, bB] as const;
-        if (normal) {
-            const deltaV = bodies[0].GetLinearVelocity().Clone().Subtract(bodies[1].GetLinearVelocity());
-            const impactIntensity = Math.abs(normal.Dot(deltaV));
-            if (impactIntensity > HARD_HIT_THRESHOLD) {
-                return createHitBallHardEvent(b.player);
-            }
-        }
-        return null;
-    }
+    [ContactObjT.Ball + ContactObjT.Player]: handleBallHasPlayerContact,
+    [ContactObjT.Ball + ContactObjT.Goal]: handleBallHitsGoal,
+    [ContactObjT.Player + ContactObjT.Goal]: handlePlayerHitsObstacle,
+    [ContactObjT.Player + ContactObjT.Wall]: handlePlayerHitsObstacle,
+    [ContactObjT.Player + ContactObjT.Fence]: handlePlayerHitsObstacle,
 };
 
 function contactToEvent(contact: b2Contact): { ev: SomeGameEvent | null , contactType: number } {
     const [a, b] = extractBodies(contact);
-    const bodies = [a, b] as const;
-    const cd: ContactData = {};
-    const types: Array<keyof ContactData> = []
-    bodies.forEach(b => {
-        const userData = b.GetUserData();
-        const type = userData?.type as keyof ContactData;
-        if (type !== undefined) {
-            if (!cd[type]) {
-                cd[type] = [];
-            }
-            types.push(type);
-            cd[type]!.push(userData);
-        }
-    });
+    const toType = (b: b2Body) => b.GetUserData()?.type;
+    const types = [toType(a), toType(b)];
     const contactType = getContactType(types[0], types[1]);
     const handler = contactRegistry[contactType];
     if (handler) {
         const userDataArray = [a.GetUserData(), b.GetUserData()];
-        if (types[1] > types[0]) {
+        // make sure numerically smaller type is supplied to handler first
+        if (typeToContactParticipantType(types[0])  > (typeToContactParticipantType(types[1]))) {
             userDataArray.reverse();
         }
-        return { ev: handler({a: userDataArray[0], b: userDataArray[1], contact}), contactType };
+        const contData: ContactData<any, any> = {a: userDataArray[0], b: userDataArray[1], contact };
+        // could not find a better solution than any
+        return { ev: handler(contData as any), contactType };
     }
+    return { ev: null, contactType };
+}
 
-    const ev = createGameEvent(cd, contact, bodies);
-    return { ev, contactType };
+function typeToContactParticipantType(type: keyof TypeToUserData) {
+    return typeToContactType[type] ?? 0;
 }
 
 function extractBodies(contact: b2Contact) {
@@ -99,50 +81,31 @@ function extractBodies(contact: b2Contact) {
     return [a, b];
 }
 
-function createGameEvent(cd: ContactData, contact: b2Contact, bodies: readonly [b2Body, b2Body]): SomeGameEvent | null {
-    if (cd.player?.length) {
-        const ev = onPlayerContact(cd as Parameters<typeof onPlayerContact>[0], contact, bodies);
-        if (ev) {
-            return ev;
-        }
-    }
-    if (cd.ball?.length) {
-        return onBallContact(cd as Parameters<typeof onBallContact>[0]);
-    }
-    return null;
-}
+function handlePlayerHitsObstacle({ a, b }: ContactData<PlayerUserData, GoalUserData | FenceUserData | WallUserData>) {
+    return createPlayerHitsObstacleEvent(a.player);
+};
 
-function onPlayerContact(cd: WithRequired<ContactData, "player">, contact: b2Contact, bodies: readonly [b2Body, b2Body]): SomeGameEvent | null {
-    const player = cd.player?.[0].player;
-    if (player === undefined) {
-        return null;
-    }
-    // goal, fence, wall are all the same from a player's perspective
-    if(cd.wall?.length || cd.goal?.length || cd.fence?.length) {
-        return createPlayerHitsObstacleEvent(player);
-    }
-    if (cd.player?.length) {
-        const normal = contact.GetManifold().localNormal;
-        if (normal) {
-            const deltaV = bodies[0].GetLinearVelocity().Clone().Subtract(bodies[1].GetLinearVelocity());
-            const impactIntensity = Math.abs(normal.Dot(deltaV));
-            if (impactIntensity > HARD_HIT_THRESHOLD) {
-                return createHitBallHardEvent(cd.player[0].player);
-            }
+function handleBallHasPlayerContact({ b, contact }: ContactData<BallUserData, PlayerUserData>) {
+    const normal = contact.GetManifold().localNormal;
+    const [aB, bB] = extractBodies(contact);
+    const bodies = [aB, bB] as const;
+    if (normal) {
+        const deltaV = bodies[0].GetLinearVelocity().Clone().Subtract(bodies[1].GetLinearVelocity());
+        const impactIntensity = Math.abs(normal.Dot(deltaV));
+        if (impactIntensity > HARD_HIT_THRESHOLD) {
+            return createHitBallHardEvent(b.player);
         }
     }
     return null;
-}
+};
 
-function onBallContact(cd: WithRequired<ContactData, "ball">): SomeGameEvent | null {
-    if (cd.goal?.length) {
-        const player = cd.goal?.[0]?.owningPlayer;
-        if (player !== undefined) {
-            return createGoalScoredEvent(player)
-        }
+function handleBallHitsGoal({ b }: ContactData<BallUserData, GoalUserData>) {
+    const player = b.owningPlayer;
+    if (player !== undefined) {
+        return createGoalScoredEvent(player);
     }
     return null;
-}
+};
 
 export function createContactListener(onEvent: (ev: SomeGameEvent) => void): b2ContactListener {
     const lastHandledContacts: {
