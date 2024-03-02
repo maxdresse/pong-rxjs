@@ -25,9 +25,9 @@ const createLoop = ({ renderer, world, params }: ILoopDef) => {
     const onFrame$ = new Subject<void>();
     const { timeStep, positionIterations, velocityIterations} = params;
     const loop = () => {
+        incrementFrameCount();
+        onFrame$.next();
         if (!params.paused) {
-            incrementFrameCount();
-            onFrame$.next();
             world.Step(timeStep, { 
                 positionIterations,
                 velocityIterations 
