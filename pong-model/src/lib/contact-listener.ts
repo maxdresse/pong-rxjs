@@ -6,6 +6,7 @@ import { createGoalScoredEvent } from './events/goal-scored-event';
 import { WithRequired } from './type-utils';
 import { createHitBallHardEvent } from './events/player-hits-ball-hard';
 import { HARD_HIT_THRESHOLD } from './physical-constants';
+import { getFrameCount } from './frame-counter';
 
 type ContactData  = {
     ball?:  Array<ReturnType<typeof getBallUserData>>;
@@ -15,12 +16,35 @@ type ContactData  = {
     fence?:  Array<ReturnType<typeof getFenceUserData>>;
 };
 
+const enum ContactParticipantType {
+    Ball = 1,
+    Player = 2,
+    Goal = 4,
+    Wall = 8,
+    Fence = 16
+};
 
-function contactToEvent(contact: b2Contact): SomeGameEvent | null {
+const typeToValue: { [key in keyof ContactData]: ContactParticipantType} = {
+    ball: ContactParticipantType.Ball,
+    player: ContactParticipantType.Player,
+    goal: ContactParticipantType.Goal,
+    wall: ContactParticipantType.Wall,
+    fence: ContactParticipantType.Fence
+};
+
+function getContactType(a: keyof ContactData, b: keyof ContactData): number {
+    const aT = typeToValue[a] ?? 0;
+    const bT = typeToValue[b] ?? 0;
+    return aT + bT;
+}
+
+
+function contactToEvent(contact: b2Contact): { ev: SomeGameEvent | null , contactType: number } {
     const a = contact.GetFixtureA().GetBody();
     const b = contact.GetFixtureB().GetBody();
     const bodies = [a, b] as const;
     const cd: ContactData = {};
+    const types: Array<keyof ContactData> = []
     bodies.forEach(b => {
         const userData = b.GetUserData();
         const type = userData?.type as keyof ContactData;
@@ -28,9 +52,16 @@ function contactToEvent(contact: b2Contact): SomeGameEvent | null {
             if (!cd[type]) {
                 cd[type] = [];
             }
+            types.push(type);
             cd[type]!.push(userData);
         }
     });
+    const contactType = getContactType(types[0], types[1]);
+    const ev = createGameEvent(cd, contact, bodies);
+    return { ev, contactType };
+}
+
+function createGameEvent(cd: ContactData, contact: b2Contact, bodies: readonly [b2Body, b2Body]): SomeGameEvent | null {
     if (cd.player?.length) {
         const ev = onPlayerContact(cd as Parameters<typeof onPlayerContact>[0], contact, bodies);
         if (ev) {
@@ -76,10 +107,24 @@ function onBallContact(cd: WithRequired<ContactData, "ball">): SomeGameEvent | n
 }
 
 export function createContactListener(onEvent: (ev: SomeGameEvent) => void): b2ContactListener {
+    const lastHandledContacts: {
+        frameCount: number | undefined;
+        contactTypes: Array<number>;
+    } = {
+        frameCount: undefined,
+        contactTypes: []
+    };
     return {
         BeginContact: (contact) => {
-            const ev = contactToEvent(contact);
-            if (ev) {
+            const currentFrame = getFrameCount();
+            if (currentFrame !== lastHandledContacts.frameCount) {
+                lastHandledContacts.contactTypes.length = 0;
+                lastHandledContacts.frameCount = currentFrame;
+            }
+            const { ev, contactType } = contactToEvent(contact);
+            const alreadyHandled = lastHandledContacts.contactTypes.includes(contactType);
+            if (ev && !alreadyHandled) {
+                lastHandledContacts.contactTypes.push(contactType);
                 setTimeout(() => {
                     // during contact, physics is locked: call in next tick
                     onEvent(ev);

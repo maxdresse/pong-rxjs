@@ -12,6 +12,7 @@ import { createRenderer } from './render/renderer';
 import { forOneOrMany } from './array-utils';
 import { initUI } from './ui/ui';
 import { getGamepadConfig } from './gamepad-config';
+import { incrementFrameCount, initFrameCount } from './frame-counter';
 
 interface ILoopDef {
     renderer: IRenderer;
@@ -20,10 +21,12 @@ interface ILoopDef {
 }
 
 const createLoop = ({ renderer, world, params }: ILoopDef) => {
+    initFrameCount();
     const onFrame$ = new Subject<void>();
     const { timeStep, positionIterations, velocityIterations} = params;
     const loop = () => {
         if (!params.paused) {
+            incrementFrameCount();
             onFrame$.next();
             world.Step(timeStep, { 
                 positionIterations,
