@@ -1,6 +1,6 @@
 import { b2Body, b2Contact, b2ContactListener } from '@box2d/core';
 import { SomeGameEvent } from './types';
-import { getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
+import { BallUserData, PlayerUserData, getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
 import { createPlayerHitsObstacleEvent as createPlayerHitsObstacleEvent } from './events/player-hits-obstacle-event';
 import { createGoalScoredEvent } from './events/goal-scored-event';
 import { WithRequired } from './type-utils';
@@ -17,6 +17,7 @@ type ContactData  = {
 };
 
 const enum ContactParticipantType {
+    None = 0,
     Ball = 1,
     Player = 2,
     Goal = 4,
@@ -24,7 +25,13 @@ const enum ContactParticipantType {
     Fence = 16
 };
 
-const typeToValue: { [key in keyof ContactData]: ContactParticipantType} = {
+type ContactDataNew<UserDataA, UserDataB> = {
+    a: UserDataA,
+    b: UserDataB,
+    contact: b2Contact;
+};
+
+const typeToContactType: { [key in keyof ContactData]: ContactParticipantType} = {
     ball: ContactParticipantType.Ball,
     player: ContactParticipantType.Player,
     goal: ContactParticipantType.Goal,
@@ -32,16 +39,34 @@ const typeToValue: { [key in keyof ContactData]: ContactParticipantType} = {
     fence: ContactParticipantType.Fence
 };
 
-function getContactType(a: keyof ContactData, b: keyof ContactData): number {
-    const aT = typeToValue[a] ?? 0;
-    const bT = typeToValue[b] ?? 0;
+function getContactType(a: keyof ContactData, b: keyof ContactData) {
+    const aT = typeToContactType[a] ?? ContactParticipantType.None;
+    const bT = typeToContactType[b] ?? ContactParticipantType.None;
     return aT + bT;
 }
 
+type ContactType = ReturnType<typeof getContactType>;
+
+const contactRegistry: {
+
+} = {
+    [ContactParticipantType.Ball + ContactParticipantType.Player]: ({ b, contact}: ContactDataNew<BallUserData, PlayerUserData>) => {
+        const normal = contact.GetManifold().localNormal;
+        const [aB, bB] = extractBodies(contact);
+        const bodies = [aB, bB] as const;
+        if (normal) {
+            const deltaV = bodies[0].GetLinearVelocity().Clone().Subtract(bodies[1].GetLinearVelocity());
+            const impactIntensity = Math.abs(normal.Dot(deltaV));
+            if (impactIntensity > HARD_HIT_THRESHOLD) {
+                return createHitBallHardEvent(b.player);
+            }
+        }
+        return null;
+    }
+};
 
 function contactToEvent(contact: b2Contact): { ev: SomeGameEvent | null , contactType: number } {
-    const a = contact.GetFixtureA().GetBody();
-    const b = contact.GetFixtureB().GetBody();
+    const [a, b] = extractBodies(contact);
     const bodies = [a, b] as const;
     const cd: ContactData = {};
     const types: Array<keyof ContactData> = []
@@ -59,6 +84,12 @@ function contactToEvent(contact: b2Contact): { ev: SomeGameEvent | null , contac
     const contactType = getContactType(types[0], types[1]);
     const ev = createGameEvent(cd, contact, bodies);
     return { ev, contactType };
+}
+
+function extractBodies(contact: b2Contact) {
+    const a = contact.GetFixtureA().GetBody();
+    const b = contact.GetFixtureB().GetBody();
+    return [a, b];
 }
 
 function createGameEvent(cd: ContactData, contact: b2Contact, bodies: readonly [b2Body, b2Body]): SomeGameEvent | null {

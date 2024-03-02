@@ -6,11 +6,21 @@ export const goalType = 'goal';
 export const ballType = 'ball';
 export const fenceType = 'fence';
 
-export type UserDataUnion = ReturnType<typeof getBallUserData> |
-    ReturnType<typeof getPlayerUserData> |
-    ReturnType<typeof getGoalUserData> |
-    ReturnType<typeof getWallUserData> |
-    ReturnType<typeof getFenceUserData>;
+export type BallUserData = ReturnType<typeof getBallUserData>;
+
+export type PlayerUserData = ReturnType<typeof getPlayerUserData>;
+
+export type GoalUserData = ReturnType<typeof getGoalUserData>;
+
+export type WallUserData = ReturnType<typeof getWallUserData>;
+
+export type FenceUserData = ReturnType<typeof getFenceUserData>;
+
+export type UserDataUnion = BallUserData |
+    PlayerUserData |
+    GoalUserData |
+    WallUserData |
+    FenceUserData
 
 export function getWallUserData() {
     return { type: wallType } as const;
