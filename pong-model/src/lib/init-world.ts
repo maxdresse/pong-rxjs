@@ -9,11 +9,11 @@ import { createContactListener } from './contact-listener';
 import { PLAYER_RESTITUTION } from './physical-constants';
 import { createContactFilter } from './contact-filter';
 
-export interface InitWorlProps {
+export interface InitWorldProps {
     onEvent: (ev: SomeGameEvent) => void;
 }
 
-export const initWorld = ({ onEvent }: InitWorlProps) => {
+export const initWorld = ({ onEvent }: InitWorldProps) => {
     // create box 2d world
     const gravity = new b2Vec2(0, 0);
     const world = b2World.Create(gravity);
