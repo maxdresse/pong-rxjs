@@ -2,7 +2,7 @@ import { createPauseIntent, createPlayIntent } from '../intents/play-pause-inten
 import { createToggleThemeIntent } from '../intents/toggle-theme-intent';
 import { TEXT_COL_CSS_PROP } from '../render/render-constants';
 import { Player, Score, UIData } from '../types';
-import { PLAYER_BORDER_RADIUS } from './ui-constants';
+import { PLAYER_BORDER_RADIUS, PLAYER_FONT_SIZE } from './ui-constants';
 import { PLAYER_STATUS_W, PLAYER_STATUS_H, PLAYER_STATUS_LH, PLAYER_STATUS_BORDER_WIDTH, PLAYER_STATUS_ALIGNMENT } from './ui-constants';
 
 const UI_KEY_EVENT_TO_HANDLER: { [key: string]: (uiData: UIData) => void } = {
@@ -70,6 +70,7 @@ function initPlayerScoreUIElement(stl: CSSStyleDeclaration, textcol: string) {
     stl.border = `dashed ${textcol}  ${PLAYER_STATUS_BORDER_WIDTH}`;
     stl.bottom = PLAYER_STATUS_ALIGNMENT;
     stl.borderRadius = PLAYER_BORDER_RADIUS;
+    stl.fontSize = PLAYER_FONT_SIZE;
 }
 
 function togglePlayPause(uiData: UIData) {
