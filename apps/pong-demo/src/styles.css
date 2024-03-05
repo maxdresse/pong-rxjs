@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+
+@font-face {
+    font-family: 'GameFont';
+    src: url('assets/gamefont.woff2') format('woff2');
+}
+
 html, body {
     height: 100%;
     width: 100%;
@@ -6,4 +12,5 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-family: 'GameFont';
 }
