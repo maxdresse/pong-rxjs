@@ -96,8 +96,27 @@ export interface GameParameters {
     userMessage?: UserMessage;
 }
 
+export interface GetStatsConfig {
+    // desired update interval in milliseconds
+    updateInterval$: Observable<number>;
+}
+
+type ValueType = object | string | number;
+
+type GameStatsRecord<V extends ValueType> = Record<string, V>;
+interface GameStatsAttribute {
+    label: string;
+    id: string;
+}
+
+interface GameStatistics {
+    attributes: Array<GameStatsAttribute>;
+    records: Array<GameStatsRecord<ValueType>>;
+}
+
 export interface IGameDef {
     canvas: HTMLCanvasElement;
+    getStats?:({ updateInterval$ }: GetStatsConfig) => Observable<GameStatistics>;
 }
 
 export type GameFactory = (def: IGameDef) => IGame; 
