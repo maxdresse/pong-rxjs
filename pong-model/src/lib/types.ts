@@ -103,7 +103,7 @@ export interface GetStatsConfig {
 
 type ValueType = object | string | number;
 
-type GameStatsRecord<V extends ValueType> = Record<string, V>;
+type GameStatsRecord<V extends ValueType = ValueType> = Record<string, V>;
 interface GameStatsAttribute {
     label: string;
     id: string;
@@ -111,7 +111,7 @@ interface GameStatsAttribute {
 
 interface GameStatistics {
     attributes: Array<GameStatsAttribute>;
-    records: Array<GameStatsRecord<ValueType>>;
+    records: Array<GameStatsRecord>;
 }
 
 export interface IGameDef {
@@ -144,4 +144,8 @@ export interface UIData     {
 
 export interface GamepadConfig {
     playerToGamePad: { [key in Player]: Gamepad | null };
+}
+
+export interface StatsCollector {
+    collectRecord(record: GameStatsRecord): void;
 }
