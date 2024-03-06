@@ -114,6 +114,7 @@ export interface IColorScheme {
     player: IFillStroke;
     fence: IFillStroke;
     wall: string;
+    goal: string;
     text: string;
 }
 

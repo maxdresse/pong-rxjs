@@ -8,6 +8,7 @@ import { drawFence } from './draw-fence';
 import { drawWall } from './draw-wall';
 import { updateCanvasCssProps } from './canvas-css';
 import { drawOverlays } from './draw-overlays';
+import { drawGoal } from './draw-goal';
 
 export function debugDrawAll(draw: DebugDraw, params: GameParameters, world: b2World) {
     draw.Prepare(0, 0, params.zoomFactor, true); // center, zoom, flipy
@@ -24,7 +25,7 @@ const objTypeToDrawFct: { [key in UserDataUnion['type']]?: (ctx: CanvasRendering
     [GameObjectType.Player]: drawPlayer,
     [GameObjectType.Fence]: drawFence,
     [GameObjectType.Wall]: drawWall,
-    [GameObjectType.Goal]: drawWall
+    [GameObjectType.Goal]: drawGoal
 };
 
 export function drawAll(ctx: CanvasRenderingContext2D, params: GameParameters, world: b2World) {

@@ -43,3 +43,13 @@ export function drawLineShape({ ctx, shape, color }: { ctx: CanvasRenderingConte
     ctx.strokeStyle = color;
     ctx.stroke();
 }
+
+export function drawEdgeFixtures(body: b2Body, ctx: CanvasRenderingContext2D, color: string) {
+    for (let f: b2Fixture | null = body.GetFixtureList(); f; f = f.GetNext()) {
+        const shape = f.GetShape();
+        const shapeType = shape.GetType();
+        if (shapeType === b2ShapeType.e_edge) {
+            drawLineShape({ ctx, shape: shape as b2EdgeShape, color });
+        }
+    }
+}

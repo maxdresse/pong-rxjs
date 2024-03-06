@@ -24,6 +24,7 @@ export const EIGHTIES_DARK_SCHEME: IColorScheme = {
         stroke: r(lighten(ePurple), 0.5)
     },
     wall: r(eWhite),
+    goal: r(eWhite),
     text: r(eWhite)
 }
 
@@ -42,5 +43,6 @@ export const EIGHTIES_LIGHT_SCHEME: IColorScheme = {
         stroke: r(darken(eLightBlue), 0.5)
     },
     wall: r(eDarkPurple),
+    goal: r(eDarkPurple),
     text: 'black'
 }
