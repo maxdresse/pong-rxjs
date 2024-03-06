@@ -1,6 +1,11 @@
 import { b2Body, b2World } from '@box2d/core';
 import { Observable } from 'rxjs';
 
+export interface IGameDef {
+    canvas: HTMLCanvasElement;
+    getStats?:({ updateInterval$ }: GetStatsConfig) => Observable<GameStatistics>;
+}
+
 export interface IRenderer {
     draw(world: b2World): void;   
 }
@@ -96,29 +101,6 @@ export interface GameParameters {
     userMessage?: UserMessage;
 }
 
-export interface GetStatsConfig {
-    // desired update interval in milliseconds
-    updateInterval$: Observable<number>;
-}
-
-type ValueType = object | string | number;
-
-type GameStatsRecord<V extends ValueType = ValueType> = Record<string, V>;
-interface GameStatsAttribute {
-    label: string;
-    id: string;
-}
-
-interface GameStatistics {
-    attributes: Array<GameStatsAttribute>;
-    records: Array<GameStatsRecord>;
-}
-
-export interface IGameDef {
-    canvas: HTMLCanvasElement;
-    getStats?:({ updateInterval$ }: GetStatsConfig) => Observable<GameStatistics>;
-}
-
 export type GameFactory = (def: IGameDef) => IGame; 
 
 export interface IFillStroke {
@@ -146,6 +128,27 @@ export interface GamepadConfig {
     playerToGamePad: { [key in Player]: Gamepad | null };
 }
 
+export interface GetStatsConfig {
+    // desired update interval in milliseconds
+    updateInterval$: Observable<number>;
+}
+
+export type ValueType = object | string | number;
+
+export type GameStatsRecord<V extends ValueType = ValueType> = Record<string, V>;
+export interface GameStatsAttribute {
+    label: string;
+    id: string;
+}
+
+export interface GameStatistics {
+    attributes: Array<GameStatsAttribute>;
+    records: Array<GameStatsRecord>;
+}
+
 export interface StatsCollector {
-    collectRecord(record: GameStatsRecord): void;
+    beginRecord(): void;
+    writeAttribute(attrId: string, v: ValueType): void;
+    endRecord(): void;
+    clear(): void;
 }
