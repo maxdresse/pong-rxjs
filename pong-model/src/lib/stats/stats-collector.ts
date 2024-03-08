@@ -8,7 +8,7 @@ export enum AddMode {
 export interface StatsCollectorProps {
     maxBufferSize?: number;
     addMode?: AddMode;
-    onNewRecord: (records: Array<GameStatsRecord>) => void;
+    onNewRecord?: (records: Array<GameStatsRecord>) => void;
 }
 
 function createStatsCollector({ maxBufferSize, addMode, onNewRecord }: StatsCollectorProps): StatsCollector {
@@ -38,7 +38,7 @@ function createStatsCollector({ maxBufferSize, addMode, onNewRecord }: StatsColl
             } else {
                 records.unshift(currentRecord);
             }
-            onNewRecord(records);
+            onNewRecord && onNewRecord(records);
         },
         clear: () => {
             records.length = 0;

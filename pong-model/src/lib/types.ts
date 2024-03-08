@@ -153,3 +153,7 @@ export interface StatsCollector {
     endRecord(): void;
     clear(): void;
 }
+
+export interface StatsLogger {
+    onFrame(): void;
+}

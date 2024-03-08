@@ -50,6 +50,9 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const events$ = eventSubj$.pipe(
         map(gameLogic.eventResponder)
     );
+    // stats logger
+    
+
     const onEvent = (ev: SomeGameEvent) => eventSubj$.next(ev);
     // create world
     const { world, playerBodies, ballBody, tearDownWorld } = initWorld({ onEvent });
