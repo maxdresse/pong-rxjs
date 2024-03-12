@@ -1,4 +1,4 @@
-import { GameStatsRecord, StatsCollector } from '../types';
+import { GameStatsAttribute, GameStatsRecord, StatsCollector } from '../types';
 
 export enum AddMode {
     PREPEND,
@@ -14,9 +14,15 @@ export function createStatsCollector({ maxBufferSize, addMode }: StatsCollectorP
     maxBufferSize = maxBufferSize ?? 2000;
     addMode = addMode ?? AddMode.PREPEND; 
     const records: Array<GameStatsRecord> = [];
+    const attributes: Array<GameStatsAttribute> = [];
     let currentRecord: GameStatsRecord = {};
     let writing = false;
     return {
+        defineAttribute: (attriId, label) => {
+            if (!attributes.find(a => a.id === attriId)) {
+                attributes.push({ id: attriId, label });
+            }
+        },
         beginRecord: () => {
             if (writing) {
                 console.error('began writing record before old was closed');
@@ -38,8 +44,10 @@ export function createStatsCollector({ maxBufferSize, addMode }: StatsCollectorP
                 records.unshift(currentRecord);
             }
         },
-        clear: () => {
+        clearRecords: () => {
             records.length = 0;
-        }
+        },
+        getAttributes: () => attributes,
+        getRecords: () => records
     }
 }

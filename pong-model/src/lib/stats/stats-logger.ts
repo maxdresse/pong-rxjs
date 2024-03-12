@@ -33,7 +33,7 @@ function createStatsLogger(): StatsLogger {
         log: ({ playerBodies, score }) => {
             // iterate over bodies and score
             collector.beginRecord();
-            collector.writeAttribute('p1xv','Player 1 X Velocity', playerBodies[Player.PLAYER1].GetLinearVelocity().x)
+            collector.writeAttribute('p1xv', playerBodies[Player.PLAYER1].GetLinearVelocity().x)
             collector.endRecord();
         }
     };

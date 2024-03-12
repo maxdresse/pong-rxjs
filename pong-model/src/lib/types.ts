@@ -148,12 +148,13 @@ export interface GameStatistics {
 }
 
 export interface StatsCollector {
+    defineAttribute(attrId: string, label: string): void;
     beginRecord(): void;
-    writeAttribute(attrId: string, attrLabel: string, v: ValueType): void;
+    writeAttribute(attrId: string, v: ValueType): void;
     endRecord(): void;
-    clear(): void;
-    // todo getrecords
-    // todo getAttributes
+    clearRecords(): void;
+    getRecords(): GameStatistics['records'];
+    getAttributes(): GameStatistics['attributes'];
 }
 
 export interface StatsLogger {
