@@ -158,5 +158,5 @@ export interface StatsCollector {
 }
 
 export interface StatsLogger {
-    log(situation: GameSituation): void;
+    log(situation: GameSituation): GameStatistics;
 }

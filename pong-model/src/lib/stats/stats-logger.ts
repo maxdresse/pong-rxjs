@@ -35,6 +35,10 @@ function createStatsLogger(): StatsLogger {
             collector.beginRecord();
             collector.writeAttribute('p1xv', playerBodies[Player.PLAYER1].GetLinearVelocity().x)
             collector.endRecord();
+            return {
+                attributes: collector.getAttributes(),
+                records: collector.getRecords(),
+            }
         }
     };
 }
