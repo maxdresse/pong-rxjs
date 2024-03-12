@@ -152,6 +152,8 @@ export interface StatsCollector {
     writeAttribute(attrId: string, attrLabel: string, v: ValueType): void;
     endRecord(): void;
     clear(): void;
+    // todo getrecords
+    // todo getAttributes
 }
 
 export interface StatsLogger {
