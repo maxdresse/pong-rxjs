@@ -1,13 +1,15 @@
 import { Observable, auditTime, map, of, switchMap } from 'rxjs';
-import { GameStatistics, IGameDef, Player, StatsLogger } from '../types';
+import { GameSituation, GameStatistics, IGameDef, StatsCollector, StatsLogger } from '../types';
 import { createStatsCollector } from './stats-collector';
+import { STATS_ENTRIES } from './stats-entries';
 
 export interface GetStatsProps {
     onFrame$: Observable<void>;
     updateInterval$?: Observable<number>;
+    getGameSituation:() => GameSituation;
 }
 
-export function getGameStats({ onFrame$, updateInterval$ }: GetStatsProps): Observable<GameStatistics> {
+export function getGameStats({ onFrame$, updateInterval$, getGameSituation }: GetStatsProps): Observable<GameStatistics> {
     if (!updateInterval$) {
         // no interval set => no logging
         return of({
@@ -19,21 +21,22 @@ export function getGameStats({ onFrame$, updateInterval$ }: GetStatsProps): Obse
     return updateInterval$.pipe(
         switchMap(updateInterval => onFrame$.pipe(
             auditTime(updateInterval),
-            map(() => ({
-                attributes: [],
-                records: []
-            }))
+            map(() => logger.log(getGameSituation()))
         ))
     );
 }
 
 function createStatsLogger(): StatsLogger {
     const collector = createStatsCollector();
+    STATS_ENTRIES.forEach(({ attrId, label }) => {
+        collector.defineAttribute(attrId, label);
+    });
     return {
-        log: ({ playerBodies, score }) => {
-            // iterate over bodies and score
+        log: gameSituation => {
             collector.beginRecord();
-            collector.writeAttribute('p1xv', playerBodies[Player.PLAYER1].GetLinearVelocity().x)
+            STATS_ENTRIES.forEach(({ attrId, getValue }) => {
+                collector.writeAttribute(attrId, getValue(gameSituation));
+            });     
             collector.endRecord();
             return {
                 attributes: collector.getAttributes(),

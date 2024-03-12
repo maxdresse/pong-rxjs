@@ -100,7 +100,7 @@ export const createGame: GameFactory = (def: IGameDef) => {
 
     // game stats:
     const updateInterval$ = def.statsUpdateInterval$;
-    const stats$ = getGameStats({ onFrame$, updateInterval$ });
+    const stats$ = getGameStats({ onFrame$, updateInterval$, getGameSituation: () => gameSituation });
 
     // tip off game loop
     gameSituation.startLoop();
