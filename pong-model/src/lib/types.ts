@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 export interface IGameDef {
     canvas: HTMLCanvasElement;
-    getStats?:({ updateInterval$ }: GetStatsConfig) => Observable<GameStatistics>;
+    statsUpdateInterval$?: Observable<number>;
 }
 
 export interface IRenderer {
@@ -25,7 +25,7 @@ export interface IObj {
 }
 
 export interface IGame {
-    objects$: Observable<Array<IObj>>;
+    stats$: Observable<GameStatistics>;
     tearDown: () => void;
 }
 
@@ -149,11 +149,11 @@ export interface GameStatistics {
 
 export interface StatsCollector {
     beginRecord(): void;
-    writeAttribute(attrId: string, v: ValueType): void;
+    writeAttribute(attrId: string, attrLabel: string, v: ValueType): void;
     endRecord(): void;
     clear(): void;
 }
 
 export interface StatsLogger {
-    onFrame(): void;
+    log(situation: GameSituation): void;
 }

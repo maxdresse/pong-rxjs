@@ -13,6 +13,7 @@ import { forOneOrMany } from './array-utils';
 import { initUI } from './ui/ui';
 import { getGamepadConfig } from './gamepad-config';
 import { incrementFrameCount, initFrameCount } from './frame-counter';
+import { getGameStats } from './stats/stats-logger';
 
 interface ILoopDef {
     renderer: IRenderer;
@@ -50,8 +51,6 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const events$ = eventSubj$.pipe(
         map(gameLogic.eventResponder)
     );
-    // stats logger
-    
 
     const onEvent = (ev: SomeGameEvent) => eventSubj$.next(ev);
     // create world
@@ -99,11 +98,15 @@ export const createGame: GameFactory = (def: IGameDef) => {
     const { detachResizer, devicePxPerMeter$: devicePxPerMeter } = attachResizer(def.canvas, aspectRatio$);
     sub.add(devicePxPerMeter.subscribe(pxPerMtr => params.zoomFactor = pxPerMtr));
 
+    // game stats:
+    const updateInterval$ = def.statsUpdateInterval$;
+    const stats$ = getGameStats({ onFrame$, updateInterval$ });
+
     // tip off game loop
     gameSituation.startLoop();
 
     return {
-        objects$: objectsSub$,
+        stats$,
         tearDown: () => {
             sub.unsubscribe();
             tearDownWorld();
