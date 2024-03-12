@@ -1,6 +1,8 @@
 import { GameSituation, Player, ValueType } from '../types';
 
 export const STATS_ENTRIES: Array<{ attrId: string; label: string; getValue: (gs: GameSituation) => ValueType; }> = [
+    getScore(Player.PLAYER1),
+    getScore(Player.PLAYER2),
     getVelocity(Player.PLAYER1, 'x'),
     getVelocity(Player.PLAYER1, 'y'),
     getVelocity(Player.PLAYER2, 'x'),
@@ -10,6 +12,14 @@ export const STATS_ENTRIES: Array<{ attrId: string; label: string; getValue: (gs
     getPosition(Player.PLAYER2, 'x'),
     getPosition(Player.PLAYER2, 'y'),
 ];
+
+function getScore(player: Player): { attrId: string; label: string; getValue: (gs: GameSituation) => ValueType; } {
+    return {
+        attrId: 'scorep' + plStr(player),
+        label: 'Score P' + plStr(player),
+        getValue: ({ score }) => score.playerToScore[player]
+    };
+}
 
 function getVelocity(player: Player, xOrY: 'x' | 'y'): { attrId: string; label: string; getValue: (gs: GameSituation) => ValueType; } {
     return {
