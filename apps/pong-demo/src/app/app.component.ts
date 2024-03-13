@@ -27,7 +27,10 @@ export class AppComponent implements OnInit {
       this.zone.runOutsideAngular(() => {
         const stats$ = createGame({
             canvas,
-            statsUpdateInterval$: new BehaviorSubject(60)
+            stats: {
+              updateInterval$: new BehaviorSubject(60),
+              recordsMaxBufferSize: 20
+            }
           }).stats$;
         stats$.subscribe(s => this.zone.run(() => this.stats$.next(s)));
       });

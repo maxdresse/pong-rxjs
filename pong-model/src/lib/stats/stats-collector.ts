@@ -11,7 +11,7 @@ export interface StatsCollectorProps {
 }
 
 export function createStatsCollector({ maxBufferSize, addMode }: StatsCollectorProps = {}): StatsCollector {
-    maxBufferSize = maxBufferSize ?? 2000;
+    const mbs = maxBufferSize ?? 100;
     addMode = addMode ?? AddMode.PREPEND; 
     const records: Array<GameStatsRecord> = [];
     const attributes: Array<GameStatsAttribute> = [];
@@ -40,9 +40,16 @@ export function createStatsCollector({ maxBufferSize, addMode }: StatsCollectorP
             writing = false;
             if (addMode === AddMode.APPEND) {
                 records.push(currentRecord);
+                if (records.length > mbs) {
+                 records.splice(0, records.length - mbs);   
+                }
             } else {
                 records.unshift(currentRecord);
+                if (records.length > mbs) {
+                    records.length = mbs;
+                }
             }
+
         },
         clearRecords: () => {
             records.length = 0;

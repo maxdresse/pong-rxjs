@@ -3,7 +3,10 @@ import { Observable } from 'rxjs';
 
 export interface IGameDef {
     canvas: HTMLCanvasElement;
-    statsUpdateInterval$?: Observable<number>;
+    stats?: {
+        updateInterval$?: Observable<number>;
+        recordsMaxBufferSize?: number;
+    }
 }
 
 export interface IRenderer {

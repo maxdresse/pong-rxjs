@@ -5,11 +5,12 @@ import { STATS_ENTRIES } from './stats-entries';
 
 export interface GetStatsProps {
     onFrame$: Observable<void>;
-    updateInterval$?: Observable<number>;
+    statsConfig: IGameDef['stats'];
     getGameSituation:() => GameSituation;
 }
 
-export function getGameStats({ onFrame$, updateInterval$, getGameSituation }: GetStatsProps): Observable<GameStatistics> {
+export function getGameStats({ onFrame$, statsConfig, getGameSituation }: GetStatsProps): Observable<GameStatistics> {
+    const updateInterval$ = statsConfig?.updateInterval$;
     if (!updateInterval$) {
         // no interval set => no logging
         return of({
@@ -17,7 +18,7 @@ export function getGameStats({ onFrame$, updateInterval$, getGameSituation }: Ge
             records: []
         });
     }
-    const logger = createStatsLogger();
+    const logger = createStatsLogger(statsConfig.recordsMaxBufferSize);
     return updateInterval$.pipe(
         switchMap(updateInterval => onFrame$.pipe(
             updateInterval > 0 ? auditTime(updateInterval) : map(x => x),
@@ -26,8 +27,8 @@ export function getGameStats({ onFrame$, updateInterval$, getGameSituation }: Ge
     );
 }
 
-function createStatsLogger(): StatsLogger {
-    const collector = createStatsCollector();
+function createStatsLogger(maxRecordBufSize?: number): StatsLogger {
+    const collector = createStatsCollector({ maxBufferSize: maxRecordBufSize });
     STATS_ENTRIES.forEach(({ attrId, label }) => {
         collector.defineAttribute(attrId, label);
     });

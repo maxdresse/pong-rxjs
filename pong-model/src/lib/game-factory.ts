@@ -98,8 +98,8 @@ export const createGame: GameFactory = (def: IGameDef) => {
     sub.add(devicePxPerMeter.subscribe(pxPerMtr => params.zoomFactor = pxPerMtr));
 
     // game stats:
-    const updateInterval$ = def.statsUpdateInterval$;
-    const stats$ = getGameStats({ onFrame$, updateInterval$, getGameSituation: () => gameSituation });
+    const statsConfig = def?.stats;
+    const stats$ = getGameStats({ onFrame$, statsConfig, getGameSituation: () => gameSituation });
 
     // tip off game loop
     gameSituation.startLoop();
