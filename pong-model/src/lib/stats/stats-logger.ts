@@ -20,7 +20,7 @@ export function getGameStats({ onFrame$, updateInterval$, getGameSituation }: Ge
     const logger = createStatsLogger();
     return updateInterval$.pipe(
         switchMap(updateInterval => onFrame$.pipe(
-            auditTime(updateInterval),
+            updateInterval > 0 ? auditTime(updateInterval) : map(x => x),
             map(() => logger.log(getGameSituation()))
         ))
     );

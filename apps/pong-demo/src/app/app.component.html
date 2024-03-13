@@ -1,4 +1,17 @@
-<div class="debug-ui"></div>
+<div class="debug-ui">
+    <table *ngIf="(stats$ | async) as stats">
+        <thead>
+          <tr>
+            <th *ngFor="let attr of stats.attributes">{{ attr.label }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of stats.records">
+            <td *ngFor="let key of getKeys(record)">{{ record[key] }}</td>
+          </tr>
+        </tbody>
+      </table>
+</div>
 <div class="canvas-wrapper">
     <canvas #canvas></canvas>
 </div>

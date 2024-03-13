@@ -19,7 +19,10 @@ canvas {
 }
 
 .debug-ui {
-    display: none;
+    /*display: none;*/
+    font-size: 7pt;
     flex: 0 0 200px;
+    max-height: 200px;
+    overflow: hidden;
     background-color: grey;
 }

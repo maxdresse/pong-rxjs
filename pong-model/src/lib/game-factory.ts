@@ -42,7 +42,6 @@ const createLoop = ({ renderer, world, params }: ILoopDef) => {
 }
 export const createGame: GameFactory = (def: IGameDef) => {
 
-    const objectsSub$ = new Subject<Array<IObj>>();
     // events
     const [score, playerToScore$] = createInitialScore();
     const params: GameParameters = getDefaultParameters();
