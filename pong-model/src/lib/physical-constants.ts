@@ -21,6 +21,7 @@ export const W_UPPER_RIGHT = { x: WORLD_BOUNDARY_RIGHT, y: WORLD_BOUNDARY_TOP };
 
 export const PLAYER_INITIAL_H_DISTANCE = 8
 export const PLAYER_SIZE = { x: 2, y: 14 };
+export const PLAYER_ENLARGED_SIZE = { x: 2, y: 20 };
 export const FIRST_PLAYER_START_POS = { x: WORLD_BOUNDARY_LEFT + PLAYER_INITIAL_H_DISTANCE, y: 0 };
 export const SECOND_PLAYER_START_POS = { x: -FIRST_PLAYER_START_POS.x, y: FIRST_PLAYER_START_POS.y};
 export const PLAYER_DENSITY = 100;
