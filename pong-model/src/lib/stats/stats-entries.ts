@@ -1,6 +1,8 @@
+import { getFrameCount } from '../frame-counter';
 import { GameSituation, Player, ValueType } from '../types';
 
 export const STATS_ENTRIES: Array<{ attrId: string; label: string; getValue: (gs: GameSituation) => ValueType; }> = [
+    getFrame(),
     getScore(Player.PLAYER1),
     getScore(Player.PLAYER2),
     getVelocity(Player.PLAYER1, 'x'),
@@ -12,6 +14,14 @@ export const STATS_ENTRIES: Array<{ attrId: string; label: string; getValue: (gs
     getPosition(Player.PLAYER2, 'x'),
     getPosition(Player.PLAYER2, 'y'),
 ];
+
+function getFrame(): { attrId: string; label: string; getValue: (gs: GameSituation) => ValueType; } {
+    return {
+        attrId: 'frm',
+        label: 'Frame',
+        getValue: () => getFrameCount()
+    };
+}
 
 function getScore(player: Player): { attrId: string; label: string; getValue: (gs: GameSituation) => ValueType; } {
     return {
@@ -25,9 +35,11 @@ function getVelocity(player: Player, xOrY: 'x' | 'y'): { attrId: string; label: 
     return {
         attrId: getPlayerAttributeId(player, xOrY, 'v'),
         label: getPlayerLabel(player, xOrY, 'Velocity'),
-        getValue: (gameSituation: GameSituation) => gameSituation
+        getValue: (gameSituation: GameSituation) => formatFloat(
+                gameSituation
             .playerBodies[player]
             .GetLinearVelocity()[xOrY]
+        )
     };
 }
 
@@ -35,9 +47,11 @@ function getPosition(player: Player, xOrY: 'x' | 'y'): { attrId: string; label: 
     return {
         attrId: getPlayerAttributeId(player, xOrY, 'p'),
         label: getPlayerLabel(player, xOrY, 'Position'),
-        getValue: (gameSituation: GameSituation) => gameSituation
-            .playerBodies[player]
-            .GetPosition()[xOrY]
+        getValue: (gameSituation: GameSituation) => formatFloat(
+            gameSituation
+                .playerBodies[player]
+                .GetPosition()[xOrY]
+        )
     };
 }
 
@@ -51,4 +65,8 @@ function getPlayerAttributeId(player: Player, xOrY: string, infix: string): stri
 
 function plStr(player: Player): string {
     return '' + (player + 1);
+}
+
+function formatFloat(float: number): string {
+    return float.toFixed(5);
 }
