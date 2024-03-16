@@ -1,5 +1,5 @@
 import { Observable, merge } from 'rxjs';
-import { InputFactory, Player, Vc2 } from '../types';
+import { InputFactory, Player, SomeGameIntent, Vc2 } from '../types';
 import { MovePlayerIntent, createMovePlayerIntent } from '../intents/player-control-intents';
 import { UNIT_VECTOR_UP, UNIT_VECTOR_DOWN, UNIT_VECTOR_LEFT, UNIT_VECTOR_RIGHT, UNIT_VECTOR_UPPER_LEFT, UNIT_VECTOR_UPPER_RIGHT, UNIT_VECTOR_LOWER_RIGHT, UNIT_VECTOR_LOWER_LEFT } from './input-constants';
 import { combineInputs } from './input-utils';
@@ -12,6 +12,30 @@ const enum SymbolicDirection {
     DOWN = 2,
     LEFT = 4,
     RIGHT = 8
+};
+
+const enum SymbolicButton {
+    A = 1,
+    B = 2,
+    X = 4,
+    Y = 8,
+    L1 = 16,
+    L2 = 32,
+    R1 = 64,
+    R2 = 128
+}
+
+const key2SymbolicBtn: Record<string, SymbolicButton> = {
+    // roughly same layout as on XBox 360 controller
+    KeyK: SymbolicButton.X,
+    KeyO: SymbolicButton.Y,
+    KeyL: SymbolicButton.A,
+    KeyP: SymbolicButton.B,
+    // L & R Buttons
+    KeyE: SymbolicButton.L1,
+    KeyR: SymbolicButton.L2,
+    KeyU: SymbolicButton.R1,
+    KeyI: SymbolicButton.R2
 };
 
 const enum CombinedSymbolicDirection {
@@ -32,37 +56,32 @@ const smybolicDir2VectorDir: Record<SymbolicDirection | CombinedSymbolicDirectio
     [CombinedSymbolicDirection.LOWER_LEFT]: UNIT_VECTOR_LOWER_LEFT,
 };
 
+const ev2Button = (ev: KeyboardEvent): SymbolicButton | undefined => {
+    return key2SymbolicBtn[ev.key];
+}
+
+function directionBufToIntent(player: Player, directionBuf: Array<SymbolicDirection>) {
+    const dir = symbolicDirToVectorDir(directionBuf);
+    return dir ? createMovePlayerIntent({ player, direction: dir }) : null;
+}
+
 function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | undefined): InputFactory {
     return ({ onFrame$ }) => new Observable<MovePlayerIntent>(subscriber => {
         // on every frame, check the current keybuffer and
         // trigger a player move intent if a direction is presetn
-        const keyBuf: Array<SymbolicDirection> = [];
+        const directionBuf: Array<SymbolicDirection> = [];
         const sub = onFrame$.subscribe(() => {
-            const dir = symbolicDirToVectorDir(keyBuf);
-            if (!dir) {
-                return;
+            const intent = directionBufToIntent(player, directionBuf);
+            if (intent) {
+                subscriber.next(intent);
             }
-            subscriber.next(createMovePlayerIntent({ player, direction: dir}));
         });
         const cbDown: Parameters<(typeof window.addEventListener<'keydown'>)>[1] = ev => {
-            const sd = ev2Dir(ev);
-            if (!sd) {
-                return;
-            }
-            const idx = keyBuf.indexOf(sd);
-            if (idx < 0) {
-                keyBuf.unshift(sd);
-            }
+            addToDirectionBuf(ev2Dir, ev, directionBuf);
+            
         };
         const cbUp: Parameters<(typeof window.addEventListener<'keyup'>)>[1] = ev => {
-            const sd = ev2Dir(ev);
-            if (!sd) {
-                return;
-            }
-            const idx = keyBuf.indexOf(sd);
-            if (idx >= 0) {
-                keyBuf.splice(idx, 1);
-            }
+            removeFromDirectionBuf(ev2Dir, ev, directionBuf);
         };
         window.addEventListener('keydown', cbDown);
         window.addEventListener('keyup', cbUp);
@@ -80,6 +99,28 @@ const arrowKeys2SymbolicDir: Record<string, SymbolicDirection> = {
     ArrowLeft: SymbolicDirection.LEFT,
     ArrowRight: SymbolicDirection.RIGHT,
 };
+
+function removeFromDirectionBuf(ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | undefined, ev: KeyboardEvent, keyBuf: SymbolicDirection[]) {
+    const sd = ev2Dir(ev);
+    if (sd) {
+        const idx = keyBuf.indexOf(sd);
+        if (idx >= 0) {
+            keyBuf.splice(idx, 1);
+        }
+    }
+}
+
+function addToDirectionBuf(ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | undefined, ev: KeyboardEvent, keyBuf: SymbolicDirection[]): boolean {
+    const sd = ev2Dir(ev);
+    if (sd) {
+        const idx = keyBuf.indexOf(sd);
+        if (idx < 0) {
+            keyBuf.unshift(sd);
+        }
+        return true;
+    }
+    return false;
+}
 
 function symbolicDirToVectorDir(keyBuf: SymbolicDirection[]) {
     if (keyBuf.length === 1) {

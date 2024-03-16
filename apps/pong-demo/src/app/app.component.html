@@ -1,16 +1,5 @@
 <div class="debug-ui">
-    <table *ngIf="(stats$ | async) as stats">
-        <thead>
-          <tr>
-            <th *ngFor="let attr of stats.attributes; trackBy: idForAttr">{{ attr.label }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let record of stats.records; trackBy: idForRecord" >
-            <td *ngFor="let entry of getRecordEntries(record); trackBy: idForEntry">{{ entry[1] }}</td>
-          </tr>
-        </tbody>
-      </table>
+  
 </div>
 <div class="canvas-wrapper">
     <canvas #canvas></canvas>
