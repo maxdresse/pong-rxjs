@@ -3,6 +3,7 @@ import { InputFactory, Player, SomeGameIntent, Vc2 } from '../types';
 import { MovePlayerIntent, createMovePlayerIntent } from '../intents/player-control-intents';
 import { UNIT_VECTOR_UP, UNIT_VECTOR_DOWN, UNIT_VECTOR_LEFT, UNIT_VECTOR_RIGHT, UNIT_VECTOR_UPPER_LEFT, UNIT_VECTOR_UPPER_RIGHT, UNIT_VECTOR_LOWER_RIGHT, UNIT_VECTOR_LOWER_LEFT } from './input-constants';
 import { combineInputs } from './input-utils';
+import { ensurePrepended, ensureRemoved } from '../array-utils';
 
 // want truthy values to avoid errors when checking for truthiness
 // numeric values are bit shifts apart in order to easily compute
@@ -65,23 +66,31 @@ function directionBufToIntent(player: Player, directionBuf: Array<SymbolicDirect
     return dir ? createMovePlayerIntent({ player, direction: dir }) : null;
 }
 
+function btnBufToIntent(player: Player, btnBuf: Array<SymbolicButton>) {
+    return null;
+}
+
 function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | undefined): InputFactory {
     return ({ onFrame$ }) => new Observable<MovePlayerIntent>(subscriber => {
         // on every frame, check the current keybuffer and
         // trigger a player move intent if a direction is presetn
         const directionBuf: Array<SymbolicDirection> = [];
+        const btnBuf: Array<SymbolicButton> = [];
         const sub = onFrame$.subscribe(() => {
-            const intent = directionBufToIntent(player, directionBuf);
+            let intent = directionBufToIntent(player, directionBuf);
+            intent = intent ?? btnBufToIntent(player, btnBuf);
             if (intent) {
                 subscriber.next(intent);
             }
         });
         const cbDown: Parameters<(typeof window.addEventListener<'keydown'>)>[1] = ev => {
-            addToDirectionBuf(ev2Dir, ev, directionBuf);
+            addToDirectionBuf(ev2Dir, ev, directionBuf) || 
+                addToBtnBuf(ev, btnBuf);
             
         };
         const cbUp: Parameters<(typeof window.addEventListener<'keyup'>)>[1] = ev => {
-            removeFromDirectionBuf(ev2Dir, ev, directionBuf);
+            removeFromDirectionBuf(ev2Dir, ev, directionBuf) ||
+                removeFromBtnBuf(ev, btnBuf);
         };
         window.addEventListener('keydown', cbDown);
         window.addEventListener('keyup', cbUp);
@@ -103,22 +112,26 @@ const arrowKeys2SymbolicDir: Record<string, SymbolicDirection> = {
 function removeFromDirectionBuf(ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | undefined, ev: KeyboardEvent, keyBuf: SymbolicDirection[]) {
     const sd = ev2Dir(ev);
     if (sd) {
-        const idx = keyBuf.indexOf(sd);
-        if (idx >= 0) {
-            keyBuf.splice(idx, 1);
-        }
+        ensureRemoved(sd, keyBuf);
+        return true;
     }
+    return false;
 }
 
 function addToDirectionBuf(ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | undefined, ev: KeyboardEvent, keyBuf: SymbolicDirection[]): boolean {
     const sd = ev2Dir(ev);
     if (sd) {
-        const idx = keyBuf.indexOf(sd);
-        if (idx < 0) {
-            keyBuf.unshift(sd);
-        }
+        ensurePrepended(sd, keyBuf);
         return true;
     }
+    return false;
+}
+
+function addToBtnBuf(ev: KeyboardEvent, btnBuf: SymbolicButton[]): boolean {
+    return false;
+}
+
+function removeFromBtnBuf(ev: KeyboardEvent, btnBuf: SymbolicButton[]): boolean {
     return false;
 }
 
