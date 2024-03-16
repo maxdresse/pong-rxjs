@@ -57,20 +57,22 @@ const smybolicDir2VectorDir: Record<SymbolicDirection | CombinedSymbolicDirectio
     [CombinedSymbolicDirection.LOWER_LEFT]: UNIT_VECTOR_LOWER_LEFT,
 };
 
-const ev2Button = (ev: KeyboardEvent): SymbolicButton | undefined => {
-    return key2SymbolicBtn[ev.key];
-}
-
 function directionBufToIntent(player: Player, directionBuf: Array<SymbolicDirection>) {
     const dir = symbolicDirToVectorDir(directionBuf);
     return dir ? createMovePlayerIntent({ player, direction: dir }) : null;
 }
 
 function btnBufToIntent(player: Player, btnBuf: Array<SymbolicButton>) {
+    if (btnBuf.length) {
+        console.log(btnBuf);
+    }
     return null;
 }
 
-function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | undefined): InputFactory {
+type Ev2Btn = (ev: KeyboardEvent) => SymbolicButton | undefined;
+type Ev2Dir = (ev: KeyboardEvent) => SymbolicDirection | undefined;
+
+function getKeyboardInputFromMapping(player: Player, ev2Dir: Ev2Dir, ev2Btn?: Ev2Btn): InputFactory {
     return ({ onFrame$ }) => new Observable<MovePlayerIntent>(subscriber => {
         // on every frame, check the current keybuffer and
         // trigger a player move intent if a direction is presetn
@@ -84,13 +86,17 @@ function getKeyboardInputFromMapping(player: Player, ev2Dir: (ev: KeyboardEvent)
             }
         });
         const cbDown: Parameters<(typeof window.addEventListener<'keydown'>)>[1] = ev => {
-            addToDirectionBuf(ev2Dir, ev, directionBuf) || 
-                addToBtnBuf(ev, btnBuf);
+            const wasDir = addToDirectionBuf(ev2Dir, ev, directionBuf);
+            if (!wasDir && ev2Btn) {
+                addToBtnBuf(ev2Btn, ev, btnBuf);
+            }
             
         };
         const cbUp: Parameters<(typeof window.addEventListener<'keyup'>)>[1] = ev => {
-            removeFromDirectionBuf(ev2Dir, ev, directionBuf) ||
-                removeFromBtnBuf(ev, btnBuf);
+            const wasDir = removeFromDirectionBuf(ev2Dir, ev, directionBuf);
+            if (!wasDir && ev2Btn) {
+                removeFromBtnBuf(ev2Btn, ev, btnBuf);
+            }
         };
         window.addEventListener('keydown', cbDown);
         window.addEventListener('keyup', cbUp);
@@ -109,7 +115,7 @@ const arrowKeys2SymbolicDir: Record<string, SymbolicDirection> = {
     ArrowRight: SymbolicDirection.RIGHT,
 };
 
-function removeFromDirectionBuf(ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | undefined, ev: KeyboardEvent, keyBuf: SymbolicDirection[]) {
+function removeFromDirectionBuf(ev2Dir: Ev2Dir, ev: KeyboardEvent, keyBuf: SymbolicDirection[]) {
     const sd = ev2Dir(ev);
     if (sd) {
         ensureRemoved(sd, keyBuf);
@@ -118,7 +124,7 @@ function removeFromDirectionBuf(ev2Dir: (ev: KeyboardEvent) => SymbolicDirection
     return false;
 }
 
-function addToDirectionBuf(ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | undefined, ev: KeyboardEvent, keyBuf: SymbolicDirection[]): boolean {
+function addToDirectionBuf(ev2Dir: Ev2Dir, ev: KeyboardEvent, keyBuf: SymbolicDirection[]): boolean {
     const sd = ev2Dir(ev);
     if (sd) {
         ensurePrepended(sd, keyBuf);
@@ -127,11 +133,21 @@ function addToDirectionBuf(ev2Dir: (ev: KeyboardEvent) => SymbolicDirection | un
     return false;
 }
 
-function addToBtnBuf(ev: KeyboardEvent, btnBuf: SymbolicButton[]): boolean {
+function addToBtnBuf(ev2Btn: Ev2Btn, ev: KeyboardEvent, btnBuf: SymbolicButton[]): boolean {
+    const btn = ev2Btn(ev);
+    if (btn) {
+        ensurePrepended(btn, btnBuf);
+        return true;
+    }
     return false;
 }
 
-function removeFromBtnBuf(ev: KeyboardEvent, btnBuf: SymbolicButton[]): boolean {
+function removeFromBtnBuf(ev2Btn: Ev2Btn, ev: KeyboardEvent, btnBuf: SymbolicButton[]): boolean {
+    const btn = ev2Btn(ev);
+    if (btn) {
+        ensureRemoved(btn, btnBuf);
+        return true;
+    }
     return false;
 }
 
@@ -156,7 +172,11 @@ const wasdKeys2SymbolicDir: Record<string, SymbolicDirection> = {
 };
 
 function getWASDKeyboardInput(player: Player): InputFactory {
-    return getKeyboardInputFromMapping(player, ev => wasdKeys2SymbolicDir[ev.code]);
+    return getKeyboardInputFromMapping(
+        player,
+        ev => wasdKeys2SymbolicDir[ev.code],
+        ev => key2SymbolicBtn[ev.code]
+    );
 }
 
 export function getKeyboardInput(): InputFactory {
