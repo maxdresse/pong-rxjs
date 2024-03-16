@@ -1,8 +1,9 @@
 import { b2PolygonShape } from '@box2d/core';
 import { GameEffect, Player } from '../types';
 import { PLAYER_ENLARGED_SIZE, PLAYER_SIZE } from '../physical-constants';
+import { DEFAUL_MUTATION_DURATION } from '../physical-constants';
 
-export function createEnlargePlayerEffect(player: Player, duration: number): GameEffect {
+export function createEnlargePlayerEffect(player: Player, duration = DEFAUL_MUTATION_DURATION): GameEffect {
     return {
         apply: ({ playerBodies }) => {
             const body = playerBodies[player];

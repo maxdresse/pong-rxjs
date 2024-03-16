@@ -15,6 +15,8 @@ import { createToggleThemeEffect } from './effects/toggle-theme-effect';
 import { isHitBallHardEvent } from './events/player-hits-ball-hard';
 import { createForceFeedbackEffect } from './effects/force-feedback-effect';
 import { createResetPlayersEffect } from './effects/reset-players-effect';
+import { isEnlargePlayerIntent } from './intents/enlarge-player-intent';
+import { createEnlargePlayerEffect } from './effects/enlarge-player-effect';
 
 
 
@@ -34,6 +36,8 @@ export function createGameLogic({ score, params }: GameLogitInit): GameLogic {
                 return createPlayEffect();
             } else if (isToggleThemeIntent(intent)) {
                 return createToggleThemeEffect();
+            } else if (isEnlargePlayerIntent(intent)) {
+                return createEnlargePlayerEffect(intent.payload)
             }
             throw Error('unknown intent');
         },

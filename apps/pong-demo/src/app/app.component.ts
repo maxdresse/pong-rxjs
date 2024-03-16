@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
         const stats$ = createGame({
             canvas,
             stats: {
-              updateInterval$: new BehaviorSubject(60),
+              updateInterval$: undefined,  //new BehaviorSubject(60),
               recordsMaxBufferSize: 100
             }
           }).stats$;

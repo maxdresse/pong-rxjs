@@ -41,5 +41,6 @@ export const BALL_KICKOFF_VELOCITY = 0;
 export const BALL_KICKOFF_DELTA_X = 6;
 export const HARD_HIT_THRESHOLD = 0.045;
 export const KICKOFF_DELAY = 500;
+export const DEFAUL_MUTATION_DURATION = 10 * 1000;
 
 
