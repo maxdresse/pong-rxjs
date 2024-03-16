@@ -4,6 +4,7 @@ import { MovePlayerIntent, createMovePlayerIntent } from '../intents/player-cont
 import { UNIT_VECTOR_UP, UNIT_VECTOR_DOWN, UNIT_VECTOR_LEFT, UNIT_VECTOR_RIGHT, UNIT_VECTOR_UPPER_LEFT, UNIT_VECTOR_UPPER_RIGHT, UNIT_VECTOR_LOWER_RIGHT, UNIT_VECTOR_LOWER_LEFT } from './input-constants';
 import { combineInputs } from './input-utils';
 import { ensurePrepended, ensureRemoved } from '../array-utils';
+import { SymbolicButton } from './btn';
 
 // want truthy values to avoid errors when checking for truthiness
 // numeric values are bit shifts apart in order to easily compute
@@ -14,17 +15,6 @@ const enum SymbolicDirection {
     LEFT = 4,
     RIGHT = 8
 };
-
-const enum SymbolicButton {
-    A = 1,
-    B = 2,
-    X = 4,
-    Y = 8,
-    L1 = 16,
-    L2 = 32,
-    R1 = 64,
-    R2 = 128
-}
 
 const key2SymbolicBtn: Record<string, SymbolicButton> = {
     // roughly same layout as on XBox 360 controller
