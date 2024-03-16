@@ -1,4 +1,4 @@
-import { Observable, map } from 'rxjs';
+import { Observable, filter, map } from 'rxjs';
 
 export const enum SymbolicButton {
     A = 1,
@@ -16,7 +16,22 @@ export type SymbolicButtonCombination = number;
 
 function onCombo(sequence: Array<SymbolicButtonCombination>): (src$: Observable<SymbolicButtonCombination>) => Observable<void> {
     let currentIdx = 0;
-    return src$ => src$.pipe(map(_ => {
-        
-    }));
+    const lastIndex = sequence.length - 1;
+    return src$ => src$.pipe(
+        filter(combination => {
+            if (currentIdx > lastIndex) {
+                return true;
+            }
+            if (sequence[currentIdx] === combination) {
+                // match
+                currentIdx++;
+                return currentIdx > lastIndex;
+            } else {
+                // no match => reset
+                currentIdx = 0;
+            }
+            return false;
+        }),
+        map(_ => undefined)
+    );
 }
