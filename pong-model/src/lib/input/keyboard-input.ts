@@ -67,7 +67,7 @@ type EventConfig = {
 function getKeyboardInputFromMapping(player: Player, { ev2Dir, ev2Btn }: EventConfig): InputFactory {
     const btnCombination$ = new BehaviorSubject<number>(0);
     const combo$ = btnCombination$.pipe(
-        onCombo([SymbolicButton.X, SymbolicButton.Y, SymbolicButton.A, SymbolicButton.B], 300)
+        onCombo([SymbolicButton.X, SymbolicButton.Y, SymbolicButton.A, SymbolicButton.B], 1000)
     );
     return ({ onFrame$ }) => new Observable<MovePlayerIntent>(subscriber => {
         const comboSub = combo$.subscribe(() => console.log('combo!'));

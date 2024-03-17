@@ -1,4 +1,4 @@
-import { Observable, filter, map } from 'rxjs';
+import { Observable, distinctUntilChanged, filter, map } from 'rxjs';
 
 export const enum SymbolicButton {
     A = 1,
@@ -22,6 +22,8 @@ export function onCombo(sequence: Array<SymbolicButtonCombination>, stepTimeout:
         currentIdx = 0;
     }
     return src$ => src$.pipe(
+        distinctUntilChanged(),
+        filter(x => !!x),
         filter(combination => {
             clearTimeout(to);
             let success = false;
@@ -35,6 +37,9 @@ export function onCombo(sequence: Array<SymbolicButtonCombination>, stepTimeout:
                     // match, but not yet done
                     // need to get to next step within timeout
                     to = setTimeout(reset, stepTimeout);
+                } else {
+                    // success => clean up
+                    reset();
                 }
             } else {
                 // no match => reset
