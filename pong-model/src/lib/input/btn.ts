@@ -23,22 +23,24 @@ function onCombo(sequence: Array<SymbolicButtonCombination>, stepTimeout: number
     }
     return src$ => src$.pipe(
         filter(combination => {
-            to = setTimeout(reset, stepTimeout);
+            clearTimeout(to);
+            let success = false;
             if (currentIdx > lastIndex) {
-                clearTimeout(to);
-                return true;
-            }
-            if (sequence[currentIdx] === combination) {
+                success = true;
+            } else if (sequence[currentIdx] === combination) {
                 // match
                 currentIdx++;
-                clearTimeout(to);
-                return currentIdx > lastIndex;
+                success = currentIdx > lastIndex;
+                if (!success) {
+                    // match, but not yet done
+                    // need to get to next step within timeout
+                    to = setTimeout(reset, stepTimeout);
+                }
             } else {
                 // no match => reset
                 reset();
             }
-            clearTimeout(to);
-            return false;
+            return success;
         }),
         map(_ => undefined)
     );
