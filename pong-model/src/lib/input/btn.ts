@@ -14,7 +14,7 @@ export const enum SymbolicButton {
 // don't have a stronger type for the time being
 export type SymbolicButtonCombination = number;
 
-function onCombo(sequence: Array<SymbolicButtonCombination>, stepTimeout: number): (src$: Observable<SymbolicButtonCombination>) => Observable<void> {
+export function onCombo(sequence: Array<SymbolicButtonCombination>, stepTimeout: number): (src$: Observable<SymbolicButtonCombination>) => Observable<void> {
     let currentIdx = 0;
     const lastIndex = sequence.length - 1;
     let to: ReturnType<typeof setTimeout>;

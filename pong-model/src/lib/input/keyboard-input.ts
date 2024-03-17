@@ -1,10 +1,10 @@
-import { Observable, merge } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, merge } from 'rxjs';
 import { InputFactory, Player, SomeGameIntent, Vc2 } from '../types';
 import { MovePlayerIntent, createMovePlayerIntent } from '../intents/player-control-intents';
 import { UNIT_VECTOR_UP, UNIT_VECTOR_DOWN, UNIT_VECTOR_LEFT, UNIT_VECTOR_RIGHT, UNIT_VECTOR_UPPER_LEFT, UNIT_VECTOR_UPPER_RIGHT, UNIT_VECTOR_LOWER_RIGHT, UNIT_VECTOR_LOWER_LEFT } from './input-constants';
 import { combineInputs } from './input-utils';
 import { ensurePrepended, ensureRemoved } from '../array-utils';
-import { SymbolicButton } from './btn';
+import { SymbolicButton, onCombo } from './btn';
 
 // want truthy values to avoid errors when checking for truthiness
 // numeric values are bit shifts apart in order to easily compute
@@ -52,11 +52,8 @@ function directionBufToIntent(player: Player, directionBuf: Array<SymbolicDirect
     return dir ? createMovePlayerIntent({ player, direction: dir }) : null;
 }
 
-function btnBufToIntent(player: Player, btnBuf: Array<SymbolicButton>) {
-    if (btnBuf.length) {
-        console.log(btnBuf);
-    }
-    return null;
+function updateBtnCombination(combination$: Subject<number>, btnBuf: Array<SymbolicButton>) {
+    combination$.next(btnBuf.reduce((a, b) => a + b, 0));
 }
 
 type Ev2Btn = (ev: KeyboardEvent) => SymbolicButton | undefined;
@@ -68,17 +65,22 @@ type EventConfig = {
 };
 
 function getKeyboardInputFromMapping(player: Player, { ev2Dir, ev2Btn }: EventConfig): InputFactory {
+    const btnCombination$ = new BehaviorSubject<number>(0);
+    const combo$ = btnCombination$.pipe(
+        onCombo([SymbolicButton.X, SymbolicButton.Y, SymbolicButton.A, SymbolicButton.B], 300)
+    );
     return ({ onFrame$ }) => new Observable<MovePlayerIntent>(subscriber => {
+        const comboSub = combo$.subscribe(() => console.log('combo!'));
         // on every frame, check the current keybuffer and
-        // trigger a player move intent if a direction is presetn
+        // trigger a player move intent if a direction is present
         const directionBuf: Array<SymbolicDirection> = [];
         const btnBuf: Array<SymbolicButton> = [];
         const sub = onFrame$.subscribe(() => {
-            let intent = directionBufToIntent(player, directionBuf);
-            intent = intent ?? btnBufToIntent(player, btnBuf);
+            const intent = directionBufToIntent(player, directionBuf);
             if (intent) {
                 subscriber.next(intent);
             }
+            updateBtnCombination(btnCombination$, btnBuf);
         });
         const cbDown: Parameters<(typeof window.addEventListener<'keydown'>)>[1] = ev => {
             const wasDir = addToDirectionBuf(ev2Dir, ev, directionBuf);
@@ -97,6 +99,7 @@ function getKeyboardInputFromMapping(player: Player, { ev2Dir, ev2Btn }: EventCo
         window.addEventListener('keyup', cbUp);
         subscriber.add(() => {
             sub.unsubscribe();
+            comboSub.unsubscribe();
             window.removeEventListener('keydown', cbDown);
             window.removeEventListener('keyup', cbUp);
         });
