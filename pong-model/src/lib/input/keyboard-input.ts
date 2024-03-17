@@ -62,7 +62,12 @@ function btnBufToIntent(player: Player, btnBuf: Array<SymbolicButton>) {
 type Ev2Btn = (ev: KeyboardEvent) => SymbolicButton | undefined;
 type Ev2Dir = (ev: KeyboardEvent) => SymbolicDirection | undefined;
 
-function getKeyboardInputFromMapping(player: Player, ev2Dir: Ev2Dir, ev2Btn?: Ev2Btn): InputFactory {
+type EventConfig = {
+    ev2Dir: Ev2Dir;
+    ev2Btn?: Ev2Btn;
+};
+
+function getKeyboardInputFromMapping(player: Player, { ev2Dir, ev2Btn }: EventConfig): InputFactory {
     return ({ onFrame$ }) => new Observable<MovePlayerIntent>(subscriber => {
         // on every frame, check the current keybuffer and
         // trigger a player move intent if a direction is presetn
@@ -151,7 +156,7 @@ function symbolicDirToVectorDir(keyBuf: SymbolicDirection[]) {
 }
 
 export function getArrowKeyboardInput(player: Player): InputFactory {
-    return getKeyboardInputFromMapping(player, ev => arrowKeys2SymbolicDir[ev.key]);
+    return getKeyboardInputFromMapping(player, { ev2Dir: ev => arrowKeys2SymbolicDir[ev.key] });
 }
 
 const wasdKeys2SymbolicDir: Record<string, SymbolicDirection> = {
@@ -164,8 +169,8 @@ const wasdKeys2SymbolicDir: Record<string, SymbolicDirection> = {
 function getWASDKeyboardInput(player: Player): InputFactory {
     return getKeyboardInputFromMapping(
         player,
-        ev => wasdKeys2SymbolicDir[ev.code],
-        ev => key2SymbolicBtn[ev.code]
+        { ev2Dir: ev => wasdKeys2SymbolicDir[ev.code],
+          ev2Btn: ev => key2SymbolicBtn[ev.code] }
     );
 }
 
