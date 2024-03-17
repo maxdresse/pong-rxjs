@@ -22,8 +22,8 @@ export function onCombo(sequence: Array<SymbolicButtonCombination>, stepTimeout:
         currentIdx = 0;
     }
     return src$ => src$.pipe(
-        distinctUntilChanged(),
-        filter(x => !!x),
+        distinctUntilChanged(), // only btn changes
+        filter(x => !!x), // ignore empty btn presses
         filter(combination => {
             clearTimeout(to);
             let success = false;
