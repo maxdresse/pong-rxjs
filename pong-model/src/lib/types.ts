@@ -102,6 +102,10 @@ export interface GameParameters {
     goalsToWin: number;
     gamePadConfig: GamepadConfig;
     userMessage?: UserMessage;
+    handicaps?: { [key in Player]: {
+            barelyVisible?: boolean;
+        } 
+    }
 }
 
 export type GameFactory = (def: IGameDef) => IGame; 
