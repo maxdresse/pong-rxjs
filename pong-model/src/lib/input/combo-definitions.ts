@@ -16,17 +16,17 @@ const dc = defineCombination;
 
 export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (player: Player) => SomeGameIntent]> = 
     [
-        [[dc('xyab')], player => createEnlargePlayerIntent(otherPlayer(player))]
+        [dc('xyab'), player => createEnlargePlayerIntent(otherPlayer(player))]
     ];
 
-function defineCombination(btnString: string): SymbolicButtonCombination {
-    let result: SymbolicButtonCombination = 0;
+function defineCombination(btnString: string): Array<SymbolicButtonCombination> {
+    const result: Array<SymbolicButtonCombination> = [];
     for (const char of btnString) {
         const sym = charToSym[char];
         if (sym == undefined) {
             throw Error('illegal sequence');
         }
-        result += sym;
+        result.push(sym);
    }
    return result;
 }
