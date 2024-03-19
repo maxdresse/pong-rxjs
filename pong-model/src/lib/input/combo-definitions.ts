@@ -19,7 +19,6 @@ export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (playe
         [[dc('xyab')], player => createEnlargePlayerIntent(otherPlayer(player))]
     ];
 
-console.log('hi')
 function defineCombination(btnString: string): SymbolicButtonCombination {
     let result: SymbolicButtonCombination = 0;
     for (const char of btnString) {
