@@ -16,7 +16,7 @@ const dc = defineCombination;
 
 export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (player: Player) => SomeGameIntent]> = 
     [
-        [dc('xyab'), player => createEnlargePlayerIntent(otherPlayer(player))]
+        [dc('xyab'), playerThatOwnsBtn => createEnlargePlayerIntent(otherPlayer(playerThatOwnsBtn))]
     ];
 
 function defineCombination(btnString: string): Array<SymbolicButtonCombination> {
