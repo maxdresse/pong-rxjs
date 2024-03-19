@@ -5,7 +5,7 @@ export interface MovePlayerPayload {
     direction: Vc2;
 };
 
-export const MOVE_PLAYER_INTENT = 12;
+export const MOVE_PLAYER_INTENT = 16;
 
 export type MovePlayerIntent = GameIntent<typeof MOVE_PLAYER_INTENT, MovePlayerPayload>;
 

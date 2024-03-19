@@ -1,6 +1,6 @@
 import { GameIntent, Player, SomeGameIntent } from '../types';
 
-export const ENLARGE_PLAYER_INTENT = 21;
+export const ENLARGE_PLAYER_INTENT = 5;
 
 export type EnlargePlayerIntent = GameIntent<typeof ENLARGE_PLAYER_INTENT, Player>;
 

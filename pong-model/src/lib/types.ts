@@ -163,3 +163,7 @@ export interface StatsCollector {
 export interface StatsLogger {
     log(situation: GameSituation): GameStatistics;
 }
+
+export enum HandicapType {
+    OPPONENT_ENLARGED
+}

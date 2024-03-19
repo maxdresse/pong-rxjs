@@ -4,7 +4,8 @@ import { MovePlayerIntent, createMovePlayerIntent } from '../intents/player-cont
 import { UNIT_VECTOR_UP, UNIT_VECTOR_DOWN, UNIT_VECTOR_LEFT, UNIT_VECTOR_RIGHT, UNIT_VECTOR_UPPER_LEFT, UNIT_VECTOR_UPPER_RIGHT, UNIT_VECTOR_LOWER_RIGHT, UNIT_VECTOR_LOWER_LEFT } from './input-constants';
 import { combineInputs } from './input-utils';
 import { ensurePrepended, ensureRemoved } from '../array-utils';
-import { SymbolicButton, onCombo } from './btn';
+import { SymbolicButton } from './btn';
+import { onCombo } from './combo';
 
 // want truthy values to avoid errors when checking for truthiness
 // numeric values are bit shifts apart in order to easily compute

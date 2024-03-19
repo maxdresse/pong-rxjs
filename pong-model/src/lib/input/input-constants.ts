@@ -7,4 +7,5 @@ export const UNIT_VECTOR_UPPER_LEFT = { x: -invsqr2, y: invsqr2 };
 export const UNIT_VECTOR_UPPER_RIGHT = { x: invsqr2, y: invsqr2 };
 export const UNIT_VECTOR_LOWER_RIGHT = { x: invsqr2, y: -invsqr2 };
 export const UNIT_VECTOR_LOWER_LEFT = { x: -invsqr2, y: -invsqr2 };
+export const COMBO_STEP_TIMEOUT = 1000;
 

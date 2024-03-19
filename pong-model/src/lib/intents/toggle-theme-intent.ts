@@ -1,6 +1,6 @@
 import { GameIntent, SomeGameIntent } from '../types';
 
-export const TOGGLE_THEME_INTENT = 47;
+export const TOGGLE_THEME_INTENT = 21;
 
 export type ToggleThemeIntent = GameIntent<typeof TOGGLE_THEME_INTENT, void>;
 
