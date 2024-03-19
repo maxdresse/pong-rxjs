@@ -1,11 +1,11 @@
-import { BehaviorSubject, Observable, Subject, merge } from 'rxjs';
-import { InputFactory, Player, SomeGameIntent, Vc2 } from '../types';
-import { MovePlayerIntent, createMovePlayerIntent } from '../intents/player-control-intents';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { InputFactory, Player, SomeGameEvent, Vc2 } from '../types';
+import { createMovePlayerIntent } from '../intents/player-control-intents';
 import { UNIT_VECTOR_UP, UNIT_VECTOR_DOWN, UNIT_VECTOR_LEFT, UNIT_VECTOR_RIGHT, UNIT_VECTOR_UPPER_LEFT, UNIT_VECTOR_UPPER_RIGHT, UNIT_VECTOR_LOWER_RIGHT, UNIT_VECTOR_LOWER_LEFT } from './input-constants';
 import { combineInputs } from './input-utils';
 import { ensurePrepended, ensureRemoved } from '../array-utils';
 import { SymbolicButton } from './btn';
-import { onCombo } from './combo';
+import { combinationToIntent } from './combination-to-intent';
 
 // want truthy values to avoid errors when checking for truthiness
 // numeric values are bit shifts apart in order to easily compute
@@ -67,11 +67,10 @@ type EventConfig = {
 
 function getKeyboardInputFromMapping(player: Player, { ev2Dir, ev2Btn }: EventConfig): InputFactory {
     const btnCombination$ = new BehaviorSubject<number>(0);
-    const combo$ = btnCombination$.pipe(
-        onCombo([SymbolicButton.X, SymbolicButton.Y, SymbolicButton.A, SymbolicButton.B], 1000)
-    );
-    return ({ onFrame$ }) => new Observable<MovePlayerIntent>(subscriber => {
-        const comboSub = combo$.subscribe(() => console.log('combo!'));
+    const intentFromCombo$ = combinationToIntent(btnCombination$, player);
+
+    return ({ onFrame$ }) => new Observable<SomeGameEvent>(subscriber => {
+        const comboSub = intentFromCombo$.subscribe(combIntent => subscriber.next(combIntent));
         // on every frame, check the current keybuffer and
         // trigger a player move intent if a direction is present
         const directionBuf: Array<SymbolicDirection> = [];

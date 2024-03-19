@@ -3,13 +3,6 @@ import { otherPlayer } from '../player-utils';
 import { Player, SomeGameIntent } from '../types';
 import { SymbolicButton, SymbolicButtonCombination } from './btn';
 
-const dc = defineCombination;
-
-export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (player: Player) => SomeGameIntent]> = 
-    [
-        [[dc('xyab')], player => createEnlargePlayerIntent(otherPlayer(player))]
-    ];
-
 const charToSym: Record<string, SymbolicButton> = {
     a: SymbolicButton.A,
     b: SymbolicButton.B,
@@ -19,6 +12,14 @@ const charToSym: Record<string, SymbolicButton> = {
     l2: SymbolicButton.L2
 };
 
+const dc = defineCombination;
+
+export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (player: Player) => SomeGameIntent]> = 
+    [
+        [[dc('xyab')], player => createEnlargePlayerIntent(otherPlayer(player))]
+    ];
+
+console.log('hi')
 function defineCombination(btnString: string): SymbolicButtonCombination {
     let result: SymbolicButtonCombination = 0;
     for (const char of btnString) {
