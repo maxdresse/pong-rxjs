@@ -21,6 +21,7 @@ export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (playe
         [dc('xyab'), playerThatOwnsBtn => createEnlargePlayerIntent(otherPlayer(playerThatOwnsBtn))]
     ];
 
+// todo: chord support! suggested syntax 'xy|ab')
 function defineCombination(btnString: string): Array<SymbolicButtonCombination> {
     const result: Array<SymbolicButtonCombination> = [];
     for (const char of btnString) {
