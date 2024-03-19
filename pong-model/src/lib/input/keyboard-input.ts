@@ -19,15 +19,15 @@ const enum SymbolicDirection {
 
 const key2SymbolicBtn: Record<string, SymbolicButton> = {
     // roughly same layout as on XBox 360 controller
-    KeyK: SymbolicButton.X,
-    KeyO: SymbolicButton.Y,
-    KeyL: SymbolicButton.A,
-    KeyP: SymbolicButton.B,
+    KeyK: SymbolicButton.Y,
+    KeyO: SymbolicButton.X,
+    KeyL: SymbolicButton.B,
+    KeyP: SymbolicButton.A,
     // L & R Buttons
-    KeyE: SymbolicButton.L1,
-    KeyR: SymbolicButton.L2,
-    KeyU: SymbolicButton.R1,
-    KeyI: SymbolicButton.R2
+    Key1: SymbolicButton.L1,
+    Key2: SymbolicButton.L2,
+    Key9: SymbolicButton.R1,
+    Key0: SymbolicButton.R2
 };
 
 const enum CombinedSymbolicDirection {

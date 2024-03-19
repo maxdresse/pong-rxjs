@@ -8,8 +8,10 @@ const charToSym: Record<string, SymbolicButton> = {
     b: SymbolicButton.B,
     x: SymbolicButton.X,
     y: SymbolicButton.Y,
-    l1: SymbolicButton.L1,
-    l2: SymbolicButton.L2
+    l: SymbolicButton.L1,
+    L: SymbolicButton.L2,
+    r: SymbolicButton.R1,
+    R: SymbolicButton.R2
 };
 
 const dc = defineCombination;
