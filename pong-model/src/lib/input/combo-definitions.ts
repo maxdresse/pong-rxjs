@@ -1,11 +1,13 @@
-import { HandicapType } from '../types';
+import { createEnlargePlayerIntent } from '../intents/enlarge-player-intent';
+import { otherPlayer } from '../player-utils';
+import { Player, SomeGameIntent } from '../types';
 import { SymbolicButton, SymbolicButtonCombination } from './btn';
 
 const dc = defineCombination;
 
-export const COMBO_DEFINITIONS:  Array<[HandicapType, Array<SymbolicButtonCombination>]> = 
+export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (player: Player) => SomeGameIntent]> = 
     [
-        [HandicapType.OPPONENT_ENLARGED, [dc('xyab')]]
+        [[dc('xyab')], player => createEnlargePlayerIntent(otherPlayer(player))]
     ];
 
 const charToSym: Record<string, SymbolicButton> = {

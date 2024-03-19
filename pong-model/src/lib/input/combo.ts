@@ -1,20 +1,6 @@
 import { SymbolicButtonCombination } from './btn';
-
-import { Observable, distinctUntilChanged, filter, map, merge } from 'rxjs';
+import { Observable, distinctUntilChanged, filter } from 'rxjs';
 import { COMBO_STEP_TIMEOUT } from './input-constants';
-import { COMBO_DEFINITIONS } from './combo-definitions';
-import { createHandicapIntent } from '../intents/handicap-intent';
-import { Player, SomeGameIntent } from '../types';
-
-export function combiToIntent(comb$: Observable<SymbolicButtonCombination>, player: Player): Observable<SomeGameIntent> {
-    const combo$s = COMBO_DEFINITIONS.map(([type, sequence]) => {
-        return comb$.pipe(
-            onCombo(sequence),
-            map(_ => createHandicapIntent(player, type))   
-        )
-    });
-    return merge(...combo$s);
-}
 
 export function onCombo(sequence: Array<SymbolicButtonCombination>, stepTimeout = COMBO_STEP_TIMEOUT): (src$: Observable<SymbolicButtonCombination>) => Observable<SymbolicButtonCombination> {
     let currentIdx = 0;
