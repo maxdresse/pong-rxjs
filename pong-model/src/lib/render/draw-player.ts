@@ -1,6 +1,8 @@
 import { b2Body, b2PolygonShape, b2ShapeType, b2Vec2 } from '@box2d/core';
 import { drawInBodyContext } from './draw-utils';
 import { IColorScheme, Vc2 } from '../types';
+import { PlayerUserData } from '../body-user-data';
+import { BARELY_VISIBLE_OPACITY } from './render-constants';
 
 
 export function drawPlayer(ctx: CanvasRenderingContext2D, body: b2Body, cs: IColorScheme): void {
@@ -14,6 +16,10 @@ export function drawPaddle(body: b2Body, ctx: CanvasRenderingContext2D, colors: 
     const f = body.GetFixtureList();
     if (!f) {
         return;
+    }
+    const barelyVisible = (body.GetUserData() as PlayerUserData)?.isBarelyVisible;
+    if (barelyVisible) {
+        ctx.globalAlpha = BARELY_VISIBLE_OPACITY;
     }
     const shape = f.GetShape() as b2PolygonShape;
     const shapeType = shape.GetType();
@@ -34,6 +40,9 @@ export function drawPaddle(body: b2Body, ctx: CanvasRenderingContext2D, colors: 
         ctx.fill();
         ctx.strokeStyle = colors.stroke;
         ctx.stroke();
+        if (barelyVisible) {
+            ctx.globalAlpha = 1;
+        }
     }
 }
 

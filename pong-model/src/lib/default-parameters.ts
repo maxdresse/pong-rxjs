@@ -1,4 +1,4 @@
-import { GameParameters } from './types';
+import { GameParameters, Player } from './types';
 import { DEFAULT_POS_ITERATIONS, DEFAULT_VEL_ITERATIONS } from './physical-constants';
 import { DEFAULT_ZOOM } from './render/render-constants';
 import { DEFAULT_TIME_STEP } from './physical-constants';
@@ -15,6 +15,6 @@ export function getDefaultParameters(): GameParameters {
         colorScheme: EIGHTIES_DARK_SCHEME,
         goalsToWin: GOALS_TO_WIN,
         paused: false,
-        gamePadConfig: { playerToGamePad: [null, null] }
+        gamePadConfig: { playerToGamePad: [null, null] },
     };
 }

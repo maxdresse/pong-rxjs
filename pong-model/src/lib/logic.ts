@@ -17,6 +17,8 @@ import { createForceFeedbackEffect } from './effects/force-feedback-effect';
 import { createResetPlayersEffect } from './effects/reset-players-effect';
 import { isEnlargePlayerIntent } from './intents/enlarge-player-intent';
 import { createEnlargePlayerEffect } from './effects/enlarge-player-effect';
+import { isMakeBarelyVisibleIntent } from './intents/make-barely-visible-intent';
+import { createMakeBarelyVisibleEffect } from './effects/make-barely-visible-effect';
 
 
 
@@ -38,6 +40,8 @@ export function createGameLogic({ score, params }: GameLogitInit): GameLogic {
                 return createToggleThemeEffect();
             } else if (isEnlargePlayerIntent(intent)) {
                 return createEnlargePlayerEffect(intent.payload)
+            } else if (isMakeBarelyVisibleIntent(intent)) {
+                return createMakeBarelyVisibleEffect(intent.payload);
             }
             throw Error('unknown intent');
         },

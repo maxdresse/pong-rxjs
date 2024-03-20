@@ -31,7 +31,7 @@ export function getGoalUserData(owningPlayer: Player) {
 }
 
 export function getPlayerUserData(player: Player) {
-    return { type: playerType, player } as const;
+    return { type: playerType, player, isBarelyVisible: false };
 }
 
 export function getBallUserData() {

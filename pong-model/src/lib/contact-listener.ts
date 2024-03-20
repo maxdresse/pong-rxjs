@@ -1,6 +1,6 @@
 import { b2Body, b2Contact, b2ContactListener } from '@box2d/core';
 import { GameObjectType, SomeGameEvent } from './types';
-import { BallUserData, FenceUserData, GoalUserData, PlayerUserData, WallUserData, getBallUserData, getFenceUserData, getGoalUserData, getPlayerUserData, getWallUserData } from './body-user-data';
+import { BallUserData, FenceUserData, GoalUserData, PlayerUserData, WallUserData } from './body-user-data';
 import { createPlayerHitsObstacleEvent as createPlayerHitsObstacleEvent } from './events/player-hits-obstacle-event';
 import { createGoalScoredEvent } from './events/goal-scored-event';
 import { createHitBallHardEvent } from './events/player-hits-ball-hard';
