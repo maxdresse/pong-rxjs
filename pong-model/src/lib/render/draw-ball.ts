@@ -1,7 +1,7 @@
 import { b2Body, b2CircleShape, b2Fixture, b2ShapeType, b2Vec2 } from '@box2d/core';
 import { drawInBodyContext } from './draw-utils';
 import { IColorScheme, IFillStroke } from '../types';
-import { DISABLED_OPACITY } from './render-constants';
+import { DISABLED_ALPHA } from './render-constants';
 
 export function drawBall(ctx: CanvasRenderingContext2D, body: b2Body, cs: IColorScheme): void {
     drawInBodyContext(ctx, body, () => {
@@ -11,7 +11,7 @@ export function drawBall(ctx: CanvasRenderingContext2D, body: b2Body, cs: IColor
 
 function drawCircularFixtures(body: b2Body, ctx: CanvasRenderingContext2D, cs: IColorScheme) {
     if (!body.IsEnabled()) {
-        ctx.globalAlpha = DISABLED_OPACITY;
+        ctx.globalAlpha = DISABLED_ALPHA;
     }
     for (let f: b2Fixture | null = body.GetFixtureList(); f; f = f.GetNext()) {
         const shape = f.GetShape();
