@@ -24,10 +24,10 @@ const key2SymbolicBtn: Record<string, SymbolicButton> = {
     KeyL: SymbolicButton.B,
     KeyP: SymbolicButton.A,
     // L & R Buttons
-    Key1: SymbolicButton.L1,
-    Key2: SymbolicButton.L2,
-    Key9: SymbolicButton.R1,
-    Key0: SymbolicButton.R2
+    Digit1: SymbolicButton.L1,
+    Digit2: SymbolicButton.L2,
+    Digit9: SymbolicButton.R1,
+    Digit0: SymbolicButton.R2
 };
 
 const enum CombinedSymbolicDirection {

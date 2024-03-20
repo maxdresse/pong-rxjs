@@ -3,6 +3,8 @@ import { otherPlayer } from '../player-utils';
 import { Player, SomeGameIntent } from '../types';
 import { SymbolicButton, SymbolicButtonCombination } from './btn';
 
+const CHORD_SEPARATOR = '|';
+
 const charToSym: Record<string, SymbolicButton> = {
     a: SymbolicButton.A,
     b: SymbolicButton.B,
@@ -18,18 +20,24 @@ const dc = defineCombination;
 
 export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (player: Player) => SomeGameIntent]> = 
     [
-        [dc('xyab'), playerThatOwnsBtn => createEnlargePlayerIntent(otherPlayer(playerThatOwnsBtn))]
+        [dc('l|L|r|R'), playerThatOwnsBtn => createEnlargePlayerIntent(otherPlayer(playerThatOwnsBtn))]
     ];
 
-// todo: chord support! suggested syntax 'xy|ab')
 function defineCombination(btnString: string): Array<SymbolicButtonCombination> {
+    btnString = btnString ?? '';
     const result: Array<SymbolicButtonCombination> = [];
-    for (const char of btnString) {
-        const sym = charToSym[char];
-        if (sym == undefined) {
-            throw Error('illegal sequence');
+    const chords = btnString.split(CHORD_SEPARATOR)
+        .filter(x => !!x);
+    chords.forEach(chord => {
+        let chordComb = 0;
+        for (const char of chord) {
+            const sym = charToSym[char];
+            if (sym == undefined) {
+                throw Error('illegal sequence');
+            }
+            chordComb += sym;
         }
-        result.push(sym);
-   }
+        result.push(chordComb);
+    });
    return result;
 }
