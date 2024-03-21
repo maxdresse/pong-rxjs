@@ -15,8 +15,7 @@ export function createPauseEffect(): GameEffect {
             params.paused = true;
             params.userMessage = {
                 type: UserMessageType.BOTH,
-                msg: 'Paused',
-                flashing: true
+                msg: 'Paused'
             };
         }
     };

@@ -1,5 +1,5 @@
 import { getFrameCount } from '../frame-counter';
-import { GameParameters } from '../types';
+import { GameParameters, UserMessageType } from '../types';
 import { FONT_FAMILY } from './font-constants';
 import { USR_MSG_FONT_SIZE } from './font-constants';
 import { FRAME_COUNT_PER_FLASH } from './render-constants';
@@ -20,12 +20,24 @@ function drawUserMessage(params: GameParameters, ctx: CanvasRenderingContext2D) 
     // but seems to be Ok in our case
     const textMetrics = ctx.measureText(msg);
     const { width: w, actualBoundingBoxAscent: h } = textMetrics;
-    ctx.translate(0.5 * (ctx.canvas.width - w), 0.5 * (ctx.canvas.height - h));
+    const [tx, ty] = getTranslation(ctx, w, h, params.userMessage.type);
+    ctx.translate(tx, ty);
 
     ctx.fillStyle = getFillColor(params);
     ctx.fillText(msg, 0, 0);
 
     ctx.restore();
+}
+
+const type2RelativeTranslation = {
+    [UserMessageType.BOTH]: [0.5, 0.5],
+    [UserMessageType.P1]: [0.25, 0.25],
+    [UserMessageType.P2]: [0.80, 0.25],
+}
+
+function getTranslation(ctx: CanvasRenderingContext2D, w: number, h: number, type: UserMessageType) {
+    const [rx, ry] = type2RelativeTranslation[type];
+    return [rx * (ctx.canvas.width - w), ry * (ctx.canvas.height - h)];
 }
 
 function getFillColor(params: GameParameters) {

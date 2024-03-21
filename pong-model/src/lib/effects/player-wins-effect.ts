@@ -7,7 +7,8 @@ export function createPlayerWinsEffect(winningPlayer: Player): GameEffect {
             params.paused = true;
             params.userMessage = {
                 type: UserMessageType.BOTH,
-                msg: `${getPlayerDisplayName(winningPlayer)} Wins!`
+                msg: `${getPlayerDisplayName(winningPlayer)} Wins!`,
+                flashing: true,
             }
         }
     };
