@@ -21,6 +21,8 @@ import { isMakeBarelyVisibleIntent } from './intents/make-barely-visible-intent'
 import { createMakeBarelyVisibleEffect } from './effects/make-barely-visible-effect';
 import { isShrinkPlayerIntent } from './intents/shrink-player-intent';
 import { createShrinkPlayerEffect } from './effects/shrink-player-effect';
+import { isInvertControlsIntent } from './intents/invert-control-intent';
+import { createInvertControlsEffect } from './effects/invert-controls-effect';
 
 
 
@@ -46,7 +48,9 @@ export function createGameLogic({ score, params }: GameLogitInit): GameLogic {
                 return createMakeBarelyVisibleEffect(intent.payload);
             } else if (isShrinkPlayerIntent(intent)) {
                 return createShrinkPlayerEffect(intent.payload);
-            } 
+            } else if (isInvertControlsIntent(intent)) {
+                return createInvertControlsEffect(intent.payload);
+            }
             throw Error('unknown intent');
         },
         eventResponder: (event) => {

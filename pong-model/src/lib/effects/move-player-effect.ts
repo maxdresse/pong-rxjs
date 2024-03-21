@@ -16,6 +16,9 @@ export function createMovePlayerEffect({ player, direction }: {player: Player; d
             if (!d.Normalize()) {
                 return;
             }
+            if (params.control[player].inverted) {
+                d.Scale(-1);
+            }
             body.ApplyLinearImpulseToCenter(d.Scale(MOVE_IMPULSE_FACTOR));
         }
     }

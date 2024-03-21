@@ -103,6 +103,11 @@ export interface GameParameters {
     goalsToWin: number;
     gamePadConfig: GamepadConfig;
     userMessage?: UserMessage;
+    control: {
+        [key in Player]: {
+            inverted: boolean;
+        }
+    }
 }
 
 export type GameFactory = (def: IGameDef) => IGame; 

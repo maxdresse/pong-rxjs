@@ -16,5 +16,15 @@ export function getDefaultParameters(): GameParameters {
         goalsToWin: GOALS_TO_WIN,
         paused: false,
         gamePadConfig: { playerToGamePad: [null, null] },
+        control: {
+            [Player.PLAYER1]: getDefaultControlParams(),
+            [Player.PLAYER2]: getDefaultControlParams()
+        }
     };
 }
+function getDefaultControlParams(): { inverted: boolean; } {
+    return {
+        inverted: false
+    };
+}
+
