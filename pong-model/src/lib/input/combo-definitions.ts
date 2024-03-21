@@ -1,5 +1,6 @@
 import { createEnlargePlayerIntent } from '../intents/enlarge-player-intent';
 import { createMakeBarelyVisibleIntent } from '../intents/make-barely-visible-intent';
+import { createShrinkPlayerIntent } from '../intents/shrink-player-intent';
 import { otherPlayer } from '../player-utils';
 import { Player, SomeGameIntent } from '../types';
 import { SymbolicButton, SymbolicButtonCombination } from './btn';
@@ -21,7 +22,7 @@ const dc = defineCombination;
 
 export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (player: Player) => SomeGameIntent]> = 
     [
-        [dc('y|x|l'), playerThatOwnsBtn => createEnlargePlayerIntent(playerThatOwnsBtn)],
+        [dc('y|x|l'), playerThatOwnsBtn => createShrinkPlayerIntent(otherPlayer(playerThatOwnsBtn))],
         [dc('y|x|L'), playerThatOwnsBtn => createMakeBarelyVisibleIntent(otherPlayer(playerThatOwnsBtn))]
     ];
 

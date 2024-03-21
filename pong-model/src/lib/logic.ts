@@ -19,6 +19,8 @@ import { isEnlargePlayerIntent } from './intents/enlarge-player-intent';
 import { createEnlargePlayerEffect } from './effects/enlarge-player-effect';
 import { isMakeBarelyVisibleIntent } from './intents/make-barely-visible-intent';
 import { createMakeBarelyVisibleEffect } from './effects/make-barely-visible-effect';
+import { isShrinkPlayerIntent } from './intents/shrink-player-intent';
+import { createShrinkPlayerEffect } from './effects/shrink-player-effect';
 
 
 
@@ -42,7 +44,9 @@ export function createGameLogic({ score, params }: GameLogitInit): GameLogic {
                 return createEnlargePlayerEffect(intent.payload)
             } else if (isMakeBarelyVisibleIntent(intent)) {
                 return createMakeBarelyVisibleEffect(intent.payload);
-            }
+            } else if (isShrinkPlayerIntent(intent)) {
+                return createShrinkPlayerEffect(intent.payload);
+            } 
             throw Error('unknown intent');
         },
         eventResponder: (event) => {
