@@ -90,6 +90,7 @@ export const enum UserMessageType {
 export interface UserMessage {
     type: UserMessageType;
     msg: string;
+    flashing?: boolean;
 }
 
 export interface GameParameters {

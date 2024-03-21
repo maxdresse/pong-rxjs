@@ -6,4 +6,5 @@ export const USE_DEBUG_RENDERER = false;export const CANVAS_RELATIVE_MARGIN = 0.
 export const TEXT_COL_CSS_PROP = '--pong-text-color';
 export const DISABLED_ALPHA = 0.5;
 export const BARELY_VISIBLE_ALPHA = 0.15;
+export const FRAME_COUNT_PER_FLASH = 20;
 
