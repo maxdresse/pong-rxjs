@@ -19,7 +19,8 @@ export function getDefaultParameters(): GameParameters {
         control: {
             [Player.PLAYER1]: getDefaultControlParams(),
             [Player.PLAYER2]: getDefaultControlParams()
-        }
+        },
+        scoreProgress: []
     };
 }
 function getDefaultControlParams(): { inverted: boolean; } {

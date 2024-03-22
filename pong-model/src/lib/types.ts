@@ -107,7 +107,8 @@ export interface GameParameters {
         [key in Player]: {
             inverted: boolean;
         }
-    }
+    },
+    scoreProgress: Array<Player>; // newest comes first!
 }
 
 export type GameFactory = (def: IGameDef) => IGame; 

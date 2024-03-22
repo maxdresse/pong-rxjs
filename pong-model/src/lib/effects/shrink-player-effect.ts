@@ -7,7 +7,7 @@ import { showFlashingMsgToPlayer } from '../render/user-message-utils';
 export function createShrinkPlayerEffect(player: Player, duration = DEFAUL_MUTATION_DURATION): GameEffect {
     return {
         apply: ({ playerBodies, params }) => {
-            const body = playerBodies[player];
+            const body = playerBodies [player];
             const fixture = body.GetFixtureList();
             if (!fixture) {
                 return;

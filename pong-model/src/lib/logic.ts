@@ -6,7 +6,6 @@ import { GameEvent, GameLogic, GameParameters, IGameDef, Player, Score } from '.
 import { GoalScoredPayload, isGoalScoredEvent } from './events/goal-scored-event';
 import { createKickoffEffect } from './effects/kickoff-effect';
 import { otherPlayer } from './player-utils';
-import { createChangeScoreEffect } from './effects/change-score-effect';
 import { createPlayerWinsEffect } from './effects/player-wins-effect';
 import { isPauseIntent, isPlayIntent } from './intents/play-pause-intent';
 import { createPauseEffect, createPlayEffect } from './effects/play-pause-effect';
@@ -23,8 +22,8 @@ import { isShrinkPlayerIntent } from './intents/shrink-player-intent';
 import { createShrinkPlayerEffect } from './effects/shrink-player-effect';
 import { isInvertControlsIntent } from './intents/invert-control-intent';
 import { createInvertControlsEffect } from './effects/invert-controls-effect';
-
-
+import { getRandomHandicap } from './handicaps';
+import { createIncrementScoreEffect } from './effects/increment-score-effect';
 
 interface GameLogitInit {
     score: Score;
@@ -70,14 +69,17 @@ function handleGoal(event: GameEvent<101, GoalScoredPayload>, score: Score, para
     const pToScore = score.playerToScore;
     if (pToScore[scoringPlayer] + 1 < params.goalsToWin) {
         // case game goes on
-        return [createChangeScoreEffect(p2s => p2s[scoringPlayer]++), createKickoffEffect(scoringPlayer)];
+        const result = [createIncrementScoreEffect(scoringPlayer), createKickoffEffect(scoringPlayer)];
+        const prg = params.scoreProgress;
+        const getsHandicap = prg[0] === scoringPlayer && prg[1] === scoringPlayer;
+        if (getsHandicap) {
+            result.push(getRandomHandicap(scoringPlayer));
+        }
+        return result;
     }
     // case player wins
     return [
-        createChangeScoreEffect(p2s => {
-            p2s[Player.PLAYER1] = 0;
-            p2s[Player.PLAYER2] = 0;
-        }),
+        createIncrementScoreEffect(scoringPlayer),
         createKickoffEffect(scoringPlayer),
         createPlayerWinsEffect(scoringPlayer),
         createResetPlayersEffect(),
