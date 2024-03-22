@@ -8,3 +8,4 @@ export const PLAYER_BORDER_RADIUS = '8px';
 export const PLAYER_FONT_SIZE = '45pt';
 export const PLAYER_PADDING_BOTTOM = '5px';
 export const PLAYER_PADDING_LEFT = '5px';
+export const SHORT_MSG_DURATION = 3000;
