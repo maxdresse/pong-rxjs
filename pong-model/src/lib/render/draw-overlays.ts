@@ -32,12 +32,12 @@ function drawUserMessage(params: GameParameters, ctx: CanvasRenderingContext2D) 
 const type2RelativeTranslation = {
     [UserMessageType.BOTH]: [0.5, 0.5],
     [UserMessageType.P1]: [0.25, 0.25],
-    [UserMessageType.P2]: [0.80, 0.25],
+    [UserMessageType.P2]: [0.75, 0.25],
 }
 
 function getTranslation(ctx: CanvasRenderingContext2D, w: number, h: number, type: UserMessageType) {
     const [rx, ry] = type2RelativeTranslation[type];
-    return [rx * (ctx.canvas.width - w), ry * (ctx.canvas.height - h)];
+    return [rx * ctx.canvas.width - w * 0.5 , ry * ctx.canvas.height - h * 0.5];
 }
 
 function getFillColor(params: GameParameters) {
