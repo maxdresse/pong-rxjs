@@ -22,8 +22,7 @@ export function getGamepadInput(): InputFactory {
             gpds.forEach((gp, gpIdx) => {
                 // update btn combination buffer
                 const player = gpIdx % 2; // simple mapping, could be made configurable
-                const otherPlayer = (player + 1) % 2;
-                btnCombination$s[otherPlayer].next(getSymbolicButtonCombination(gp));
+                btnCombination$s[player].next(getSymbolicButtonCombination(gp));
                 // scan only 1 axis, players seem to be confused
                 // if more than one axis works
                 const axisCount = 1;
