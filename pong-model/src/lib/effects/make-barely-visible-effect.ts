@@ -1,10 +1,11 @@
 import { GameEffect, Player } from '../types';
 import { DEFAUL_MUTATION_DURATION } from '../physical-constants';
 import { PlayerUserData } from '../body-user-data';
+import { showFlashingMsgToPlayer } from '../render/user-message-utils';
 
 export function createMakeBarelyVisibleEffect(player: Player, duration = DEFAUL_MUTATION_DURATION): GameEffect {
     return {
-        apply: ({ playerBodies }) => {
+        apply: ({ playerBodies, params }) => {
             const body = playerBodies[player];
             if (!body) {
                 return;
@@ -14,6 +15,7 @@ export function createMakeBarelyVisibleEffect(player: Player, duration = DEFAUL_
                 return;
             } 
             userData.isBarelyVisible = true;
+            showFlashingMsgToPlayer('Invisible', player, params);
             setTimeout(() => {
                 userData.isBarelyVisible = false;
             }, duration)

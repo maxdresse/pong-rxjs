@@ -14,6 +14,10 @@ export interface MsgOpts {
     flashing?: boolean;
 }
 
+export function showFlashingMsgToPlayer(msg: string, player: Player, params: GameParameters) {
+    return showShortMessage(msg, params, { flashing: true, type: getMsgType(player)})
+}
+
 export function showShortMessage(msg: string, params: GameParameters, { type, flashing  }: MsgOpts) {
     params.userMessage = {
         type: type ?? UserMessageType.BOTH,
