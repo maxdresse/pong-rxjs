@@ -6,7 +6,7 @@ export function createInvertControlsEffect(player: Player, duration = DEFAUL_MUT
     return {
         apply: ({ params }: GameSituation) => {
             params.control[player].inverted = true;
-            showFlashingMsgToPlayer('Invert Controls', player, params)
+            showFlashingMsgToPlayer('Invert Controls!', player, params)
             setTimeout(() => {
                 params.control[player].inverted = false;
             }, duration)

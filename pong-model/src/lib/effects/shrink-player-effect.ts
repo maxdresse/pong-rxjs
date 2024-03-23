@@ -14,7 +14,7 @@ export function createShrinkPlayerEffect(player: Player, duration = DEFAUL_MUTAT
             }
             const shape = fixture.GetShape() as b2PolygonShape;
             shape.SetAsBox(PLAYER_SMALL_SIZE.x / 2, PLAYER_SMALL_SIZE.y / 2);
-            showFlashingMsgToPlayer('Boxy Paddle', player, params);
+            showFlashingMsgToPlayer('Small Paddle!', player, params);
             setTimeout(() => {
                 shape.SetAsBox(PLAYER_SIZE.x / 2, PLAYER_SIZE.y / 2);
             }, duration)

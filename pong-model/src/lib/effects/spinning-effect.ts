@@ -20,7 +20,7 @@ export function createSpinningEffect(player: Player, duration = DEFAUL_MUTATION_
                 requestAnimationFrame(applyTorq);
             }
             requestAnimationFrame(applyTorq);
-            showFlashingMsgToPlayer('Spinning', player, params);
+            showFlashingMsgToPlayer('Spinning!', player, params);
             setTimeout(() => {
                 cancelled = true;
                 body.SetFixedRotation(true);

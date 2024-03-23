@@ -15,7 +15,7 @@ export function createMakeBarelyVisibleEffect(player: Player, duration = DEFAUL_
                 return;
             } 
             userData.isBarelyVisible = true;
-            showFlashingMsgToPlayer('Invisible', player, params);
+            showFlashingMsgToPlayer('Invisible!', player, params);
             setTimeout(() => {
                 userData.isBarelyVisible = false;
             }, duration)
