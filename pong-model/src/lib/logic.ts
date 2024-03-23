@@ -24,6 +24,8 @@ import { isInvertControlsIntent } from './intents/invert-control-intent';
 import { createInvertControlsEffect } from './effects/invert-controls-effect';
 import { getRandomHandicap } from './handicaps';
 import { createIncrementScoreEffect } from './effects/increment-score-effect';
+import { isSpinningIntent as isSpinningIntent } from './intents/spinning-intent';
+import { createSpinningEffect } from './effects/spinning-effect';
 
 interface GameLogitInit {
     score: Score;
@@ -49,6 +51,8 @@ export function createGameLogic({ score, params }: GameLogitInit): GameLogic {
                 return createShrinkPlayerEffect(intent.payload);
             } else if (isInvertControlsIntent(intent)) {
                 return createInvertControlsEffect(intent.payload);
+            } else if (isSpinningIntent(intent)) {
+                return createSpinningEffect(intent.payload);
             }
             throw Error('unknown intent');
         },

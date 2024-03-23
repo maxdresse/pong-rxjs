@@ -1,7 +1,7 @@
-import { createEnlargePlayerIntent } from '../intents/enlarge-player-intent';
 import { createInvertControlsIntent } from '../intents/invert-control-intent';
 import { createMakeBarelyVisibleIntent } from '../intents/make-barely-visible-intent';
 import { createShrinkPlayerIntent } from '../intents/shrink-player-intent';
+import { createSpinningIntent } from '../intents/spinning-intent';
 import { otherPlayer } from '../player-utils';
 import { Player, SomeGameIntent } from '../types';
 import { SymbolicButton, SymbolicButtonCombination } from './btn';
@@ -25,7 +25,8 @@ export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (playe
     [
         [dc('y|x|l'), playerThatOwnsBtn => createShrinkPlayerIntent(otherPlayer(playerThatOwnsBtn))],
         [dc('y|x|L'), playerThatOwnsBtn => createMakeBarelyVisibleIntent(otherPlayer(playerThatOwnsBtn))],
-        [dc('y|x|r'), playerThatOwnsBtn => createInvertControlsIntent(otherPlayer(playerThatOwnsBtn))]
+        [dc('y|x|r'), playerThatOwnsBtn => createInvertControlsIntent(otherPlayer(playerThatOwnsBtn))],
+        [dc('y|x|R'), playerThatOwnsBtn => createSpinningIntent(otherPlayer(playerThatOwnsBtn))]
     ];
 
 function defineCombination(btnString: string): Array<SymbolicButtonCombination> {
