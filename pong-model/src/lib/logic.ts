@@ -26,6 +26,8 @@ import { getRandomHandicap } from './handicaps';
 import { createIncrementScoreEffect } from './effects/increment-score-effect';
 import { isSpinningIntent as isSpinningIntent } from './intents/spinning-intent';
 import { createSpinningEffect } from './effects/spinning-effect';
+import { createReportGoalEffect } from './effects/report-goal-effect';
+import { REPORT_GOAL_DURATION } from './ui/ui-constants';
 
 interface GameLogitInit {
     score: Score;
@@ -68,12 +70,17 @@ export function createGameLogic({ score, params }: GameLogitInit): GameLogic {
         }
     };
 }
+
 function handleGoal(event: GameEvent<101, GoalScoredPayload>, score: Score, params: GameParameters) {
     const scoringPlayer = otherPlayer(event.payload.player);
     const pToScore = score.playerToScore;
     if (pToScore[scoringPlayer] + 1 < params.goalsToWin) {
         // case game goes on
-        const result = [createIncrementScoreEffect(scoringPlayer), createKickoffEffect(scoringPlayer)];
+        const result = [
+             createIncrementScoreEffect(scoringPlayer),
+             createReportGoalEffect(scoringPlayer, REPORT_GOAL_DURATION),
+             createKickoffEffect(scoringPlayer)
+            ];
         const prg = params.scoreProgress;
         const getsHandicap = prg[0] === scoringPlayer && prg[1] === scoringPlayer;
         if (getsHandicap) {

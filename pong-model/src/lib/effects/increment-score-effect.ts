@@ -12,7 +12,7 @@ export function createIncrementScoreEffect(scoringPlayer: Player): GameEffect {
                 params.scoreProgress.unshift(scoringPlayer);
             } else {
                 // game end
-                tmp[Player.PLAYER1] = 0;
+                tmp[Player.PLAYER1] = 0;    
                 tmp[Player.PLAYER2] = 0;
                 params.scoreProgress.length = 0;
             }
