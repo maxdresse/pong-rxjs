@@ -5,12 +5,15 @@ import { getMsgType } from '../render/user-message-utils';
 export function createReportGoalEffect(scoringPlayer: Player, duration = DEFAUL_MUTATION_DURATION): GameEffect {
     return {
         apply: ({ params }) => {
+            const msgText = 'Goal!';
             params.userMessage = {
-                msg: 'Goal!',
+                msg: msgText,
                 type: getMsgType(scoringPlayer)
             }
             setTimeout(() => {
-                params.userMessage = undefined;
+                if (params.userMessage?.msg === msgText) {
+                    params.userMessage = undefined;
+                }
             }, duration)
         }
     };
