@@ -1,6 +1,7 @@
+// idea use symbol and save timeout on fct object
+
 export function scheduleRevertFct(fct: () => void, timeout: number, revertFctBuffer: Array<() => void>): void {
-    // todo: real scheduling
-    removeFct(fct, revertFctBuffer);
+    addFct(fct, revertFctBuffer);
     setTimeout(() => {
         fct();
         removeFct(fct, revertFctBuffer);
@@ -10,6 +11,12 @@ export function scheduleRevertFct(fct: () => void, timeout: number, revertFctBuf
 export function abortAllRevertFcts(revertFctBuffer: Array<() => void>): void {
     revertFctBuffer.length = 0;
 }
+
+function addFct(fct: () => void, buf: Array<() => void>): void {
+    removeFct(fct, buf);
+    buf.push(fct);
+}
+
 
 function removeFct(fct: () => void, buf: Array<() => void>): void {
     const idx = buf.indexOf(fct);
