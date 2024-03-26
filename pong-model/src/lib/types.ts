@@ -109,6 +109,7 @@ export interface GameParameters {
         }
     },
     scoreProgress: Array<Player>; // newest comes first!
+    revertEffectFcts: Array<() => void>;
 }
 
 export type GameFactory = (def: IGameDef) => IGame; 
