@@ -23,10 +23,10 @@ const dc = defineCombination;
 
 export const COMBO_DEFINITIONS:  Array<[Array<SymbolicButtonCombination>, (player: Player) => SomeGameIntent]> = 
     [
-        [dc('y|x|l'), playerThatOwnsBtn => createShrinkPlayerIntent(otherPlayer(playerThatOwnsBtn))],
-        [dc('y|x|L'), playerThatOwnsBtn => createMakeBarelyVisibleIntent(otherPlayer(playerThatOwnsBtn))],
-        [dc('y|x|r'), playerThatOwnsBtn => createInvertControlsIntent(otherPlayer(playerThatOwnsBtn))],
-        [dc('y|x|R'), playerThatOwnsBtn => createSpinningIntent(otherPlayer(playerThatOwnsBtn))]
+        [dc('y|x|l'), playerThatOwnsBtn => createMakeBarelyVisibleIntent(otherPlayer(playerThatOwnsBtn))],
+        [dc('y|x|L'), playerThatOwnsBtn => createShrinkPlayerIntent(otherPlayer(playerThatOwnsBtn))],
+        [dc('y|x|r'), playerThatOwnsBtn => createSpinningIntent(otherPlayer(playerThatOwnsBtn))],
+        [dc('y|x|R'), playerThatOwnsBtn => createInvertControlsIntent(otherPlayer(playerThatOwnsBtn))],
     ];
 
 function defineCombination(btnString: string): Array<SymbolicButtonCombination> {
