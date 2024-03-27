@@ -1,10 +1,14 @@
 import { b2Vec2 } from '@box2d/core';
 import { GameEffect, Player } from '../types';
 import { FIRST_PLAYER_START_POS, SECOND_PLAYER_START_POS } from '../physical-constants';
+import { flushAllRevertFcts } from '../schedule-revert-fct';
 
 export function createResetPlayersEffect(): GameEffect {
     return {
-        apply: ({ playerBodies }) => {
+        apply: ({ playerBodies, params }) => {
+            // revert all effects that are currently applied to players
+            flushAllRevertFcts(params.revertEffectFcts);
+
             playerBodies
                 .filter(b => !!b)
                 .forEach((body, idx) => {

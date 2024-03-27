@@ -1,6 +1,7 @@
 import { GameEffect, Player } from '../types';
 import { DEFAUL_MUTATION_DURATION } from '../physical-constants';
 import { showFlashingMsgToPlayer } from '../render/user-message-utils';
+import { scheduleRevertFct } from '../schedule-revert-fct';
 
 export function createSpinningEffect(player: Player, duration = DEFAUL_MUTATION_DURATION): GameEffect {
     return {
@@ -21,11 +22,11 @@ export function createSpinningEffect(player: Player, duration = DEFAUL_MUTATION_
             }
             requestAnimationFrame(applyTorq);
             showFlashingMsgToPlayer('Spinning!', player, params);
-            setTimeout(() => {
+            scheduleRevertFct(() => {
                 cancelled = true;
                 body.SetFixedRotation(true);
                 body.SetAngle(0);
-            }, duration)
+            }, duration, params.revertEffectFcts);
         }
     };
 }
