@@ -16,7 +16,7 @@ export function createEnlargePlayerEffect(player: Player, duration = DEFAUL_MUTA
             shape.SetAsBox(PLAYER_ENLARGED_SIZE.x / 2, PLAYER_ENLARGED_SIZE.y / 2);
             scheduleRevertFct(() => {
                 shape.SetAsBox(PLAYER_SIZE.x / 2, PLAYER_SIZE.y / 2);
-            }, duration, params.revertEffectFcts);
+            }, duration, params.revertPlayerEffectFcts);
         }
     };
 }

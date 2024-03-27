@@ -10,7 +10,7 @@ export function createInvertControlsEffect(player: Player, duration = DEFAUL_MUT
             showFlashingMsgToPlayer('Invert Controls!', player, params);
             scheduleRevertFct(() => {
                 params.control[player].inverted = false;
-            }, duration, params.revertEffectFcts);
+            }, duration, params.revertPlayerEffectFcts);
         }
     }
 };

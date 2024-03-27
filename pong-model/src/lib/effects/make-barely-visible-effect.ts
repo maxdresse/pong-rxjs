@@ -19,7 +19,7 @@ export function createMakeBarelyVisibleEffect(player: Player, duration = DEFAUL_
             showFlashingMsgToPlayer('Invisible!', player, params);
             scheduleRevertFct(() => {
                 userData.isBarelyVisible = false;
-            }, duration, params.revertEffectFcts);
+            }, duration, params.revertPlayerEffectFcts);
         }
     };
 }

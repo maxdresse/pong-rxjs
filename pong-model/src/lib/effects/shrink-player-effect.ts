@@ -18,7 +18,7 @@ export function createShrinkPlayerEffect(player: Player, duration = DEFAUL_MUTAT
             showFlashingMsgToPlayer('Small Paddle!', player, params);
             scheduleRevertFct(() => {
                 shape.SetAsBox(PLAYER_SIZE.x / 2, PLAYER_SIZE.y / 2);
-            }, duration, params.revertEffectFcts);
+            }, duration, params.revertPlayerEffectFcts);
         }
     };
 }

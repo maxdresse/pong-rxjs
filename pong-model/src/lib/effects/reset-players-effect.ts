@@ -7,7 +7,7 @@ export function createResetPlayersEffect(): GameEffect {
     return {
         apply: ({ playerBodies, params }) => {
             // revert all effects that are currently applied to players
-            flushAllRevertFcts(params.revertEffectFcts);
+            flushAllRevertFcts(params.revertPlayerEffectFcts);
 
             playerBodies
                 .filter(b => !!b)

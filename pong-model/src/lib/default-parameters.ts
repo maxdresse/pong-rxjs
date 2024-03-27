@@ -21,7 +21,7 @@ export function getDefaultParameters(): GameParameters {
             [Player.PLAYER2]: getDefaultControlParams()
         },
         scoreProgress: [],
-        revertEffectFcts: []
+        revertPlayerEffectFcts: []
     };
 }
 function getDefaultControlParams(): { inverted: boolean; } {

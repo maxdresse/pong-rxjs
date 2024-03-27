@@ -26,7 +26,7 @@ export function createSpinningEffect(player: Player, duration = DEFAUL_MUTATION_
                 cancelled = true;
                 body.SetFixedRotation(true);
                 body.SetAngle(0);
-            }, duration, params.revertEffectFcts);
+            }, duration, params.revertPlayerEffectFcts);
         }
     };
 }
