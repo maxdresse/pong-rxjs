@@ -15,6 +15,10 @@ I created this project in order to practice my rxjs skills and try out a couple 
 npm i && npx nx serve pong-demo
 ```
 
-Controls are WASD for left paddle, arrow keys for the right paddle.
+Controls are WASD for the left paddle, arrow keys for the right paddle.
 
 Gamepad controls use the left analog stick.
+
+## Repo structure 
+
+Repo was scaffolded using Nx.
