@@ -19,6 +19,11 @@ Controls are WASD for the left paddle, arrow keys for the right paddle.
 
 Gamepad controls use the left analog stick.
 
+## Game rules
+
+* 5 goals to win
+* if you score three goals in a row, you get a random handicap out of 4 possible (invisible, small paddle, inverted controls, spinning paddle)
+
 ## Repo structure 
 
 * game is implemented in `pong-model/src/lib`
