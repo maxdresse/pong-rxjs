@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { createGame } from '@pong/pong-model';
-import { GameStatistics, GameStatsAttribute, GameStatsRecord, ValueType } from 'pong-model/src/lib/types';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { GameStatistics, GameStatsAttribute, GameStatsRecord, ValueType } from '@pong/pong-model';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   standalone: true,

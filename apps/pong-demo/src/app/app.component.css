@@ -18,8 +18,9 @@ canvas {
     height: 100%;
 }
 
+/* unhide to show debug stats */
 .debug-ui {
-    /*display: none;*/
+    display: none;
     font-size: 7pt;
     flex: 0 0 200px;
     overflow: hidden;
