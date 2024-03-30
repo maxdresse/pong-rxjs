@@ -1,5 +1,5 @@
-import { BehaviorSubject, Subject, Subscription, map, merge, of } from 'rxjs';
-import { IGameDef, IObj, GameFactory, GameParameters, GameEffect, SomeGameEvent, IRenderer, SomeGameIntent } from './types'
+import { BehaviorSubject, Subject, Subscription, map, merge } from 'rxjs';
+import { IGameDef, GameFactory, GameParameters, SomeGameEvent, IRenderer, SomeGameIntent } from './types'
 import { b2World } from '@box2d/core';
 import { attachResizer } from './canvas-resizer';
 import { initWorld } from './init-world';

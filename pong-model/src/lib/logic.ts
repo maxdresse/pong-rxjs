@@ -2,7 +2,7 @@ import { createPlayerSlowdownEffect } from './effects/player-slowdown-effect';
 import { createMovePlayerEffect } from './effects/move-player-effect';
 import { isPlayerHitsObstacleEvent } from './events/player-hits-obstacle-event';
 import { isMovePlayerIntent } from './intents/player-control-intents';
-import { GameEvent, GameLogic, GameParameters, IGameDef, Player, Score } from './types';
+import { GameEvent, GameLogic, GameParameters, Score } from './types';
 import { GoalScoredPayload, isGoalScoredEvent } from './events/goal-scored-event';
 import { createKickoffEffect } from './effects/kickoff-effect';
 import { otherPlayer } from './player-utils';

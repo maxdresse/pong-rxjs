@@ -14,6 +14,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+    "noUnusedLocals": true,
     "paths": {
       "@pong/pong-model": ["pong-model/src/index.ts"]
     }

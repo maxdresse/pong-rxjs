@@ -1,5 +1,5 @@
 import { Observable, auditTime, map, of, switchMap } from 'rxjs';
-import { GameSituation, GameStatistics, IGameDef, StatsCollector, StatsLogger } from '../types';
+import { GameSituation, GameStatistics, IGameDef, StatsLogger } from '../types';
 import { createStatsCollector } from './stats-collector';
 import { STATS_ENTRIES } from './stats-entries';
 

@@ -1,4 +1,4 @@
-import { b2World, b2PolygonShape, b2BodyDef, b2BodyType, b2EdgeShape, b2CircleShape, b2FixtureDef, b2MassData, b2Fixture } from '@box2d/core';
+import { b2World, b2PolygonShape, b2BodyDef, b2BodyType, b2EdgeShape, b2CircleShape, b2FixtureDef } from '@box2d/core';
 import { Vc2 } from './types';
 import { DEFAULT_DAMPING } from './physical-constants';
 import { DEFAULT_DENSITY } from './physical-constants';

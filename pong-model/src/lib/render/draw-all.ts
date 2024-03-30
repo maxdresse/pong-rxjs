@@ -1,5 +1,5 @@
 import { GameObjectType, GameParameters, IColorScheme } from '../types';
-import { b2World, DrawShapes, DrawJoints, b2Fixture, b2ShapeType, b2CircleShape, b2Vec2, b2BodyDef, b2Body } from '@box2d/core';
+import { b2World, DrawShapes, DrawJoints, b2Body } from '@box2d/core';
 import { DebugDraw } from "@box2d/debug-draw";
 import { UserDataUnion } from '../body-user-data';
 import { drawBall } from './draw-ball';
