@@ -7,7 +7,7 @@ I created this project in order to practice my rxjs skills and try out a couple 
 * use of rxjs in a game
 * a message-driven architecture that uses intents, events and effects for the controls and the game logic
 * no use of classes (except for classes from 3rd party libs), just functions
-* browser Gamepad API
+* the browser Gamepad API
 
 ## Running the game
 
@@ -20,5 +20,8 @@ Controls are WASD for the left paddle, arrow keys for the right paddle.
 Gamepad controls use the left analog stick.
 
 ## Repo structure 
+
+* game is implemented in `pong-model/src/lib`
+* the demo app `pong-demo` is a tiny angular app that basically provides a canvas
 
 Repo was scaffolded using Nx.
